@@ -1,0 +1,29 @@
+image: node:latest
+
+stages:
+  - deploy
+
+development:
+  stage: deploy
+  script:
+    - cd client
+    - npm install
+    - npm run build
+    - cd ..
+    - cd server
+    - curl --location "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar zx
+    - ./cf login -u $CF_USERNAME -p $CF_PASSWORD -a $CF_API_ENDPOINT
+    - ./cf target -s dev
+    - ./cf push plm -f ./deploy-configs/manifest-gcp-dev.yml --no-start
+    - ./cf set-env plm HOST $HOST
+    - ./cf set-env plm APP_KEY $APP_KEY
+    - ./cf set-env plm DB_HOST $DB_HOST
+    - ./cf set-env plm DB_USER $DB_USER
+    - ./cf set-env plm DB_PASSWORD $DB_PASSWORD
+    - ./cf set-env plm DB_DATABASE $DB_DATABASE
+    - ./cf start plm
+  # artifacts:
+  #   paths:
+  #     - server # artifact path must be /public for GitLab Pages to pick it up
+  only:
+    - dev
