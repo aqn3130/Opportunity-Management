@@ -6,9 +6,6 @@ stages:
 development:
   stage: deploy
   script:
-    - cd client
-    - npm install
-    - npm run build
     - cd ..
     - cd server
     - curl --location "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar zx
