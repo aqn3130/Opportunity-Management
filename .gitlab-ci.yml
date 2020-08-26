@@ -6,8 +6,6 @@ stages:
 development:
   stage: deploy
   script:
-    - cd ..
-    - cd server
     - curl --location "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar zx
     - ./cf login -u $CF_USERNAME -p $CF_PASSWORD -a $CF_API_ENDPOINT
     - ./cf target -s dev
