@@ -1,0 +1,13 @@
+---
+applications:
+  - name: imdm
+    memory: 256M
+    instances: 1
+    random-route: false
+    stack: cflinuxfs3
+    env:
+      STAGE: dev
+      ENV_SILENT: true
+      DB_CONNECTION: mysql
+    routes:
+      - route: imdm-dev.springernature.app
