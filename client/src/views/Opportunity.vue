@@ -20,7 +20,7 @@
             <template v-slot:top>
                 <v-toolbar flat color="grey lighten-3">
                     <v-toolbar-title>
-                        Country Map
+                        Opportunity
                     </v-toolbar-title>
 
                     <v-spacer></v-spacer>
@@ -96,7 +96,7 @@
     import Navbar from "../components/Navbar";
     import { mapState } from 'vuex';
     export default {
-        name: 'country-map',
+        name: 'opportunity',
         components:{
             Navbar
         },

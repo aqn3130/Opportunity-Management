@@ -135,7 +135,7 @@
                     { title: 'Dashboard', icon: 'mdi-view-dashboard', action: '/dashboard' },
                     { title: 'Personnel', icon: 'mdi-image', action: '/personnel' },
                     { title: 'Product', icon: 'mdi-image', action: '/product' },
-                    { title: 'Country Map', icon: 'mdi-image', action: '/country-map' },
+                    { title: 'Opportunity', icon: 'mdi-image', action: '/opportunity' },
                     { title: 'LD-Stage', icon: 'mdi-image', action: '/ld-stage' },
                     { title: 'Likelihood Map', icon: 'mdi-image', action: '/likelihood-map' },
                 ],

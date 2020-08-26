@@ -9,13 +9,14 @@ import RegionAssignedVP from "../views/RegionAssignedVP";
 import ProductGroupHierachy from "../views/ProductGroupHierachy";
 import Personnel from "../views/Personnel";
 import Product from "../views/Product";
-import CountryMap from "../views/CountryMap";
+import CountryMap from "../views/Opportunity";
 import LDStage from "../views/LDStage";
 import LikeLihoodMap from "../views/LikeLihoodMap";
 import Login from "../views/Login";
 import Users from "../views/Users";
 import CountryRegionTerritory from "../views/CountryRegionTerritory";
 import SNCustomerName from "../views/SNCustomerName";
+import Opportunity from "../views/Opportunity";
 
 Vue.use(VueRouter)
 
@@ -88,9 +89,9 @@ const routes = [
     component: Product
   },
   {
-    path: '/country-map',
-    name: 'country-map',
-    component: CountryMap
+    path: '/opportunity',
+    name: 'opportunity',
+    component: Opportunity
   },
   {
     path: '/ld-stage',
