@@ -2,9 +2,11 @@
   <v-app>
     <NavBar />
     <v-content>
-      <v-container fluid>
-        <router-view></router-view>
-      </v-container>
+<!--      <v-container fluid>-->
+<!--    <v-main>-->
+      <router-view></router-view>
+<!--    </v-main>-->
+<!--      </v-container>-->
     </v-content>
     <v-footer app></v-footer>
   </v-app>

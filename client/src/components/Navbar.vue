@@ -5,9 +5,9 @@
             tile
             dark
     >
-        <v-app-bar fixed color="primary" app dense>
+        <v-app-bar fixed color="#455A64" app dense>
             <v-app-bar-nav-icon @click.stop="onSandwichMenuClick"></v-app-bar-nav-icon>
-            <v-toolbar-title class="v-card--link" @click="toHome">iMDM</v-toolbar-title>
+            <v-toolbar-title class="v-card--link" @click="toHome">Opportunity Management</v-toolbar-title>
         </v-app-bar>
 
         <v-navigation-drawer
@@ -21,7 +21,7 @@
                 width="300px"
                 app
         >
-            <v-card color="primary" tile flat height="150px">
+            <v-card color="#455A64" tile flat height="150px">
                 <v-list-item two-line>
                     <!--                    <v-list-item-avatar>-->
                     <!--                        <img src="">-->
@@ -29,88 +29,47 @@
 
                     <v-list-item-content>
                         <v-icon @click="drawer = false" class="justify-end mb-10">close</v-icon>
-                        <v-list-item-title>iMDM</v-list-item-title>
-                        <v-list-item-subtitle>Intelligent Master Data Management</v-list-item-subtitle>
+                        <v-list-item-title>PLM</v-list-item-title>
+                        <v-list-item-subtitle>Opportunity Management</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
             </v-card>
-
-            <v-list
-                    nav
-                    class="py-0"
-                    dense
-            >
-
-<!--                <v-divider class="mb-5 mt-5 white"></v-divider>-->
-
-                <v-card
-                        class="mt-10 grey lighten-3"
-                        width="300px"
+            <v-divider></v-divider>
+            <v-card flat color='white' tile height="600px">
+                <v-list
+                        dense
+                        nav
                         light
+                        class='pt-5'
                 >
-                    <v-list-group
-                            sub-group
-                            no-action
+                    <v-list-item v-for='item in items'
+                                 :key='item.title' link v-model='group'
+                                 :to='item.action'
                     >
-                        <template v-slot:activator>
-                            <v-list-item-content>
-                                <v-list-item-title>CRM/PLM</v-list-item-title>
-                            </v-list-item-content>
-                        </template>
-                        <v-list-item
-                                v-for="item in items1"
-                                :key="item.title"
-                                @click=""
-                                v-model="group"
-                                :to=item.action
-                        >
-                            <v-list-item-title v-text="item.title"></v-list-item-title>
-                            <v-list-item-action>
-                                <v-icon v-text="item[2]"></v-icon>
-                            </v-list-item-action>
-                        </v-list-item>
-                    </v-list-group>
-                </v-card>
+                        <v-list-item-icon>
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-list-item-icon>
 
-                <v-card
-                        class="mt-5 grey lighten-3"
-                        width="300px"
-                        light
-                >
-                <v-list-group
-                        sub-group
-                        no-action
-                >
-                    <template v-slot:activator>
                         <v-list-item-content>
-                            <v-list-item-title>iMDM</v-list-item-title>
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
                         </v-list-item-content>
-                    </template>
-                    <v-list-item
-                            v-for="item in items"
-                            :key="item.title"
-                            @click=""
-                            v-model="group"
-                            :to=item.action
-                    >
-                        <v-list-item-title v-text="item.title"></v-list-item-title>
-                        <v-list-item-action>
-                            <v-icon v-text="item[2]"></v-icon>
-                        </v-list-item-action>
                     </v-list-item>
-                </v-list-group>
-                </v-card>
-            </v-list>
-<!--            <v-list dark>-->
-<!--                <v-list-item title="Users" to="/users"></v-list-item>-->
-<!--            </v-list>-->
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title class="title">
-                        <v-list-item-action class="ml-0"><v-btn to="/users" text><v-icon class="mr-5">mdi-account</v-icon>Accounts</v-btn></v-list-item-action>
-                    </v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+                </v-list>
+            </v-card>
+            <template v-slot:append>
+                <div class='pa-1 grey lighten-2'>
+                    <v-btn @click='logout' block light small>
+                        Logout
+                    </v-btn>
+                    <!--            <v-subheader-->
+                    <!--              @click="logout"-->
+                    <!--              style="cursor: pointer"-->
+                    <!--            >-->
+                    <!--              Logout-->
+                    <!--            </v-subheader>-->
+                </div>
+            </template>
+
         </v-navigation-drawer>
     </v-card>
 </template>
@@ -121,23 +80,46 @@
         data () {
             return {
                 items: [
-                    { title: 'Dashboard', icon: 'mdi-view-dashboard', action: '/dashboard' },
-                    { title: 'Revenue Account', icon: 'mdi-image', action: '/revenue_account' },
-                    { title: 'Material Code', icon: 'mdi-image', action: '/material_code' },
-                    { title: 'Product Title', icon: 'mdi-image', action: '/product_title' },
-                    { title: 'Region Assigned VP', icon: 'mdi-image', action: '/region_assigned_vp' },
-                    { title: 'Product Group Hierachy', icon: 'mdi-image', action: '/product_group_hierachy' },
-                    { title: 'Country Region Territory', icon: 'mdi-image', action: '/country-region-territory' },
-                    { title: 'SN Customer Name', icon: 'mdi-image', action: '/sn-customer-name' },
-                    { title: 'About', icon: 'mdi-help-box', action: '' },
-                ],
-                items1: [
-                    { title: 'Dashboard', icon: 'mdi-view-dashboard', action: '/dashboard' },
-                    { title: 'Personnel', icon: 'mdi-image', action: '/personnel' },
-                    { title: 'Product', icon: 'mdi-image', action: '/product' },
-                    { title: 'Opportunity', icon: 'mdi-image', action: '/opportunity' },
-                    { title: 'LD-Stage', icon: 'mdi-image', action: '/ld-stage' },
-                    { title: 'Likelihood Map', icon: 'mdi-image', action: '/likelihood-map' },
+                    {
+                        title: 'Dashboard',
+                        icon: 'dashboard',
+                        action: '/dashboard'
+                    },
+                    {
+                        title: 'Projects Overview',
+                        icon: 'view_module',
+                        action: '/overview'
+                    },
+                    {
+                        title: 'Project Update',
+                        icon: 'update',
+                        action: '/project-update'
+                    },
+                    {
+                        title: 'Edit Opportunity',
+                        icon: 'edit',
+                        action: '/opportunity'
+                    },
+                    {
+                        title: 'Project Detail',
+                        icon: 'details',
+                        action: '/project-detail'
+                    },
+                    {
+                        title: 'Project Resources',
+                        icon: 'category',
+                        action: '/project-resources'
+                    },
+                    {
+                        title: 'Accounts',
+                        icon: 'supervisor_account',
+                        action: '/account'
+                    },
+                    {
+                        title: 'Admin Console',
+                        icon: 'settings',
+                    }
+
                 ],
                 right: false,
                 drawer: null,
@@ -147,7 +129,7 @@
                 expandOnHover: false,
                 background: false,
                 current_page: null
-            }
+        };
         },
         methods: {
             onSandwichMenuClick(){
@@ -155,6 +137,10 @@
             },
             toHome(){
                 this.$router.push({path: '/'})
+            },
+            async logout() {
+                await this.$store.dispatch('logout');
+                await this.$router.push('/login');
             }
         },
         watch: {
