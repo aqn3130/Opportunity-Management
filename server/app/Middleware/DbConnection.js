@@ -21,7 +21,7 @@ class DbConnection {
         user: Env.get('DB_USER'),
         password: Env.get('DB_PASSWORD'),
         database: Env.get('DB_DATABASE'),
-        acquireConnectionTimeout: 60000
+        acquireConnectionTimeout: 120000
       }
     });
   }
