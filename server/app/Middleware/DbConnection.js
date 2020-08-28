@@ -52,8 +52,11 @@ class DbConnection {
     }
 
     knex = await this.getDBConnection();
-    const Table = () => knex(table);
-    request.Table = Table();
+    // const Table = () => knex(table);
+    const Table = table;
+    request.Table = Table;
+    request.Knex = knex;
+    // request.Table = Table();
     await next()
   }
 }

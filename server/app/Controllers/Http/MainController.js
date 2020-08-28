@@ -18,11 +18,31 @@ class MainController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    const params = request.all();
     try {
-      return await request.Table;
-      // let data = await request.Table.orderBy('updated_at', 'desc');
-      // const data = await request.knex.select('*').from(request.table);
-      // response.send(data);
+      // return await request.Knex.select('*').from(request.Table)
+
+      // return await request.Knex.select('*').from(request.Table).join('Product', function() {
+      //   this.on('Opportunity.Id', '=', 'Product.Opportunity_fk').orOn('Opportunity.Id', '=', 'Product.Opportunity_fk')
+      // })
+
+      // return await request.Knex.table(request.Table)
+      //   .join('Product', 'Opportunity.Id', '=', 'Product.Opportunity_fk')
+      //   .groupBy('Product.Id')
+
+      let query = undefined;
+      if (params.id) {
+        query = await request.Knex.select('*')
+          .from('Product')
+          .joinRaw('Opportunity')
+          .where('Opportunity_fk', params.id)
+      } else {
+        query = request.Knex.select('*').from(request.Table)
+      }
+      return query;
+
+      // return await request.Knex.select('*').from('Product').joinRaw('Opportunity').where('Opportunity_fk', 1)
+
     } catch (e) {
       throw e;
     }

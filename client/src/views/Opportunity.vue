@@ -147,7 +147,7 @@
         },
         methods: {
             getRecords: async function () {
-                const data = await this.$store.dispatch('getRecords');
+                const data = await this.$store.dispatch('getRecords', 1);
                 this.rows = data;
             },
             editItem (item) {

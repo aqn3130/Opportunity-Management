@@ -29,9 +29,9 @@ export default new Vuex.Store({
     async setCurrentTable({commit},table){
       await commit('setTable', table);
     },
-    async getRecords({commit}){
+    async getRecords({commit}, id){
       commit('setLoading', true);
-      const { data } = (await axios.get(this.state.table));
+      const { data } = (await axios.get(`${this.state.table}?id=${id}`));
       // const { data } = (await axios.get('/api/' + this.state.table));
       commit('setData', data);
       commit('setLoading', false);
