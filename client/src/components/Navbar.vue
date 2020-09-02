@@ -7,7 +7,7 @@
     >
         <v-app-bar fixed color="#455A64" app dense>
             <v-app-bar-nav-icon @click.stop="onSandwichMenuClick"></v-app-bar-nav-icon>
-            <v-toolbar-title class="v-card--link" @click="toHome">Opportunity Management</v-toolbar-title>
+            <v-toolbar-title class="v-card--link text-uppercase subtitle-2" @click="toHome">Opportunity Management: {{ $router.currentRoute.name}}</v-toolbar-title>
         </v-app-bar>
 
         <v-navigation-drawer
@@ -77,6 +77,7 @@
 <script>
     export default {
         name: "Navbar",
+        props: ['searchStr'],
         data () {
             return {
                 items: [

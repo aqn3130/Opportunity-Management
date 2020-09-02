@@ -12,7 +12,8 @@ export default new Vuex.Store({
   state: {
     table: null,
     userData: [],
-    loading: false
+    loading: false,
+    opportunityId: null
   },
   mutations: {
     setTable(state,value){
@@ -23,7 +24,10 @@ export default new Vuex.Store({
     },
     setLoading(state,value){
       state.loading = value;
-    }
+    },
+    setOppId(state,id){
+      state.opportunityId = id;
+    },
   },
   actions: {
     async setCurrentTable({commit},table){
