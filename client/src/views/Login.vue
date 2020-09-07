@@ -1,7 +1,7 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col cols="12" md="6" offset-md="3">
+    <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+            <v-col cols="12" sm="8" md="4">
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-card max-width="500px">
                         <v-card-title>Login</v-card-title>
@@ -46,6 +46,7 @@
 </template>
 <script>
     import { mapState, mapActions, mapGetters, mapMutations} from 'vuex';
+    import router from "../router";
     export default {
         name: 'Login',
         data: () => ({
@@ -80,7 +81,12 @@
             ]),
             validate() {
                 if (this.$refs.form.validate()) {
-                    this.login();
+                    try {
+                        this.login();
+                        this.$router.push('dashboard');
+                    } catch (e) {
+                        this.setError(e);
+                    }
                 }
             },
             reset() {

@@ -4,6 +4,7 @@
             height="48px"
             tile
             dark
+            v-if="currentUser"
     >
         <v-app-bar fixed color="#455A64" app dense>
             <v-app-bar-nav-icon @click.stop="onSandwichMenuClick"></v-app-bar-nav-icon>
@@ -13,9 +14,6 @@
         <v-navigation-drawer
                 v-model="drawer"
                 :color="color"
-                :expand-on-hover="expandOnHover"
-                :mini-variant="miniVariant"
-                :right="right"
                 temporary
                 height="800px"
                 width="300px"
@@ -61,23 +59,17 @@
                     <v-btn @click='logout' block light small>
                         Logout
                     </v-btn>
-                    <!--            <v-subheader-->
-                    <!--              @click="logout"-->
-                    <!--              style="cursor: pointer"-->
-                    <!--            >-->
-                    <!--              Logout-->
-                    <!--            </v-subheader>-->
                 </div>
             </template>
-
         </v-navigation-drawer>
     </v-card>
 </template>
 
 <script>
+    import {mapActions, mapState} from "vuex";
+
     export default {
         name: "Navbar",
-        props: ['searchStr'],
         data () {
             return {
                 items: [
@@ -87,14 +79,9 @@
                         action: '/dashboard'
                     },
                     {
-                        title: 'Projects Overview',
-                        icon: 'view_module',
-                        action: '/overview'
-                    },
-                    {
-                        title: 'Project Update',
-                        icon: 'update',
-                        action: '/project-update'
+                        title: 'New Opportunity',
+                        icon: 'add',
+                        action: '/new-opportunity'
                     },
                     {
                         title: 'Edit Opportunity',
@@ -102,19 +89,9 @@
                         action: '/opportunity'
                     },
                     {
-                        title: 'Project Detail',
-                        icon: 'details',
-                        action: '/project-detail'
-                    },
-                    {
-                        title: 'Project Resources',
-                        icon: 'category',
-                        action: '/project-resources'
-                    },
-                    {
                         title: 'Accounts',
                         icon: 'supervisor_account',
-                        action: '/account'
+                        action: '/users'
                     },
                     {
                         title: 'Admin Console',
@@ -122,12 +99,9 @@
                     }
 
                 ],
-                right: false,
-                drawer: null,
+                drawer: false,
                 group: null,
                 color: '#fff',
-                miniVariant: false,
-                expandOnHover: false,
                 background: false,
                 current_page: null
         };
@@ -139,10 +113,7 @@
             toHome(){
                 this.$router.push({path: '/'})
             },
-            async logout() {
-                await this.$store.dispatch('logout');
-                await this.$router.push('/login');
-            }
+            ...mapActions('auth', ['logout'])
         },
         watch: {
             group () {
@@ -151,12 +122,9 @@
 
         },
         computed: {
-            bg() {
-                return this.background ? 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg' : undefined
-            },
+            ...mapState('auth', ['token', 'currentUser']),
         },
         created() {
-            this.current_page = this.$router.currentRoute.name;
         }
     }
 </script>

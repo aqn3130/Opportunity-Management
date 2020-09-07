@@ -37,7 +37,7 @@ export default new Vuex.Store({
       commit('setLoading', true);
       const { data } = (await axios.get(`${this.state.table}?id=${id}`));
       // const { data } = (await axios.get('/api/' + this.state.table));
-      commit('setData', data);
+      // commit('setData', data);
       commit('setLoading', false);
       return data;
     },

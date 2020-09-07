@@ -44,6 +44,10 @@
         }),
 
         computed: {
+            ...mapState([
+                "userData",
+                "userAdded"
+            ]),
             formTitle () {
                 return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
             },
@@ -56,7 +60,7 @@
         },
 
         async created () {
-            await this.$store.dispatch('setCurrentTable','users');
+            await this.$store.dispatch('setCurrentTable','SalesRep');
             await this.getRecords();
         },
 
@@ -94,11 +98,5 @@
                 this.close()
             },
         },
-        computed: {
-            ...mapState([
-                "userData",
-                "userAdded"
-            ])
-        }
     }
 </script>

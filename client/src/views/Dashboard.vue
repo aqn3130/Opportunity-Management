@@ -16,39 +16,29 @@
                 <v-card class="d-flex ml-auto mr-auto justify-center transparent mt-n10" flat width="auto">
                     <v-row>
                         <v-col>
-<!--                            <v-row>-->
-<!--                                <v-col md="4">-->
-                                    <v-select
-                                            v-model="selectedStatus"
-                                            :items="statuses"
-                                            @change="onSelectChange"
-                                            style="width: 110px"
-                                            dark
-                                            class="caption"
-                                            dense
-                                    ></v-select>
-<!--                                </v-col>-->
-
-<!--                                <v-spacer></v-spacer>-->
-<!--                                <v-col md="8">-->
-
-<!--                                </v-col>-->
-
-<!--                            </v-row>-->
+                            <v-select
+                                v-model="selectedStatus"
+                                :items="statuses"
+                                @change="onSelectChange"
+                                style="width: 110px"
+                                dark
+                                class="caption"
+                                dense
+                            ></v-select>
                             <v-data-table
-                                    :headers="headers"
-                                    :items="rows"
-                                    :items-per-page="5"
-                                    class="elevation-1"
-                                    :footer-props="{
+                                :headers="headers"
+                                :items="rows"
+                                :items-per-page="5"
+                                class="elevation-1"
+                                :footer-props="{
                                   showFirstLastPage: true,
                                   firstIcon: 'mdi-arrow-collapse-left',
                                   lastIcon: 'mdi-arrow-collapse-right',
                                   prevIcon: 'mdi-minus',
                                   nextIcon: 'mdi-plus'
                                 }"
-                                    @click:row="editOpportunity"
-                                    :search="searchStr"
+                                @click:row="editOpportunity"
+                                :search="searchStr"
                             >
                                 <template v-slot:top>
                                     <v-toolbar flat color="grey lighten-3">
@@ -66,23 +56,23 @@
                                     </v-toolbar>
                                 </template>
                                 <template v-slot:item.OpportunityName="{ item }">
-                            <span style="font-size: small; font-weight: bold;">
-                                {{item.OpportunityName}}
-                            </span><br>
+                                    <span style="font-size: small; font-weight: bold;">
+                                        {{item.OpportunityName}}
+                                    </span><br>
                                     <span style="font-size: small">
-                            {{ item.SalesStage }}<br>
-                            </span>
+                                        {{ item.SalesStage }}<br>
+                                    </span>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-list-item-subtitle
                                                     v-bind="attrs" v-on="on"
                                             >
-                                <span style="font-size: small; max-width: 200px" class="text-truncate d-inline-block">
-                                {{item.CustomerName}}-{{item.BPID}}
-                                </span>
+                                                <span style="font-size: small; max-width: 200px" class="text-truncate d-inline-block">
+                                                {{item.CustomerName}}-{{item.BPID}}
+                                                </span>
                                             </v-list-item-subtitle>
                                         </template>
-                                        <span>{{item.CustomerName}}-{{item.BPID}}</span>
+                                    <span>{{item.CustomerName}}-{{item.BPID}}</span>
                                     </v-tooltip>
                                 </template>
                                 <template v-slot:item.ExpectedCloseDate="{ item }">
@@ -91,12 +81,22 @@
                                 </span>
                                 </template>
                             </v-data-table>
-
                         </v-col>
                     </v-row>
                 </v-card>
             </v-container>
         </v-layout>
+        <v-btn
+            absolute
+            dark
+            fab
+            bottom
+            right
+            color="#455A64"
+            class="mb-10 mr-10"
+        >
+            <v-icon>mdi-plus</v-icon>
+        </v-btn>
     </div>
 </template>
 
@@ -115,16 +115,6 @@
         data() {
             return {
                 rows: [],
-                // headers: [
-                //     {text: 'Opportunity Name', align: 'left', value: 'OpportunityName'},
-                //     {text: 'Country', align: 'left', value: 'Country'},
-                //     {text: 'Channel Type', align: 'left', value: 'ChannelType'},
-                //     {text: 'Status', align: 'left', value: 'Status'},
-                //     {text: 'License ID', align: 'left', value: 'LicenseID'},
-                //     {text: 'Expected Close Date', align: 'left', value: 'ExpectedCloseDate'},
-                //     {text: 'Currency', align: 'left', value: 'Currency'},
-                //     {text: 'Gross Value', align: 'left', value: 'GrossValue'},
-                // ],
                 OppStatus: null,
                 statuses: ['All' ,'In Process', 'Won', 'Closed Won', 'Closed Lost'],
                 searchStr: '',
@@ -176,6 +166,7 @@
             }),
             editOpportunity (item) {
                 this.setOppId(item.Id);
+                // console.log(item.Id);
             },
             onSelectChange (status) {
                 console.log(status);
