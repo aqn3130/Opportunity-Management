@@ -8,33 +8,78 @@
             <v-row class="px-lg-10">
                 <v-col md="6">
                     <v-text-field
-                            v-model="salesRep"
+                            v-model="currentUser.username"
                             :rules="nameRules"
                             label="Sales Rep"
                             required
+                            disabled
                     ></v-text-field>
 
                     <v-text-field
-                            v-model="email"
-                            :rules="emailRules"
-                            label="E-mail"
+                            v-model="salesRepType"
+                            :rules="nameRules"
+                            label="Type"
+                            required
+                            disabled
+                    ></v-text-field>
+                    <v-menu
+                            v-model="menu"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="290px"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                                    v-model="date"
+                                    label="Opportunity Start Date"
+                                    prepend-icon="event"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
+                    </v-menu>
+
+                    <v-text-field
+                            v-model="opportunityName"
+                            :rules="nameRules"
+                            label="Opportunity Name"
                             required
                     ></v-text-field>
-
+                    <v-text-field
+                            v-model="customerName"
+                            :rules="nameRules"
+                            label="Customer Name"
+                            required
+                    ></v-text-field>
+                    <v-text-field
+                            v-model="bpId"
+                            :rules="nameRules"
+                            label="BP ID"
+                    ></v-text-field>
+                    <v-text-field
+                            v-model="memberOfConsortia"
+                            :rules="nameRules"
+                            label="Member Of Consortia"
+                    ></v-text-field>
                     <v-select
-                            v-model="select"
-                            :items="items"
+                            v-model="country"
+                            :items="countryItems"
                             :rules="[v => !!v || 'Item is required']"
-                            label="Item"
+                            label="Country"
+                            required
+                            @input="getStates(country)"
+                    ></v-select>
+                    <v-select
+                            v-model="state"
+                            :items="states"
+                            :rules="[v => !!v || 'Item is required']"
+                            label="State"
                             required
                     ></v-select>
-
-                    <v-checkbox
-                            v-model="checkbox"
-                            :rules="[v => !!v || 'You must agree to continue!']"
-                            label="Do you agree?"
-                            required
-                    ></v-checkbox>
                 </v-col>
                 <v-col md="6">
                     <v-text-field
@@ -54,7 +99,7 @@
 
                     <v-select
                             v-model="select"
-                            :items="items"
+                            :items="countryItems"
                             :rules="[v => !!v || 'Item is required']"
                             label="Item"
                             required
@@ -103,6 +148,8 @@
 </template>
 
 <script>
+    import {mapState} from "vuex";
+
     export default {
         name: "NewOpportunity",
         data: () => ({
@@ -117,13 +164,18 @@
                 v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
             ],
             select: null,
-            items: [
-                'Item 1',
-                'Item 2',
-                'Item 3',
-                'Item 4',
-            ],
+            countryItems: [],
             checkbox: false,
+            salesRepType: null,
+            date: new Date().toISOString().substr(0, 10),
+            menu: false,
+            opportunityName: null,
+            customerName: null,
+            bpId: null,
+            memberOfConsortia: null,
+            country: null,
+            states: [],
+            state: null
         }),
         props: {
             salesRep: String
@@ -138,6 +190,29 @@
             resetValidation () {
                 this.$refs.form.resetValidation()
             },
+            async getStates (country) {
+                this.states = [];
+                await this.$store.dispatch('setCurrentTable', 'States');
+                const states = await this.$store.dispatch('getRecords', '');
+                Object.keys(states).forEach((value, index) => {
+                    if (country.toLowerCase().trim() === states[index].Country.toLowerCase().trim()) {
+                        this.states.push(states[index].Name);
+                    }
+                });
+            }
         },
+        computed: {
+            ...mapState('auth', ['currentUser']),
+        },
+        async created() {
+            await this.$store.dispatch('setCurrentTable', 'SalesRep');
+            const response = await this.$store.dispatch('getSalesRep', this.currentUser.email);
+            this.salesRepType = response[0].Type;
+            await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
+            const countries = await this.$store.dispatch('getRecords', '');
+            Object.keys(countries).forEach((value, index) => {
+                this.countryItems.push(countries[index].Country);
+            });
+        }
     }
 </script>

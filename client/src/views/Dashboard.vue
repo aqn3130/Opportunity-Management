@@ -94,6 +94,8 @@
             right
             color="#455A64"
             class="mb-10 mr-10"
+            link
+            to="/new-opportunity"
         >
             <v-icon>mdi-plus</v-icon>
         </v-btn>

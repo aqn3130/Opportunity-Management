@@ -78,7 +78,11 @@ export default new Vuex.Store({
         }
       });
       commit('setLoading',false);
-    }
+    },
+    async getSalesRep({commit}, email){
+      const { data } = (await axios.get(`${this.state.table}?email=${email}`));
+      return data;
+    },
   },
   modules: {
     auth,

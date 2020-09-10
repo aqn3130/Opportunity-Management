@@ -27,7 +27,6 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    // component: Dashboard,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -37,7 +36,6 @@ const routes = [
   {
     path: '/new-opportunity',
     name: 'New Opportunity',
-    // component: NewOpportunity,
     component: () => import(/* webpackChunkName: "newOpportunity" */ '../views/NewOpportunity.vue'),
     meta: { requiresAuth: true }
   },

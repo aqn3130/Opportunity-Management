@@ -36,7 +36,13 @@ class MainController {
           .from('Product')
           .joinRaw('Opportunity')
           .where('Opportunity_fk', params.id)
-      } else {
+      }
+      else if (params.email){
+        query = await request.Knex.select('*')
+          .from(request.Table)
+          .where('Email', params.email)
+      }
+      else {
         query = request.Knex.select('*').from(request.Table)
       }
       return query;
