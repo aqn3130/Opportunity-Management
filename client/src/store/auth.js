@@ -27,37 +27,37 @@ export default {
         }
     },
     actions: {
-        login({ commit, state }){
-            axios({
+        async login({ commit, state }){
+            const { data } = await axios({
                 method: 'post',
                 url: `auth/login`,
                 data: {
                     username: state.username,
                     password: state.password
                 }
-            }).then(function ({ data }) {
-                if (data.token){
-                    commit('setToken',data.token);
-                    localStorage.setItem('token', data.token);
-                    commit('setCurrentUser', data.user);
-                    commit('setPassword', null);
-                    commit('setUsername', null);
-                } else {
-                    commit('setError', data.message);
-                }
-            }).catch(function (error) {
-                console.log(error);
             });
-            // finally(function () {
-            //     if (state.token){
-            //         router.push('/dashboard');
-            //     }
-            // })
+            commit('setToken', data.token);
+            localStorage.setItem('token', data.token);
+            commit('setCurrentUser', data.user);
+            commit('setPassword', null);
+            commit('setUsername', null);
+            window.USER = data.user;
         },
         logout({ commit }) {
+            localStorage.removeItem('token');
             commit('setToken', null);
             commit('setCurrentUser', null);
-            router.push('/login');
-        }
+            window.USER = null;
+        },
+        async getCurrentUser({ commit, state}){
+            await axios({
+                method: 'get',
+                url: `get-current-user`,
+            }).then(function ({ data }) {
+                commit('setCurrentUser', data)
+            }).catch(function (e) {
+                console.log(e);
+            })
+        },
     }
 }

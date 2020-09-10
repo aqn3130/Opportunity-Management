@@ -76,14 +76,13 @@
                 'setPassword',
                 'setError'
             ]),
-            ...mapActions('auth', [
-                'login'
-            ]),
-            validate() {
+            ...mapActions('auth', ['login']),
+            async validate() {
                 if (this.$refs.form.validate()) {
                     try {
-                        this.login();
-                        this.$router.push('dashboard');
+                        // await this.$store.dispatch('auth/login');
+                        await this.login();
+                        await this.$router.push({ name: 'Dashboard' });
                     } catch (e) {
                         this.setError(e);
                     }

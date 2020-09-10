@@ -4,11 +4,15 @@
             height="48px"
             tile
             dark
-            v-if="currentUser"
     >
-        <v-app-bar fixed color="#455A64" app dense>
+        <v-app-bar color="#455A64" app dense>
             <v-app-bar-nav-icon @click.stop="onSandwichMenuClick"></v-app-bar-nav-icon>
-            <v-toolbar-title class="v-card--link text-uppercase subtitle-2" @click="toHome">Opportunity Management: {{ $router.currentRoute.name}}</v-toolbar-title>
+            <v-toolbar-title
+                    class="v-card--link text-uppercase subtitle-2"
+                    @click="toHome"
+            >
+                Opportunity Management: {{ $route.name }}
+            </v-toolbar-title>
         </v-app-bar>
 
         <v-navigation-drawer
@@ -41,7 +45,9 @@
                         class='pt-5'
                 >
                     <v-list-item v-for='item in items'
-                                 :key='item.title' link v-model='group'
+                                 :key='item.title'
+                                 link
+                                 v-model='group'
                                  :to='item.action'
                     >
                         <v-list-item-icon>
@@ -103,7 +109,10 @@
                 group: null,
                 color: '#fff',
                 background: false,
-                current_page: null
+                current_page: null,
+                destinations: this.$store.destinations,
+                isLoggedIn: false,
+                currentPageName: ''
         };
         },
         methods: {
@@ -113,18 +122,25 @@
             toHome(){
                 this.$router.push({path: '/'})
             },
-            ...mapActions('auth', ['logout'])
+            logout() {
+                this.$store.dispatch('auth/logout');
+                this.$router.push({ name: 'Login'});
+            }
         },
         watch: {
             group () {
                 this.drawer = false
             },
-
         },
         computed: {
             ...mapState('auth', ['token', 'currentUser']),
         },
         created() {
+        },
+        beforeCreate() {
+        },
+        mounted() {
+            this.currentPageName = this.$router.currentRoute.name;
         }
     }
 </script>

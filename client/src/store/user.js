@@ -67,7 +67,7 @@ export default {
             commit('setName', null);
             await commit('setUsers', []);
             commit('setLoading', false);
-        }
+        },
         // async getUsers({ commit, state }) {
         //     const { data } = (await axios.get(this.state.table));
         //     return data;

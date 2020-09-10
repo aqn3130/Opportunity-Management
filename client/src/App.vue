@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <NavBar />
+    <NavBar v-if="currentUser"/>
     <v-content>
 <!--      <v-container fluid>-->
 <!--    <v-main>-->
@@ -14,6 +14,7 @@
 
 <script>
 import NavBar from './components/Navbar';
+import {mapState} from "vuex";
 
 export default {
   name: 'App',
@@ -24,5 +25,8 @@ export default {
 
   data: () => ({
   }),
+    computed: {
+      ...mapState('auth', ['currentUser'])
+    }
 };
 </script>

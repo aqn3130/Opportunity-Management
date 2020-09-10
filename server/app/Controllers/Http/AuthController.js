@@ -85,7 +85,8 @@ class AuthController {
   }
 
   async getCurrentUser({ request, response, auth }){
-
+    const currentUser = await auth.getUser();
+    return currentUser;
   }
 
   async fetchUsers({ request, response, auth}){

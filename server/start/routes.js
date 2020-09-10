@@ -23,6 +23,7 @@ Route.group(function () {
   Route.resource('revenue_account','MainController').apiOnly();
   Route.post('auth/login','AuthController.login');
   Route.get('user/:name','AuthController.fetchUsers');
+  Route.get('get-current-user','AuthController.getCurrentUser');
   Route.get('add-user/:user','AuthController.addUser');
   // Route.resource('main','MainController');
 }).prefix('api');
