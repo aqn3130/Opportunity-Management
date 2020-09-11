@@ -76,9 +76,21 @@
                     <v-select
                             v-model="state"
                             :items="states"
-                            :rules="[v => !!v || 'Item is required']"
                             label="State"
-                            required
+                            :disabled="state === 'N/A'"
+                    ></v-select>
+                    <v-select
+                            v-model="channelType"
+                            :rules="nameRules"
+                            label="Channel Type"
+                            :items="channelTypeItems"
+                            @input="setIndustryType(channelType)"
+                    ></v-select>
+                    <v-select
+                            v-model="industryType"
+                            :rules="nameRules"
+                            label="Institution/Industry Type"
+                            :items="industryTypeItems"
                     ></v-select>
                 </v-col>
                 <v-col md="6">
@@ -175,7 +187,11 @@
             memberOfConsortia: null,
             country: null,
             states: [],
-            state: null
+            state: null,
+            channelType: null,
+            industryType: null,
+            channelTypeItems: ['Academic', 'Corporate', 'Government'],
+            industryTypeItems: []
         }),
         props: {
             salesRep: String
@@ -192,11 +208,26 @@
             },
             async getStates (country) {
                 this.states = [];
+                this.state = null;
                 await this.$store.dispatch('setCurrentTable', 'States');
                 const states = await this.$store.dispatch('getRecords', '');
                 Object.keys(states).forEach((value, index) => {
                     if (country.toLowerCase().trim() === states[index].Country.toLowerCase().trim()) {
                         this.states.push(states[index].Name);
+                    }
+                });
+                if ( this.states.length === 0 ) {
+                    this.states.push('N/A');
+                    this.state = this.states[0];
+                }
+            },
+            async setIndustryType (channelType) {
+                this.industryTypeItems = [];
+                await this.$store.dispatch('setCurrentTable', 'Industry');
+                const industries = await this.$store.dispatch('getRecords', '');
+                Object.keys(industries).forEach((value, index) => {
+                    if (channelType.toLowerCase().trim() === industries[index].Channel.toLowerCase().trim()) {
+                        this.industryTypeItems.push(industries[index].Industry);
                     }
                 });
             }
