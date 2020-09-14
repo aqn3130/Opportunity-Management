@@ -18,11 +18,11 @@ const Route = use('Route')
 Route.group(function () {
   Route.on('/').render('welcome');
   Route.resource('opportunity','MainController').apiOnly();
-  Route.resource('SalesRep','MainController').apiOnly();
+  Route.resource('salesrep','MainController').apiOnly();
   Route.resource('product','MainController').apiOnly();
-  Route.resource('Country_Region_Territory','MainController').apiOnly();
-  Route.resource('States','MainController').apiOnly();
-  Route.resource('Industry','MainController').apiOnly();
+  Route.resource('country_region_territory','MainController').apiOnly();
+  Route.resource('states','MainController').apiOnly();
+  Route.resource('industry','MainController').apiOnly();
   Route.put('opportunity','MainController.update');
   Route.resource('revenue_account','MainController').apiOnly();
   Route.post('auth/login','AuthController.login');

@@ -13,6 +13,8 @@
             >
                 Opportunity Management: {{ $route.name }}
             </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn text class="text-lowercase" v-if="currentUser"><v-icon left>mdi-account-circle</v-icon>{{ currentUser.username }}</v-btn>
         </v-app-bar>
 
         <v-navigation-drawer

@@ -66,10 +66,11 @@ export default new Vuex.Store({
       commit('setLoading',false);
     },
     async createRecord({commit},data){
+      // console.log(data)
       commit('setLoading', true);
-      let created_at = new Date();
-      created_at = moment(created_at).format('YYYY-MM-DD h:mm:ss');
-      data.created_at = created_at;
+      let CreationDate = new Date();
+      CreationDate = moment(CreationDate).format('YYYY-MM-DD h:mm:ss');
+      data.CreationDate = CreationDate;
       await axios({
         method: "post",
         url: `${this.state.table}`,

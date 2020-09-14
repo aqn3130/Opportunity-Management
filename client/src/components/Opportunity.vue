@@ -1,161 +1,248 @@
 <template>
-    <v-container>
-        <v-form
-                ref="form"
-                v-model="valid"
-                lazy-validation
-        >
-            <v-row class="px-lg-10">
-                <v-col md="6">
-                    <v-text-field
-                            v-model="currentUser.username"
-                            :rules="nameRules"
-                            label="Sales Rep"
-                            required
-                            disabled
-                    ></v-text-field>
+    <v-container style="max-width: 900px" class="mb-auto mt-auto">
+<!--        <v-card>-->
+            <v-form
+                    ref="form"
+                    v-model="valid"
+                    lazy-validation
+            >
+                <v-row class="px-lg-10">
+                    <v-col md="6">
+                        <v-text-field
+                                v-model="currentUser.username"
+                                :rules="nameRules"
+                                label="Sales Rep"
+                                required
+                                disabled
+                        ></v-text-field>
 
-                    <v-text-field
-                            v-model="salesRepType"
-                            :rules="nameRules"
-                            label="Type"
-                            required
-                            disabled
-                    ></v-text-field>
-                    <v-menu
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="290px"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                    v-model="date"
-                                    label="Opportunity Start Date"
-                                    prepend-icon="event"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
-                    </v-menu>
+                        <v-text-field
+                                v-model="salesRepType"
+                                :rules="nameRules"
+                                label="Type"
+                                required
+                                disabled
+                        ></v-text-field>
+                        <v-menu
+                                v-model="menu"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                        v-model="date"
+                                        label="Opportunity Start Date"
+                                        prepend-icon="event"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
+                        </v-menu>
 
-                    <v-text-field
-                            v-model="opportunityName"
-                            :rules="nameRules"
-                            label="Opportunity Name"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            v-model="customerName"
-                            :rules="nameRules"
-                            label="Customer Name"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            v-model="bpId"
-                            :rules="nameRules"
-                            label="BP ID"
-                    ></v-text-field>
-                    <v-text-field
-                            v-model="memberOfConsortia"
-                            :rules="nameRules"
-                            label="Member Of Consortia"
-                    ></v-text-field>
-                    <v-select
-                            v-model="country"
-                            :items="countryItems"
-                            :rules="[v => !!v || 'Item is required']"
-                            label="Country"
-                            required
-                            @input="getStates(country)"
-                    ></v-select>
-                    <v-select
-                            v-model="state"
-                            :items="states"
-                            label="State"
-                            :disabled="state === 'N/A'"
-                    ></v-select>
-                    <v-select
-                            v-model="channelType"
-                            :rules="nameRules"
-                            label="Channel Type"
-                            :items="channelTypeItems"
-                            @input="setIndustryType(channelType)"
-                    ></v-select>
-                    <v-select
-                            v-model="industryType"
-                            :rules="nameRules"
-                            label="Institution/Industry Type"
-                            :items="industryTypeItems"
-                    ></v-select>
-                </v-col>
-                <v-col md="6">
-                    <v-text-field
-                            v-model="name"
-                            :counter="10"
-                            :rules="nameRules"
-                            label="Name"
-                            required
-                    ></v-text-field>
+                        <v-text-field
+                                v-model="opportunityName"
+                                :rules="nameRules"
+                                label="Opportunity Name *"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="customerName"
+                                :rules="nameRules"
+                                label="Customer Name *"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="bpId"
+                                :rules="bpIdRules"
+                                label="BP ID"
+                                v-if="bpId"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="bpId"
+                                label="BP ID"
+                                v-else
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="memberOfConsortia"
+                                :rules="nameRules"
+                                label="Member Of Consortia *"
+                        ></v-text-field>
+                        <v-select
+                                v-model="country"
+                                :items="countryItems"
+                                :rules="[v => !!v || 'This field is required']"
+                                label="Country *"
+                                required
+                                @input="getStates(country)"
+                        ></v-select>
+                        <v-select
+                                v-model="state"
+                                :items="states"
+                                label="State"
+                                :disabled="state === 'N/A'"
+                        ></v-select>
+                        <v-select
+                                v-model="channelType"
+                                :rules="nameRules"
+                                label="Channel Type *"
+                                :items="channelTypeItems"
+                                @input="setIndustryType(channelType)"
+                        ></v-select>
+                        <v-select
+                                v-model="industryType"
+                                :rules="nameRules"
+                                label="Industry/Institution Type *"
+                                :items="industryTypeItems"
+                        ></v-select>
+                    </v-col>
+                    <v-col md="6">
+                        <v-select
+                                v-model="origin"
+                                :items="originItems"
+                                :rules="[v => !!v || 'This field is required']"
+                                label="Origin *"
+                                required
+                        ></v-select>
+                        <v-text-field
+                                v-model="leadId"
+                                label="Lead ID"
+                                :disabled="origin !== 'Marketing'"
+                        ></v-text-field>
+                        <v-select
+                                v-model="status"
+                                :items="statusItems"
+                                label="Status"
+                                @input="onStatusChange(status)"
+                        ></v-select>
+                        <v-select
+                                v-model="salesStage"
+                                :items="salesStageItems"
+                                label="Sales Stage *"
+                                :rules="nameRules"
+                        ></v-select>
+                        <v-select
+                                v-model="lostOpportunityReason"
+                                :items="lostOpportunityReasonItems"
+                                label="Lost Opportunity Reason"
+                                :disabled="status !== 'Closed Lost'"
+                        ></v-select>
 
-                    <v-text-field
-                            v-model="email"
-                            :rules="emailRules"
-                            label="E-mail"
-                            required
-                    ></v-text-field>
+                        <v-text-field
+                                v-model="licenseId"
+                                :rules="licenseIdRules"
+                                label="License ID"
+                                required
+                                v-if="licenseId"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="licenseId"
+                                label="License ID"
+                                v-else
+                        ></v-text-field>
 
-                    <v-select
-                            v-model="select"
-                            :items="countryItems"
-                            :rules="[v => !!v || 'Item is required']"
-                            label="Item"
-                            required
-                    ></v-select>
+                        <v-select
+                                v-model="forecastCategory"
+                                :items="forecastCategoryItems"
+                                label="Forecast Category"
+                        ></v-select>
+                        <v-menu
+                                v-model="menu2"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                        v-model="expectedCloseDate"
+                                        label="Expected Close Date *"
+                                        prepend-icon="event"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        :rules="nameRules"
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="expectedCloseDate" @input="menu2 = false"></v-date-picker>
+                        </v-menu>
 
-                    <v-checkbox
-                            v-model="checkbox"
-                            :rules="[v => !!v || 'You must agree to continue!']"
-                            label="Do you agree?"
-                            required
-                    ></v-checkbox>
+                        <v-text-field
+                                v-model="agentName"
+                                label="Agent Name"
+                        ></v-text-field>
+                        <v-select
+                                v-model="currency"
+                                :items="currencyItems"
+                                label="Currency *"
+                                :rules="nameRules"
+                                required
+                        ></v-select>
 
-                    <v-btn
+                        <v-btn
                             :disabled="!valid"
-                            color="primary"
-                            class="mr-4"
+                            color="#607D8B"
+                            class="mr-4 mt-5"
                             @click="validate"
                             small
-                    >
-                        Save & Close
-                    </v-btn>
+                            :loading="loading"
+                            v-if="!valid"
+                        >
+                            Save & Close
+                        </v-btn>
+                        <v-btn
+                                color="#607D8B"
+                                class="mr-4 mt-5"
+                                @click="validate"
+                                small
+                                :loading="loading"
+                                v-else
+                                dark
+                        >
+                            Save & Close
+                        </v-btn>
 
-                    <v-btn
-                            color="primary"
-                            class="mr-4"
-                            @click="resetValidation"
+                        <v-btn
+                            :disabled="!valid"
+                            color="#607D8B"
+                            class="mr-4 mt-5"
+                            @click="validate"
+                            small
+                            v-if="!valid"
+                        >
+                            Save & Edit
+                        </v-btn>
+                        <v-btn
+                            v-else
+                            color="#607D8B"
+                            class="mr-4 mt-5"
+                            @click="validate"
                             dark
                             small
-                    >
-                        Save & Edit
-                    </v-btn>
 
-                    <v-btn
-                            color="primary"
-                            class="mr-4"
+                        >
+                            Save & Edit
+                        </v-btn>
+
+                        <v-btn
+                            color="#607D8B"
+                            class="mr-4 mt-5"
                             @click="reset"
                             dark
                             small
-                    >
-                        Cancel
-                    </v-btn>
-                </v-col>
-            </v-row>
-        </v-form>
+                            elevation="0"
+                        >
+                            Cancel
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-form>
+<!--        </v-card>-->
     </v-container>
 </template>
 
@@ -175,12 +262,22 @@
                 v => !!v || 'E-mail is required',
                 v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
             ],
+            bpIdRules: [
+                (v) => (v && v.length === 10) || "This field must be 10 numeric values",
+                (v) => /^[0-9]+$/.test(v) || "Numeric values only",
+            ],
+            licenseIdRules: [
+                (v) => (v && v.length === 5) || "This field must be 5 numeric values",
+                (v) => /^[0-9]+$/.test(v) || "Numeric values only",
+            ],
             select: null,
             countryItems: [],
             checkbox: false,
             salesRepType: null,
             date: new Date().toISOString().substr(0, 10),
+            expectedCloseDate: null,
             menu: false,
+            menu2: false,
             opportunityName: null,
             customerName: null,
             bpId: null,
@@ -191,17 +288,63 @@
             channelType: null,
             industryType: null,
             channelTypeItems: ['Academic', 'Corporate', 'Government'],
-            industryTypeItems: []
+            industryTypeItems: [],
+            origin: null,
+            originItems: ['Marketing', 'Sales Originated', 'Renewal'],
+            statusItems: ['In Process', 'Won', 'Closed Won', 'Closed Lost'],
+            status: 'In Process',
+            salesStageItems: [],
+            salesStage: null,
+            leadId: null,
+            lostOpportunityReason: null,
+            lostOpportunityReasonItems: [
+                'Already License a Competing Product',
+                'Cost / Price Too High',
+                'Budget Constraints',
+                'No Demand',
+                'Not Interested',
+                'Opportunity merged or duplicated',
+                'Purchased via another channel',
+                'Sale to be handled by SCSC',
+                'Wrong Timing',
+                'Other'
+            ],
+            licenseId: null,
+            forecastCategory: null,
+            forecastCategoryItems: ['Pipeline', 'Committed', 'Best Case'],
+            agentName: null,
+            currency: null,
+            currencyItems: ['EUR', 'USD', 'GBP', 'JPY', 'AUD']
         }),
         props: {
             salesRep: String
         },
         methods: {
+            getFormData() {
+                const data_map = new Map();
+                for (let i in this.$refs.form._data.inputs) {
+                    let formLable = this.$refs.form._data.inputs[i].label.replace("*", "").replace(/ /g, "").trim();
+                    if ( formLable === 'Industry/InstitutionType' ) formLable = 'IndustryType';
+                    let formValue = this.$refs.form._data.inputs[i].value;
+                    data_map.set(formLable, formValue);
+                }
+                return Object.fromEntries(data_map);
+            },
+            async saveNewOpportunity (newOpportunity) {
+                // console.log(newOpportunity);
+                await this.$store.dispatch('setCurrentTable', 'Opportunity');
+                await this.$store.dispatch('createRecord', newOpportunity);
+                await this.$router.push({name: 'Dashboard'});
+            },
             validate () {
-                this.$refs.form.validate()
+                if ( this.$refs.form.validate() ) {
+                    this.saveNewOpportunity(this.getFormData())
+                }
+
             },
             reset () {
-                this.$refs.form.reset()
+                // this.$refs.form.reset()
+                this.$refs.form.resetValidation()
             },
             resetValidation () {
                 this.$refs.form.resetValidation()
@@ -230,12 +373,46 @@
                         this.industryTypeItems.push(industries[index].Industry);
                     }
                 });
+            },
+            onStatusChange (status) {
+                const tempArray = [
+                    '1 - Prospect / Lead',
+                    '2 - Pre-Qualification',
+                    '3 - Qualified',
+                    '4 - Needs Assessment',
+                    '5 - Product Evaluation',
+                    '6 - Proposal Sent',
+                    '7 - Negotiating Commercial',
+                    '8 - Negotiating LC/Legal',
+                    '9 - Final Terms Accepted',
+                    '10 - License Delivered to Customer'
+                ];
+                const won = ['11 - License Agreement Signed'];
+                const closedWon = ['14 - Customer Invoiced'];
+                this.lostOpportunityReason = null;
+                if ( status === 'Won' ) {
+                    this.salesStageItems = won;
+                    this.salesStage = this.salesStageItems[0];
+                }
+                else if ( status === 'Closed Won' ) {
+                    this.salesStageItems = closedWon;
+                    this.salesStage = this.salesStageItems[0];
+                }
+                else if ( status === 'Closed Lost' ) {
+                    this.salesStageItems = tempArray;
+                    // this.salesStage = null;
+                }
+                else {
+                    this.salesStageItems = tempArray;
+                }
             }
         },
         computed: {
             ...mapState('auth', ['currentUser']),
+            ...mapState(['loading'])
         },
         async created() {
+            this.onStatusChange(this.status);
             await this.$store.dispatch('setCurrentTable', 'SalesRep');
             const response = await this.$store.dispatch('getSalesRep', this.currentUser.email);
             this.salesRepType = response[0].Type;

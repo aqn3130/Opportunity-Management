@@ -77,9 +77,11 @@ class MainController {
    */
   async store ({ request, response }) {
     const { data } = request.all();
-    // console.log(data);
-    await request.Table.insert(data);
-    // await request.table_MaterialCode.insert(data);
+    try {
+      await request.Knex.table(request.Table).insert(data);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
