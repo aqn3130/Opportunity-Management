@@ -17,7 +17,7 @@
     "npm": ">=6.4.1"
   },
   "author": "Ahmad Qurbanzada",
-  "license": "UNLICENSED",
+  "license": "PRIVATE",
   "private": true,
   "dependencies": {
     "@adonisjs/ace": "^5.0.8",
@@ -34,7 +34,9 @@
     "knex": "^0.20.8",
     "mysql": "^2.18.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^7.9.0"
+  },
   "autoload": {
     "App": "./app"
   }

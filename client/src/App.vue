@@ -1,32 +1,27 @@
 <template>
   <v-app>
-    <NavBar v-if="currentUser"/>
-    <v-content>
-<!--      <v-container fluid>-->
-<!--    <v-main>-->
+    <NavBar v-if="currentUser" />
+    <v-content style="background-color: #eceff1">
       <router-view></router-view>
-<!--    </v-main>-->
-<!--      </v-container>-->
     </v-content>
     <v-footer app></v-footer>
   </v-app>
 </template>
 
 <script>
-import NavBar from './components/Navbar';
-import {mapState} from "vuex";
+import NavBar from "./components/Navbar";
+import { mapState } from "vuex";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     NavBar
   },
 
-  data: () => ({
-  }),
-    computed: {
-      ...mapState('auth', ['currentUser'])
-    }
+  data: () => ({}),
+  computed: {
+    ...mapState("auth", ["currentUser"])
+  }
 };
 </script>

@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 // import axios from 'axios'
-import axios from '../plugins/axios'
-import moment from 'moment'
-import auth from './auth'
-import user from "./user";
+import axios from '../plugins/axios';
+import moment from 'moment';
+import auth from './auth';
+import user from './user';
 
 Vue.use(Vuex);
 
@@ -13,80 +13,84 @@ export default new Vuex.Store({
     table: null,
     userData: [],
     loading: false,
-    opportunityId: null
+    opportunityId: null,
+    opportunity: null
   },
   mutations: {
-    setTable(state,value){
+    setTable(state, value) {
       state.table = value;
     },
-    setData(state,data){
+    setData(state, data) {
       state.userData = data;
     },
-    setLoading(state,value){
+    setLoading(state, value) {
       state.loading = value;
     },
-    setOppId(state,id){
+    setOppId(state, id) {
       state.opportunityId = id;
     },
+    setOpp(state, opp) {
+      state.opportunity = opp;
+    }
   },
   actions: {
-    async setCurrentTable({commit},table){
+    async setCurrentTable({ commit }, table) {
       await commit('setTable', table);
     },
-    async getRecords({commit}, id){
+    async getRecords({ commit }, id) {
       commit('setLoading', true);
-      const { data } = (await axios.get(`${this.state.table}?id=${id}`));
+      const { data } = await axios.get(`${this.state.table}?id=${id}`);
       // const { data } = (await axios.get('/api/' + this.state.table));
       // commit('setData', data);
       commit('setLoading', false);
       return data;
     },
-    async updateRecord({commit},data){
+    async updateRecord({ commit }, data) {
       commit('setLoading', true);
       const { id } = data;
       let updated_date = new Date();
       updated_date = moment(updated_date).format('YYYY-MM-DD h:mm:ss');
       data.updated_at = updated_date;
       await axios({
-        method: "post",
+        method: 'post',
         url: `${this.state.table}?_method=PUT`,
         data: {
           data: data,
           id: id
         }
       });
-      commit('setLoading',false);
+      commit('setLoading', false);
     },
-    async deleteRecord({commit},id){
+    async deleteRecord({ commit }, id) {
       commit('setLoading', true);
       await axios({
-        method: "delete",
+        method: 'delete',
         url: `${this.state.table}/${id}`
       });
-      commit('setLoading',false);
+      commit('setLoading', false);
     },
-    async createRecord({commit},data){
+    async createRecord({ commit }, data) {
       // console.log(data)
       commit('setLoading', true);
       let CreationDate = new Date();
       CreationDate = moment(CreationDate).format('YYYY-MM-DD h:mm:ss');
       data.CreationDate = CreationDate;
       await axios({
-        method: "post",
+        method: 'post',
         url: `${this.state.table}`,
         data: {
           data: data
         }
       });
-      commit('setLoading',false);
+      commit('setLoading', false);
     },
-    async getSalesRep({commit}, email){
-      const { data } = (await axios.get(`${this.state.table}?email=${email}`));
+    async getSalesRep(ctx, email) {
+      const { data } = await axios.get(`${this.state.table}?email=${email}`);
       return data;
-    },
+    }
   },
   modules: {
     auth,
     user
   }
-})
+});
