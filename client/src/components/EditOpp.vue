@@ -9,7 +9,7 @@
       tile
       color="#ffffff"
       light
-      :style="{ paddingLeft: '200px', paddingRight: '200px' }"
+      :style="{ paddingLeft: '100px', paddingRight: '100px' }"
     >
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row style="padding: 15px 20px 25px 20px">
@@ -255,114 +255,124 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-card tile>
-      <v-list dense>
-        <v-list-item-group v-model="productItem" color="primary">
-          <v-list-item v-for="(item, i) in productItems" :key="i" two-line>
-            <v-list-item-content class="mr-2">
-              <v-select
-                :items="item.cryItems"
-                v-model="item.cry"
-                label="CRY"
-              ></v-select>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2 mr-2">
-              <v-select
-                :items="item.TOBItems"
-                v-model="item.tob"
-                label="Type of Business"
-              ></v-select>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2 mr-2">
-              <v-select
-                :items="item.products"
-                v-model="item.productName"
-                label="Product Name"
-              ></v-select>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2 mr-2">
-              <v-text-field
-                v-model="item.productDescription"
-                label="Product Description"
-              ></v-text-field>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2 mr-2">
-              <v-menu
-                v-model="menu3"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+      <v-form ref="productForm" v-model="productValid" lazy-validation>
+        <v-list dense>
+          <v-list-item-group v-model="productItem" color="primary">
+            <v-list-item v-for="(item, i) in productItems" :key="i" two-line>
+              <v-list-item-content class="mr-2">
+                <v-select
+                  :items="item.cryItems"
+                  v-model="item.cry"
+                  label="CRY"
+                  :rules="nameRules"
+                ></v-select>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2 mr-2">
+                <v-select
+                  :items="item.TOBItems"
+                  v-model="item.tob"
+                  label="Type of Business"
+                  :rules="nameRules"
+                ></v-select>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2 mr-2">
+                <v-select
+                  :items="item.products"
+                  v-model="item.productName"
+                  label="Product Name"
+                  :rules="nameRules"
+                ></v-select>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2 mr-2">
+                <v-text-field
+                  v-model="item.productDescription"
+                  label="Product Description"
+                ></v-text-field>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2 mr-2">
+                <v-menu
+                  v-model="menu3"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="item.licenseStartDate"
+                      label="License Start Date"
+                      prepend-icon="event"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      :rules="nameRules"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
                     v-model="item.licenseStartDate"
-                    label="License Start Date"
-                    prepend-icon="event"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    :rules="nameRules"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="item.licenseStartDate"
-                  @input="menu3 = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2 mr-2">
-              <v-menu
-                v-model="menu4"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+                    @input="menu3 = false"
+                  ></v-date-picker>
+                </v-menu>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2 mr-2">
+                <v-menu
+                  v-model="menu4"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="item.licenseEndDate"
+                      label="License End Date"
+                      prepend-icon="event"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      :rules="nameRules"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
                     v-model="item.licenseEndDate"
-                    label="License End Date"
-                    prepend-icon="event"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    :rules="nameRules"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="item.licenseEndDate"
-                  @input="menu4 = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2 mr-2">
-              <v-select
-                :items="likelihood"
-                v-model="item.likelihood"
-                label="Likelihood"
-              ></v-select>
-            </v-list-item-content>
-            <v-list-item-content class="">
-              <v-checkbox v-model="item.agent" label="Agent"></v-checkbox>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2 mr-2">
-              <v-select
-                :items="agentDiscountOptions"
-                v-model="item.agentDiscount"
-                label="Agent Discount"
-              ></v-select>
-            </v-list-item-content>
-            <v-list-item-content class="ml-2">
-              <v-text-field
-                v-model="item.grossValue"
-                label="Gross Value"
-              ></v-text-field>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
+                    @input="menu4 = false"
+                  ></v-date-picker>
+                </v-menu>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2 mr-2">
+                <v-select
+                  :items="likelihood"
+                  v-model="item.likelihood"
+                  label="Likelihood"
+                  :rules="nameRules"
+                ></v-select>
+              </v-list-item-content>
+              <v-list-item-content class="">
+                <v-checkbox v-model="item.agent" label="Agent"></v-checkbox>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2 mr-2">
+                <v-select
+                  :items="agentDiscountOptions"
+                  v-model="item.agentDiscount"
+                  label="Agent Discount"
+                ></v-select>
+              </v-list-item-content>
+              <v-list-item-content class="ml-2">
+                <v-text-field
+                  v-model="item.grossValue"
+                  label="Gross Value"
+                  :rules="nameRules"
+                ></v-text-field>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-form>
+    </v-card>
+    <v-card>
+      <v-btn block @click="addProduct" class="mt-1">+ Add Product</v-btn>
     </v-card>
   </v-container>
 </template>
@@ -376,6 +386,7 @@ export default {
   data: () => ({
     title: 'Edit Opportunity',
     valid: true,
+    productValid: true,
     name: '',
     nameRules: [v => !!v || 'This field is required'],
     email: '',
@@ -640,6 +651,30 @@ export default {
       return moment(date)
         .utc()
         .format(format);
+    },
+    addProduct() {
+      const product = {
+        cryItems: this.cryOptions,
+        TOBItems: this.typeOfBusinessOptions,
+        cry: null,
+        tob: null,
+        products: this.products,
+        productName: null,
+        productDescription: null,
+        licenseStartDate: null,
+        licenseEndDate: null,
+        likelihood: null,
+        agent: null,
+        agentDiscount: null,
+        grossValue: null
+      };
+      if ( this.productItems[this.productItems.length - 1].cry === null ) {
+        if (this.$refs.productForm.validate()){
+          this.productItems.push(product);
+        }
+      } else {
+        this.productItems.push(product);
+      }
     }
   },
   computed: {
