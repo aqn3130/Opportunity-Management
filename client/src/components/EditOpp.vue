@@ -197,7 +197,7 @@
               :loading="newOppLoading"
               v-if="!valid"
             >
-              Save & Close
+              Save
             </v-btn>
             <v-btn
               color="#607D8B"
@@ -208,32 +208,8 @@
               v-else
               dark
             >
-              Save & Close
+              Save
             </v-btn>
-
-            <v-btn
-              :disabled="!valid"
-              color="#607D8B"
-              class="mr-4 mt-5"
-              @click="validate"
-              small
-              v-if="!valid"
-              :loading="newOppLoading"
-            >
-              Save & Edit
-            </v-btn>
-            <v-btn
-              v-else
-              color="#607D8B"
-              class="mr-4 mt-5"
-              @click="validate"
-              dark
-              small
-              :loading="newOppLoading"
-            >
-              Save & Edit
-            </v-btn>
-
             <v-btn
               color="#607D8B"
               class="mr-4 mt-5"
@@ -259,37 +235,42 @@
         <v-list dense>
           <v-list-item-group v-model="productItem" color="primary">
             <v-list-item v-for="(item, i) in productItems" :key="i" two-line>
-              <v-list-item-content class="mr-2">
+              <v-list-item-content class="">
                 <v-select
                   :items="item.cryItems"
                   v-model="item.cry"
                   label="CRY"
                   :rules="nameRules"
+                  class="body-2"
+                  :style="{ maxWidth: '80px' }"
                 ></v-select>
               </v-list-item-content>
-              <v-list-item-content class="ml-2 mr-2">
+              <v-list-item-content class="mr-2 ml-n5">
                 <v-select
                   :items="item.TOBItems"
                   v-model="item.tob"
                   label="Type of Business"
                   :rules="nameRules"
+                  class="body-2"
                 ></v-select>
               </v-list-item-content>
-              <v-list-item-content class="ml-2 mr-2">
+              <v-list-item-content class="mr-2">
                 <v-select
                   :items="item.products"
                   v-model="item.productName"
                   label="Product Name"
                   :rules="nameRules"
+                  class="body-2"
                 ></v-select>
               </v-list-item-content>
-              <v-list-item-content class="ml-2 mr-2">
+              <v-list-item-content class="">
                 <v-text-field
                   v-model="item.productDescription"
                   label="Product Description"
+                  class="body-2"
                 ></v-text-field>
               </v-list-item-content>
-              <v-list-item-content class="ml-2 mr-2">
+              <v-list-item-content class="ml-2">
                 <v-menu
                   v-model="menu3"
                   :close-on-content-click="false"
@@ -307,6 +288,7 @@
                       v-bind="attrs"
                       v-on="on"
                       :rules="nameRules"
+                      class="body-2"
                     ></v-text-field>
                   </template>
                   <v-date-picker
@@ -315,7 +297,7 @@
                   ></v-date-picker>
                 </v-menu>
               </v-list-item-content>
-              <v-list-item-content class="ml-2 mr-2">
+              <v-list-item-content class="ml-2">
                 <v-menu
                   v-model="menu4"
                   :close-on-content-click="false"
@@ -333,6 +315,7 @@
                       v-bind="attrs"
                       v-on="on"
                       :rules="nameRules"
+                      class="body-2"
                     ></v-text-field>
                   </template>
                   <v-date-picker
@@ -347,16 +330,18 @@
                   v-model="item.likelihood"
                   label="Likelihood"
                   :rules="nameRules"
+                  class="body-2"
                 ></v-select>
               </v-list-item-content>
-              <v-list-item-content class="">
-                <v-checkbox v-model="item.agent" label="Agent"></v-checkbox>
+              <v-list-item-content>
+                <v-checkbox v-model="item.agent" label="Agent" dense></v-checkbox>
               </v-list-item-content>
-              <v-list-item-content class="ml-2 mr-2">
+              <v-list-item-content class="ml-n5">
                 <v-select
                   :items="agentDiscountOptions"
                   v-model="item.agentDiscount"
                   label="Agent Discount"
+                  class="body-2"
                 ></v-select>
               </v-list-item-content>
               <v-list-item-content class="ml-2">
@@ -364,8 +349,10 @@
                   v-model="item.grossValue"
                   label="Gross Value"
                   :rules="nameRules"
+                  class="body-2"
                 ></v-text-field>
               </v-list-item-content>
+              <v-btn icon small @click="deleteProduct(item)"><v-icon small>delete</v-icon></v-btn>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -531,27 +518,42 @@ export default {
         let formValue = this.$refs.form._data.inputs[i].value;
         data_map.set(formLable, formValue);
       }
+      data_map.set('id', this.opportunityId);
       return Object.fromEntries(data_map);
     },
-    async saveNewOpportunity(newOpportunity) {
-      // console.log(newOpportunity);
+    async updateOpportunity(currentOpportunity) {
+      // console.log(currentOpportunity);
       this.newOppLoading = true;
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
-      await this.$store.dispatch('createRecord', newOpportunity);
-      this.$toast.open({
-        message: 'New Opportunity Created',
-        type: 'success',
-        duration: 2000,
-        dismissible: true,
-        onClose: () => {
-          this.$router.push({ name: 'Dashboard' });
-          this.newOppLoading = false;
-        }
-      });
+      try {
+        await this.$store.dispatch('updateRecord', currentOpportunity);
+        this.$toast.open({
+          message: 'Opportunity Updated',
+          type: 'success',
+          duration: 2000,
+          dismissible: true,
+          onClose: () => {
+            this.$router.push({ name: 'Dashboard' });
+            this.newOppLoading = false;
+          }
+        });
+      } catch (e) {
+        this.$toast.open({
+          message: 'Update failed please contact system Admin',
+          type: 'error',
+          duration: 3000,
+          dismissible: true,
+          onClose: () => {
+            this.$router.push({ name: 'Dashboard' });
+            this.newOppLoading = false;
+          }
+        });
+      }
+
     },
     async validate() {
       if (this.$refs.form.validate()) {
-        await this.saveNewOpportunity(this.getFormData());
+        await this.updateOpportunity(this.getFormData());
       }
     },
     reset() {
@@ -626,6 +628,7 @@ export default {
       const data = await this.$store.dispatch('getRecords', this.opportunityId);
       Object.keys(data).forEach(key => {
         const product = {
+          id: data[key].Id,
           cryItems: this.cryOptions,
           TOBItems: this.typeOfBusinessOptions,
           cry: data[key].CRY,
@@ -668,12 +671,20 @@ export default {
         agentDiscount: null,
         grossValue: null
       };
-      if ( this.productItems[this.productItems.length - 1].cry === null ) {
-        if (this.$refs.productForm.validate()){
+      if (this.productItems[this.productItems.length - 1].cry === null) {
+        if (this.$refs.productForm.validate()) {
           this.productItems.push(product);
         }
       } else {
         this.productItems.push(product);
+      }
+    },
+    deleteProduct(item){
+      // console.log(item);
+      if (this.productItems[this.productItems.length - 1].cry === null) {
+        this.productItems.splice(this.productItems.length - 1);
+      } else {
+
       }
     }
   },

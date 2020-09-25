@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="userData"
+    :items="rows"
     sort-by="calories"
     class="elevation-1"
   >
@@ -54,13 +54,16 @@ export default {
   },
 
   async created() {
-    await this.$store.dispatch("setCurrentTable", "SalesRep");
     await this.getRecords();
+    window.BUS.$on('user-added', async () => {
+      await this.getRecords();
+    });
   },
 
   methods: {
     getRecords: async function() {
-      const data = await this.$store.dispatch("getRecords");
+      await this.$store.dispatch("setCurrentTable", "users");
+      const data = await this.$store.dispatch("getRecords", '');
       this.rows = data;
     },
 
@@ -72,7 +75,7 @@ export default {
 
     async deleteItem(item) {
       await this.$store.dispatch("deleteRecord", item.id);
-      this.getRecords();
+      await this.getRecords();
     },
 
     close() {

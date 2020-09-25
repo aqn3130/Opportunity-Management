@@ -1,38 +1,8 @@
 <template>
   <v-card>
-    <!--        <v-container fluid>-->
-    <!--            <v-row-->
-    <!--                    align="center"-->
-    <!--            >-->
-    <!--                <v-col cols="12" sm="6">-->
-    <!--                    <v-select-->
-    <!--                            v-model="value"-->
-    <!--                            :items="users"-->
-    <!--                            chips-->
-    <!--                            label="User Selection"-->
-    <!--                            multiple-->
-    <!--                            outlined-->
-    <!--                            @input="getUsers"-->
-    <!--                    ></v-select>-->
-    <!--                </v-col>-->
-    <!--            </v-row>-->
-    <!--        </v-container>-->
     <v-container>
-      <!--<v-card-text>-->
-      <!--    <v-text-field :value="username" @change="getUsers" label="Enter user name"></v-text-field>-->
-
-      <!--    <v-combobox-->
-      <!--            :value="name"-->
-      <!--            :items="users"-->
-      <!--            label="Select user to add"-->
-      <!--            multiple-->
-      <!--            @change=""-->
-      <!--    ></v-combobox>-->
-      <!--</v-card-text>-->
-
-      <v-card max-width="400" class="mx-auto">
-        <v-toolbar color="indigo" dark>
-          <!--                    <v-toolbar-title>Users</v-toolbar-title>-->
+      <v-card max-width="400" class="mx-auto" flat>
+        <v-toolbar flat>
           <v-text-field
             class="mt-5"
             :value="username"
@@ -67,10 +37,6 @@
             <v-list-item-content>
               <v-list-item-title v-text="item.text"></v-list-item-title>
             </v-list-item-content>
-
-            <!--                        <v-list-item-avatar>-->
-            <!--                            <v-img :src="item.avatar"></v-img>-->
-            <!--                        </v-list-item-avatar>-->
             <v-list-item-action>
               <v-btn text>
                 Add
@@ -87,18 +53,6 @@ import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   data() {
     return {
-      // select: ['Vuetify', 'Programming'],
-      // items: [
-      //     'Programming',
-      //     'Design',
-      //     'Vue',
-      //     'Vuetify',
-      // ],
-
-      // items: [
-      //     { icon: true, title: 'Jason Oner', avatar: '' },
-      //
-      // ],
       selected: []
     };
   },
@@ -113,10 +67,7 @@ export default {
     async add(user) {
       this.setUser(user);
       await this.addUser();
-
-      // await this.setUsers([]);
-      // this.setName(null);
-      // console.log(this.selected);
+      window.BUS.$emit('user-added');
     }
   },
   computed: {

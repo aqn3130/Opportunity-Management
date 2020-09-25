@@ -1,4 +1,4 @@
-import axios from "../plugins/axios";
+import axios from '../plugins/axios';
 export default {
   namespaced: true,
   state: {
@@ -32,44 +32,44 @@ export default {
   },
   actions: {
     async searchUser({ commit, state }) {
-      commit("setLoading", true);
+      commit('setLoading', true);
       await axios({
-        method: "get",
+        method: 'get',
         url: `user/${state.username}`
       })
         .then(async function({ data }) {
           // console.log(data);
-          await commit("setUsers", data);
-          commit("setLoading", false);
+          await commit('setUsers', data);
+          commit('setLoading', false);
         })
         .catch(function(e) {
           console.log(e);
-          commit("setSearchError", e);
-          commit("setLoading", false);
+          commit('setSearchError', e);
+          commit('setLoading', false);
         });
     },
     async addUser({ commit, state }) {
-      commit("setLoading", true);
-      commit("setUserAdded", false);
+      commit('setLoading', true);
+      commit('setUserAdded', false);
       await axios({
-        method: "get",
+        method: 'get',
         url: `add-user/${state.user}`
       })
         .then(function() {
-          commit("setUsers", []);
-          commit("setLoading", false);
-          commit("setUserAdded", true);
+          commit('setUsers', []);
+          commit('setLoading', false);
+          commit('setUserAdded', true);
         })
         .catch(function(e) {
           console.log(e);
-          commit("setLoading", false);
+          commit('setLoading', false);
         });
     },
     async resetSearch({ commit }) {
-      commit("setLoading", true);
-      commit("setName", null);
-      await commit("setUsers", []);
-      commit("setLoading", false);
+      commit('setLoading', true);
+      commit('setName', null);
+      await commit('setUsers', []);
+      commit('setLoading', false);
     }
     // async getUsers({ commit, state }) {
     //     const { data } = (await axios.get(this.state.table));

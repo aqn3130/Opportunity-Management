@@ -24,6 +24,7 @@ Route.group(function () {
   Route.resource('country_region_territory','MainController').apiOnly();
   Route.resource('states','MainController').apiOnly();
   Route.resource('industry','MainController').apiOnly();
+  Route.resource('users','MainController').apiOnly();
   Route.put('opportunity','MainController.update');
   Route.resource('revenue_account','MainController').apiOnly();
   Route.post('auth/login','AuthController.login');

@@ -20,16 +20,6 @@ class MainController {
   async index ({ request, response, view }) {
     const params = request.all();
     try {
-      // return await request.Knex.select('*').from(request.Table)
-
-      // return await request.Knex.select('*').from(request.Table).join('Product', function() {
-      //   this.on('Opportunity.Id', '=', 'Product.Opportunity_fk').orOn('Opportunity.Id', '=', 'Product.Opportunity_fk')
-      // })
-
-      // return await request.Knex.table(request.Table)
-      //   .join('Product', 'Opportunity.Id', '=', 'Product.Opportunity_fk')
-      //   .groupBy('Product.Id')
-
       let query = undefined;
       if (params.id) {
         query = await request.Knex.select('*')
@@ -46,9 +36,6 @@ class MainController {
         query = request.Knex.select('*').from(request.Table)
       }
       return query;
-
-      // return await request.Knex.select('*').from('Product').joinRaw('Opportunity').where('Opportunity_fk', 1)
-
     } catch (e) {
       throw e;
     }
@@ -119,13 +106,8 @@ class MainController {
    */
   async update ({ params, request, response }) {
     const { id , data } = request.all();
-    const rec = await request.Table.where({ id: id });
-
-    data.created_at = rec.created_at;
-
-    const updatedId = await request.Table.where({ id: id })
-      .update(data)
-    // console.log(updatedId);
+    await request.Knex.select('*').from(request.Table).where({ id: id }).update(data)
+    // console.log(rec);
   }
 
   /**
@@ -138,8 +120,7 @@ class MainController {
    */
   async destroy ({ params, request, response }) {
     const id = params.id;
-    await request.Table.where({ id: id }).delete()
-    // await request.table_MaterialCode.where({ id: id }).delete()
+    await request.Knex(request.Table).where({ id: id }).delete()
   }
 }
 
