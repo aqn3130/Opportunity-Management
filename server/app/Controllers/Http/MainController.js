@@ -38,7 +38,7 @@ class MainController {
         const pageInt = parseInt(page);
         const perPageInt = parseInt(perPage);
         let total = await request.Knex.select('*').from(request.Table);
-        if (!page) {
+        if (!params.page) {
           return total;
         }
         total = total.length;
@@ -122,6 +122,7 @@ class MainController {
    */
   async update ({ params, request, response }) {
     const { id , data } = request.all();
+    if (request.Table === 'Product') delete data.updated_at;
     await request.Knex.select('*').from(request.Table).where({ id: id }).update(data)
     // console.log(rec);
   }

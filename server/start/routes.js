@@ -26,6 +26,7 @@ Route.group(function () {
   Route.resource('industry','MainController').apiOnly();
   Route.resource('users','MainController').apiOnly();
   Route.put('opportunity','MainController.update');
+  Route.put('product','MainController.update');
   Route.resource('revenue_account','MainController').apiOnly();
   Route.post('auth/login','AuthController.login');
   Route.get('user/:name','AuthController.fetchUsers');

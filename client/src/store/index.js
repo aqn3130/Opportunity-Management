@@ -54,6 +54,7 @@ export default new Vuex.Store({
       return data;
     },
     async updateRecord({ commit }, data) {
+      // console.log(data);
       commit('setLoading', true);
       const { id } = data;
       let updated_date = new Date();

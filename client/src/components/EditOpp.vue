@@ -553,6 +553,7 @@ export default {
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
       try {
         await this.$store.dispatch('updateRecord', currentOpportunity);
+        await this.updateProduct();
         this.$toast.open({
           message: 'Opportunity Updated',
           type: 'success',
@@ -564,6 +565,7 @@ export default {
           }
         });
       } catch (e) {
+        console.log(e);
         this.$toast.open({
           message: 'Update failed please contact system Admin',
           type: 'error',
@@ -576,6 +578,16 @@ export default {
         });
       }
 
+    },
+    async updateProduct() {
+      await this.$store.dispatch('setCurrentTable', 'Product');
+      for (const key of Object.keys(this.productItems)) {
+        delete this.productItems[key].cryItems;
+        delete this.productItems[key].products;
+        delete this.productItems[key].TOBItems;
+        console.log(this.productItems[key]);
+        await this.$store.dispatch('updateRecord', this.productItems[key]);
+      }
     },
     async validate() {
       if (this.$refs.form.validate()) {
@@ -654,11 +666,12 @@ export default {
       const data = await this.$store.dispatch('getRecords', this.opportunityId);
       Object.keys(data).forEach(key => {
         const product = {
+          opportunity_fk: data[key].Opportunity_fk,
           id: data[key].Id,
           cryItems: this.cryOptions,
           TOBItems: this.typeOfBusinessOptions,
           cry: data[key].CRY,
-          tob: data[key].TypeOfBusiness,
+          typeOfBusiness: data[key].TypeOfBusiness,
           products: this.products,
           productName: data[key].ProductName,
           productDescription: data[key].ProductDescription,
@@ -670,8 +683,8 @@ export default {
           grossValue: data[key].GrossValue
         };
         this.productItems.push(product);
-        // console.log('products', product);
       });
+      // console.log('productItems', this.productItems);
     },
     formatDate(date) {
       if (!date) return '';
