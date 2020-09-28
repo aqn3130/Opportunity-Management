@@ -33,7 +33,24 @@ class MainController {
           .where('Email', params.email)
       }
       else {
-        query = request.Knex.select('*').from(request.Table)
+        let total = await request.Knex.select('*').from(request.Table);
+        if (!params.page) {
+          return total;
+        }
+
+        total = total.length;
+        let page = params.page || 0;
+        const perPage = params.perPage || 10;
+        const pageInt = parseInt(page);
+        const perPageInt = parseInt(perPage);
+        if ( pageInt === 1 ) page = 0;
+        const offset = pageInt * perPageInt - perPageInt;
+        query = await request.Knex.select('*').from(request.Table).limit(perPage).offset(offset);
+        // console.log(page, offset);
+        return {
+          totalOpts: total,
+          opts: query
+        }
       }
       return query;
     } catch (e) {

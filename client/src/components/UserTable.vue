@@ -20,7 +20,7 @@
   </v-data-table>
 </template>
 <script>
-import { mapState } from "vuex";
+  import {mapMutations, mapState} from "vuex";
 export default {
   data: () => ({
     dialog: false,
@@ -54,6 +54,7 @@ export default {
   },
 
   async created() {
+
     await this.getRecords();
     window.BUS.$on('user-added', async () => {
       await this.getRecords();
@@ -61,7 +62,11 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      setPage: 'setPage'
+    }),
     getRecords: async function() {
+      this.setPage('');
       await this.$store.dispatch("setCurrentTable", "users");
       const data = await this.$store.dispatch("getRecords", '');
       this.rows = data;

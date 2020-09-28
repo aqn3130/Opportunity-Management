@@ -9,7 +9,7 @@
       tile
       color="#ffffff"
       light
-      :style="{ paddingLeft: '100px', paddingRight: '100px' }"
+      :style="{ paddingLeft: '200px', paddingRight: '200px' }"
     >
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row style="padding: 15px 20px 25px 20px">
@@ -20,6 +20,7 @@
               label="Sales Rep"
               required
               disabled
+              class="body-2"
             ></v-text-field>
             <v-text-field
               v-model="salesRepType"
@@ -27,6 +28,7 @@
               label="Type"
               required
               disabled
+              class="body-2"
             ></v-text-field>
             <v-menu
               v-model="menu"
@@ -35,6 +37,7 @@
               transition="scale-transition"
               offset-y
               min-width="290px"
+              class="body-2"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -44,6 +47,7 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
+                  class="body-2"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -57,24 +61,28 @@
               :rules="nameRules"
               label="Opportunity Name *"
               required
+              class="body-2"
             ></v-text-field>
             <v-text-field
               v-model="customerName"
               :rules="nameRules"
               label="Customer Name *"
               required
+              class="body-2"
             ></v-text-field>
             <v-text-field
               v-model="bpId"
               :rules="bpIdRules"
               label="BP ID"
               v-if="bpId"
+              class="body-2"
             ></v-text-field>
             <v-text-field v-model="bpId" label="BP ID" v-else></v-text-field>
             <v-text-field
               v-model="memberOfConsortia"
               :rules="nameRules"
               label="Member Of Consortia *"
+              class="body-2"
             ></v-text-field>
             <v-select
               v-model="country"
@@ -83,12 +91,14 @@
               label="Country *"
               required
               @input="getStates(country)"
+              class="body-2"
             ></v-select>
             <v-select
               v-model="state"
               :items="states"
               label="State"
               :disabled="state === 'N/A'"
+              class="body-2"
             ></v-select>
             <v-select
               v-model="channelType"
@@ -96,12 +106,14 @@
               label="Channel Type *"
               :items="channelTypeItems"
               @input="setIndustryType(channelType)"
+              class="body-2"
             ></v-select>
             <v-select
               v-model="industryType"
               :rules="nameRules"
               label="Industry/Institution Type *"
               :items="industryTypeItems"
+              class="body-2"
             ></v-select>
           </v-col>
           <v-col md="6">
@@ -111,29 +123,34 @@
               :rules="[v => !!v || 'This field is required']"
               label="Origin *"
               required
+              class="body-2"
             ></v-select>
             <v-text-field
               v-model="leadId"
               label="Lead ID"
               :disabled="origin !== 'Marketing'"
+              class="body-2"
             ></v-text-field>
             <v-select
               v-model="status"
               :items="statusItems"
               label="Status"
               @input="onStatusChange(status)"
+              class="body-2"
             ></v-select>
             <v-select
               v-model="salesStage"
               :items="salesStageItems"
               label="Sales Stage *"
               :rules="nameRules"
+              class="body-2"
             ></v-select>
             <v-select
               v-model="lostOpportunityReason"
               :items="lostOpportunityReasonItems"
               label="Lost Opportunity Reason"
               :disabled="status !== 'Closed Lost'"
+              class="body-2"
             ></v-select>
 
             <v-text-field
@@ -142,17 +159,20 @@
               label="License ID"
               required
               v-if="licenseId"
+              class="body-2"
             ></v-text-field>
             <v-text-field
               v-model="licenseId"
               label="License ID"
               v-else
+              class="body-2"
             ></v-text-field>
 
             <v-select
               v-model="forecastCategory"
               :items="forecastCategoryItems"
               label="Forecast Category"
+              class="body-2"
             ></v-select>
             <v-menu
               v-model="menu2"
@@ -171,6 +191,7 @@
                   v-bind="attrs"
                   v-on="on"
                   :rules="nameRules"
+                  class="body-2"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -186,6 +207,7 @@
               label="Currency *"
               :rules="nameRules"
               required
+              class="body-2"
             ></v-select>
 
             <v-btn
@@ -365,7 +387,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+  import {mapMutations, mapState} from 'vuex';
 import moment from 'moment';
 
 export default {
@@ -506,6 +528,10 @@ export default {
     ]
   }),
   methods: {
+    ...mapMutations({
+      setPage: 'setPage',
+      setPerPage: 'setPerPage'
+    }),
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.form._data.inputs) {
@@ -570,7 +596,7 @@ export default {
       await this.$store.dispatch('setCurrentTable', 'States');
       const states = await this.$store.dispatch('getRecords', '');
       Object.keys(states).forEach((value, index) => {
-        if (
+        if (states[index] &&
           country.toLowerCase().trim() ===
           states[index].Country.toLowerCase().trim()
         ) {
@@ -587,7 +613,7 @@ export default {
       await this.$store.dispatch('setCurrentTable', 'Industry');
       const industries = await this.$store.dispatch('getRecords', '');
       Object.keys(industries).forEach((value, index) => {
-        if (
+        if (industries[index] &&
           channelType.toLowerCase().trim() ===
           industries[index].Channel.toLowerCase().trim()
         ) {
@@ -693,6 +719,7 @@ export default {
     ...mapState(['loading', 'opportunityId', 'opportunity'])
   },
   async created() {
+    this.setPage('');
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
     await this.getProducts();
     await this.$store.dispatch('setCurrentTable', 'Products');
@@ -728,7 +755,7 @@ export default {
     await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
     const countries = await this.$store.dispatch('getRecords', '');
     Object.keys(countries).forEach((value, index) => {
-      this.countryItems.push(countries[index].Country);
+      if (countries[index]) this.countryItems.push(countries[index].Country);
     });
   }
 };

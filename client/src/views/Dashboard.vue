@@ -31,7 +31,7 @@
               <v-data-table
                 :headers="headers"
                 :items="rows"
-                :items-per-page="5"
+                :items-per-page="perPage"
                 class="elevation-1"
                 :footer-props="{
                   showFirstLastPage: true,
@@ -44,6 +44,8 @@
                 :search="searchStr"
                 :loading="loading"
                 :style="{ cursor: 'pointer' }"
+                :server-items-length="totalLeads"
+                :options.sync="options"
               >
                 <template v-slot:top>
                   <v-toolbar flat color="grey lighten-3">
@@ -125,7 +127,11 @@ export default {
       OppStatus: null,
       statuses: ['All', 'In Process', 'Won', 'Closed Won', 'Closed Lost'],
       searchStr: '',
-      selectedStatus: null
+      selectedStatus: null,
+      page: 0,
+      perPage: 5,
+      totalLeads: 0,
+      options: {}
     };
   },
   filters: {
@@ -137,7 +143,7 @@ export default {
   },
   async created() {
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
-    await this.getRecords();
+    // await this.getRecords();
     this.selectedStatus = this.statuses[0];
   },
   computed: {
@@ -166,21 +172,35 @@ export default {
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
     },
-    ...mapState(['loading'])
+    ...mapState(['loading']),
+  },
+  watch: {
+    options: {
+      handler() {
+        this.getDataFromApi().then(data => {
+          this.rows = data.items;
+          this.totalLeads = data.total;
+          // console.log(data);
+        });
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    // this.getDataFromApi().then(data => {
+    //   this.rows = data.items;
+    //   this.totalLeads = data.total;
+    // });
   },
   methods: {
     getRecords: async function() {
-      const data = await this.$store.dispatch('getRecords', '');
-      this.rows = data;
-    },
-    getRecord: async function() {
-      const data = await this.$store.dispatch('getRecords', 1);
-      // this.rows = data;
-      // console.log(data);
+      return await this.$store.dispatch('getRecords', '');
     },
     ...mapMutations({
       setOppId: 'setOppId',
-      setOpp: 'setOpp'
+      setOpp: 'setOpp',
+      setPage: 'setPage',
+      setPerPage: 'setPerPage'
     }),
     editOpportunity(item) {
       this.setOppId(item.Id);
@@ -190,6 +210,38 @@ export default {
     },
     onSelectChange(status) {
       console.log(status);
+    },
+    getDataFromApi() {
+      return new Promise(async (resolve, reject) => {
+        const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+        this.setPage(page);
+        this.setPerPage(itemsPerPage);
+        const { opts, totalOpts } = await this.getRecords();
+        const total = totalOpts;
+        let items = opts;
+
+        // console.log(items);
+        if (sortBy.length === 1 && sortDesc.length === 1) {
+          items = items.sort((a, b) => {
+            const sortA = a[sortBy[0]];
+            const sortB = b[sortBy[0]];
+
+            if (sortDesc[0]) {
+              if (sortA < sortB) return 1;
+              if (sortA > sortB) return -1;
+              return 0;
+            } else {
+              if (sortA < sortB) return -1;
+              if (sortA > sortB) return 1;
+              return 0;
+            }
+          });
+        }
+        resolve({
+          items,
+          total
+        });
+      });
     }
   }
 };

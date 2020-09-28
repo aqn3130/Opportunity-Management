@@ -14,7 +14,9 @@ export default new Vuex.Store({
     userData: [],
     loading: false,
     opportunityId: null,
-    opportunity: null
+    opportunity: null,
+    page: 0,
+    perPage: 10
   },
   mutations: {
     setTable(state, value) {
@@ -31,6 +33,12 @@ export default new Vuex.Store({
     },
     setOpp(state, opp) {
       state.opportunity = opp;
+    },
+    setPage(state, page) {
+      state.page = page;
+    },
+    setPerPage(state, perPage) {
+      state.perPage = perPage;
     }
   },
   actions: {
@@ -39,7 +47,7 @@ export default new Vuex.Store({
     },
     async getRecords({ commit }, id) {
       commit('setLoading', true);
-      const { data } = await axios.get(`${this.state.table}?id=${id}`);
+      const { data } = await axios.get(`${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}`);
       // const { data } = (await axios.get('/api/' + this.state.table));
       // commit('setData', data);
       commit('setLoading', false);
