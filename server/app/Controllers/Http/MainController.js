@@ -33,16 +33,15 @@ class MainController {
           .where('Email', params.email)
       }
       else {
-        let total = await request.Knex.select('*').from(request.Table);
-        if (!params.page) {
-          return total;
-        }
-
-        total = total.length;
-        let page = params.page || 0;
+        let page = params.page || 1;
         const perPage = params.perPage || 10;
         const pageInt = parseInt(page);
         const perPageInt = parseInt(perPage);
+        let total = await request.Knex.select('*').from(request.Table);
+        if (!page) {
+          return total;
+        }
+        total = total.length;
         if ( pageInt === 1 ) page = 0;
         const offset = pageInt * perPageInt - perPageInt;
         query = await request.Knex.select('*').from(request.Table).limit(perPage).offset(offset);

@@ -54,7 +54,6 @@ export default {
   },
 
   async created() {
-
     await this.getRecords();
     window.BUS.$on('user-added', async () => {
       await this.getRecords();

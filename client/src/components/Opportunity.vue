@@ -249,7 +249,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+  import {mapMutations, mapState} from 'vuex';
 
 export default {
   name: 'Opportunity',
@@ -329,6 +329,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({ setPage: 'setPage'}),
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.form._data.inputs) {
@@ -438,6 +439,7 @@ export default {
     ...mapState(['loading'])
   },
   async created() {
+    this.setPage('');
     this.onStatusChange(this.status);
     await this.$store.dispatch('setCurrentTable', 'SalesRep');
     const response = await this.$store.dispatch(
