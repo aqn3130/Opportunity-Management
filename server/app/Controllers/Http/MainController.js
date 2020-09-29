@@ -80,6 +80,7 @@ class MainController {
    */
   async store ({ request, response }) {
     const { data } = request.all();
+    if (request.Table === 'Product') delete data.CreationDate;
     try {
       await request.Knex.table(request.Table).insert(data);
     } catch (e) {

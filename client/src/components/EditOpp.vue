@@ -270,7 +270,7 @@
               <v-list-item-content class="mr-2 ml-n5">
                 <v-select
                   :items="item.TOBItems"
-                  v-model="item.tob"
+                  v-model="item.typeOfBusiness"
                   label="Type of Business"
                   :rules="nameRules"
                   class="body-2"
@@ -283,70 +283,28 @@
                   label="Product Name"
                   :rules="nameRules"
                   class="body-2"
+                  @input="onProductNameChange"
                 ></v-select>
               </v-list-item-content>
-              <v-list-item-content class="">
-                <v-text-field
-                  v-model="item.productDescription"
-                  label="Product Description"
-                  class="body-2"
-                ></v-text-field>
-              </v-list-item-content>
-              <v-list-item-content class="ml-2">
-                <v-menu
-                  v-model="menu3"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="item.licenseStartDate"
-                      label="License Start Date"
-                      prepend-icon="event"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      :rules="nameRules"
-                      class="body-2"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="item.licenseStartDate"
-                    @input="menu3 = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-list-item-content>
-              <v-list-item-content class="ml-2">
-                <v-menu
-                  v-model="menu4"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="item.licenseEndDate"
-                      label="License End Date"
-                      prepend-icon="event"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      :rules="nameRules"
-                      class="body-2"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="item.licenseEndDate"
-                    @input="menu4 = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-list-item-content>
-              <v-list-item-content class="ml-2 mr-2">
+              <div class="ml-2">
+                <span class="caption">License Start Date</span>
+                <Datepicker
+                  class="mb-5"
+                  placeholder="Select Date"
+                  v-model="item.licenseStartDate"
+                  :format="dateFormat"
+                ></Datepicker>
+              </div>
+              <div class="ml-n10">
+                <span class="caption">License End Date</span>
+                <Datepicker
+                  class="mb-5"
+                  placeholder="Select Date"
+                  v-model="item.licenseEndDate"
+                  :format="dateFormat"
+                ></Datepicker>
+              </div>
+              <v-list-item-content class="mr-2" :style="{ marginLeft: '-50px'}">
                 <v-select
                   :items="likelihood"
                   v-model="item.likelihood"
@@ -356,7 +314,11 @@
                 ></v-select>
               </v-list-item-content>
               <v-list-item-content>
-                <v-checkbox v-model="item.agent" label="Agent" dense></v-checkbox>
+                <v-checkbox
+                  v-model="item.agent"
+                  label="Agent"
+                  dense
+                ></v-checkbox>
               </v-list-item-content>
               <v-list-item-content class="ml-n5">
                 <v-select
@@ -374,7 +336,9 @@
                   class="body-2"
                 ></v-text-field>
               </v-list-item-content>
-              <v-btn icon small @click="deleteProduct(item)"><v-icon small>delete</v-icon></v-btn>
+              <v-btn icon small @click="deleteProduct(item)"
+                ><v-icon small>delete</v-icon></v-btn
+              >
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -387,10 +351,13 @@
 </template>
 
 <script>
-  import {mapMutations, mapState} from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import moment from 'moment';
-
+import Datepicker from 'vuejs-datepicker';
 export default {
+  components: {
+    Datepicker
+  },
   name: 'EditOpp',
   data: () => ({
     title: 'Edit Opportunity',
@@ -525,7 +492,8 @@ export default {
       18,
       19,
       20
-    ]
+    ],
+    dateFormat: 'yyyy-MM-dd'
   }),
   methods: {
     ...mapMutations({
@@ -577,7 +545,6 @@ export default {
           }
         });
       }
-
     },
     async updateProduct() {
       await this.$store.dispatch('setCurrentTable', 'Product');
@@ -585,8 +552,21 @@ export default {
         delete this.productItems[key].cryItems;
         delete this.productItems[key].products;
         delete this.productItems[key].TOBItems;
-        console.log(this.productItems[key]);
-        await this.$store.dispatch('updateRecord', this.productItems[key]);
+        // console.log(this.productItems[key]);
+        if (!this.productItems[key].id) {
+          if (this.productItems[key].typeOfBusiness === 'Renewal')
+            this.productItems[key].renewal = 1;
+          this.productItems[key].licenseStartDate = this.formatDate(
+            this.productItems[key].licenseStartDate
+          );
+          this.productItems[key].licenseEndDate = this.formatDate(
+            this.productItems[key].licenseEndDate
+          );
+          await this.$store.dispatch('createRecord', this.productItems[key]);
+          // delete this.productItems[key];
+        }
+        if (this.productItems[key].id)
+          await this.$store.dispatch('updateRecord', this.productItems[key]);
       }
     },
     async validate() {
@@ -608,9 +588,10 @@ export default {
       await this.$store.dispatch('setCurrentTable', 'States');
       const states = await this.$store.dispatch('getRecords', '');
       Object.keys(states).forEach((value, index) => {
-        if (states[index] &&
+        if (
+          states[index] &&
           country.toLowerCase().trim() ===
-          states[index].Country.toLowerCase().trim()
+            states[index].Country.toLowerCase().trim()
         ) {
           this.states.push(states[index].Name);
         }
@@ -625,9 +606,10 @@ export default {
       await this.$store.dispatch('setCurrentTable', 'Industry');
       const industries = await this.$store.dispatch('getRecords', '');
       Object.keys(industries).forEach((value, index) => {
-        if (industries[index] &&
+        if (
+          industries[index] &&
           channelType.toLowerCase().trim() ===
-          industries[index].Channel.toLowerCase().trim()
+            industries[index].Channel.toLowerCase().trim()
         ) {
           this.industryTypeItems.push(industries[index].Industry);
         }
@@ -699,16 +681,18 @@ export default {
         cryItems: this.cryOptions,
         TOBItems: this.typeOfBusinessOptions,
         cry: null,
-        tob: null,
+        typeOfBusiness: null,
         products: this.products,
         productName: null,
         productDescription: null,
         licenseStartDate: null,
         licenseEndDate: null,
         likelihood: null,
-        agent: null,
+        agent: 0,
         agentDiscount: null,
-        grossValue: null
+        grossValue: null,
+        renewal: 0,
+        opportunity_fk: parseInt(this.opportunityId, 11)
       };
       if (this.productItems[this.productItems.length - 1].cry === null) {
         if (this.$refs.productForm.validate()) {
@@ -718,13 +702,15 @@ export default {
         this.productItems.push(product);
       }
     },
-    deleteProduct(item){
+    deleteProduct(item) {
       // console.log(item);
       if (this.productItems[this.productItems.length - 1].cry === null) {
         this.productItems.splice(this.productItems.length - 1);
       } else {
-
       }
+    },
+    onProductNameChange(tob) {
+      // console.log(tob);
     }
   },
   computed: {

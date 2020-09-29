@@ -49,7 +49,7 @@
   </v-card>
 </template>
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from 'vuex';
 export default {
   data() {
     return {
@@ -58,8 +58,8 @@ export default {
   },
   created() {},
   methods: {
-    ...mapActions("user", ["searchUser", "addUser", "resetSearch"]),
-    ...mapMutations("user", ["setUsers", "setName", "setUser"]),
+    ...mapActions('user', ['searchUser', 'addUser', 'resetSearch']),
+    ...mapMutations('user', ['setUsers', 'setName', 'setUser']),
     async getUsers(name) {
       await this.setName(name);
       await this.searchUser();
@@ -71,7 +71,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("user", ["users", "name", "username", "loading"])
+    ...mapState('user', ['users', 'name', 'username', 'loading'])
   }
 };
 </script>

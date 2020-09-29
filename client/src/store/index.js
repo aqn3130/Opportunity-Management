@@ -47,7 +47,9 @@ export default new Vuex.Store({
     },
     async getRecords({ commit }, id) {
       commit('setLoading', true);
-      const { data } = await axios.get(`${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}`);
+      const { data } = await axios.get(
+        `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}`
+      );
       // const { data } = (await axios.get('/api/' + this.state.table));
       // commit('setData', data);
       commit('setLoading', false);

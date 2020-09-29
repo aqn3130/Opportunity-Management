@@ -1,57 +1,57 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Users from "../views/Users";
-import Login from "../views/Login";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Users from '../views/Users';
+import Login from '../views/Login';
 
-localStorage.getItem("token");
+localStorage.getItem('token');
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    redirect: "/dashboard"
+    path: '/',
+    redirect: '/dashboard'
   },
   {
-    path: "/login",
-    name: "Login",
+    path: '/login',
+    name: 'Login',
     component: Login
   },
   {
-    path: "*",
-    redirect: "/dashboard"
+    path: '*',
+    redirect: '/dashboard'
   },
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    path: '/dashboard',
+    name: 'Dashboard',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "dashboard" */ "../views/Dashboard.vue"),
+      import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path: "/new-opportunity",
-    name: "New Opportunity",
+    path: '/new-opportunity',
+    name: 'New Opportunity',
     component: () =>
       import(
-        /* webpackChunkName: "newOpportunity" */ "../views/NewOpportunity.vue"
+        /* webpackChunkName: "newOpportunity" */ '../views/NewOpportunity.vue'
       ),
     meta: { requiresAuth: true }
   },
   {
-    path: "/edit-opportunity",
-    name: "Edit Opportunity",
+    path: '/edit-opportunity',
+    name: 'Edit Opportunity',
     component: () =>
       import(
-        /* webpackChunkName: "EditOpportunity" */ "../views/EditOpportunity.vue"
+        /* webpackChunkName: "EditOpportunity" */ '../views/EditOpportunity.vue'
       ),
     meta: { requiresAuth: true }
   },
   {
-    path: "/users",
-    name: "Users",
+    path: '/users',
+    name: 'Users',
     component: Users,
     meta: { requiresAuth: true }
   }
@@ -63,9 +63,9 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (window.USER === null && to.path !== "login") {
+    if (window.USER === null && to.path !== 'login') {
       next({
-        name: "Login"
+        name: 'Login'
       });
     } else {
       next();

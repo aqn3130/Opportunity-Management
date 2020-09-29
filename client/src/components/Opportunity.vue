@@ -249,7 +249,7 @@
 </template>
 
 <script>
-  import {mapMutations, mapState} from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'Opportunity',
@@ -329,7 +329,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({ setPage: 'setPage'}),
+    ...mapMutations({ setPage: 'setPage' }),
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.form._data.inputs) {

@@ -172,7 +172,7 @@ export default {
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
     },
-    ...mapState(['loading']),
+    ...mapState(['loading'])
   },
   watch: {
     options: {

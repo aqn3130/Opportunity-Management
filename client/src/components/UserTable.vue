@@ -20,19 +20,19 @@
   </v-data-table>
 </template>
 <script>
-  import {mapMutations, mapState} from "vuex";
+import { mapMutations, mapState } from 'vuex';
 export default {
   data: () => ({
     dialog: false,
     headers: [
       {
-        text: "username",
-        align: "start",
+        text: 'username',
+        align: 'start',
         sortable: false,
-        value: "username"
+        value: 'username'
       },
-      { text: "email", value: "email" },
-      { text: "Actions", value: "actions" }
+      { text: 'email', value: 'email' },
+      { text: 'Actions', value: 'actions' }
     ],
     rows: [],
     editedIndex: -1,
@@ -41,9 +41,9 @@ export default {
   }),
 
   computed: {
-    ...mapState(["userData", "userAdded"]),
+    ...mapState(['userData', 'userAdded']),
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
     }
   },
 
@@ -66,8 +66,8 @@ export default {
     }),
     getRecords: async function() {
       this.setPage('');
-      await this.$store.dispatch("setCurrentTable", "users");
-      const data = await this.$store.dispatch("getRecords", '');
+      await this.$store.dispatch('setCurrentTable', 'users');
+      const data = await this.$store.dispatch('getRecords', '');
       this.rows = data;
     },
 
@@ -78,7 +78,7 @@ export default {
     },
 
     async deleteItem(item) {
-      await this.$store.dispatch("deleteRecord", item.id);
+      await this.$store.dispatch('deleteRecord', item.id);
       await this.getRecords();
     },
 
