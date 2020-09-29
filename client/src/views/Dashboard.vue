@@ -12,11 +12,7 @@
     </v-card>
     <v-layout>
       <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
-        <v-card
-          class="d-flex ml-auto mr-auto justify-center transparent mt-n10"
-          flat
-          width="auto"
-        >
+        <v-card class="d-flex justify-center transparent mt-n10" flat>
           <v-row>
             <v-col>
               <v-select
@@ -32,7 +28,7 @@
                 :headers="headers"
                 :items="rows"
                 :items-per-page="perPage"
-                class="elevation-1"
+                class="elevation-1 text-no-wrap"
                 :footer-props="{
                   showFirstLastPage: true,
                   firstIcon: 'mdi-arrow-collapse-left',

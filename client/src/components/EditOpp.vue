@@ -289,22 +289,24 @@
               <div class="ml-2">
                 <span class="caption">License Start Date</span>
                 <Datepicker
-                  class="mb-5"
+                  class="mb-5 vdp-datepicker mr-10"
                   placeholder="Select Date"
                   v-model="item.licenseStartDate"
                   :format="dateFormat"
                 ></Datepicker>
               </div>
-              <div class="ml-n10">
+              <div class="ml-n8">
                 <span class="caption">License End Date</span>
                 <Datepicker
-                  class="mb-5"
+                  class="mb-5 vdp-datepicker"
                   placeholder="Select Date"
                   v-model="item.licenseEndDate"
                   :format="dateFormat"
                 ></Datepicker>
               </div>
-              <v-list-item-content class="mr-2" :style="{ marginLeft: '-50px'}">
+              <v-list-item-content
+                class="mr-2 ml-3"
+              >
                 <v-select
                   :items="likelihood"
                   v-model="item.likelihood"
@@ -320,7 +322,7 @@
                   dense
                 ></v-checkbox>
               </v-list-item-content>
-              <v-list-item-content class="ml-n5">
+              <v-list-item-content class="ml-n8">
                 <v-select
                   :items="agentDiscountOptions"
                   v-model="item.agentDiscount"
@@ -347,6 +349,22 @@
     <v-card>
       <v-btn block @click="addProduct" class="mt-1">+ Add Product</v-btn>
     </v-card>
+    <v-dialog v-model="deleteProductDialog" persistent max-width="400">
+      <v-card>
+        <v-card-title class="grey lighten-3">
+          Product Deletion
+        </v-card-title>
+        <v-card-text class="py-5">
+          You are about to delete selected product, are you sure?
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="deleteExistingProduct">Delete</v-btn>
+          <v-btn text @click="deleteProductDialog = false">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -493,7 +511,9 @@ export default {
       19,
       20
     ],
-    dateFormat: 'yyyy-MM-dd'
+    dateFormat: 'yyyy-MM-dd',
+    deleteProductDialog: false,
+    toBeDeletedProductId: null
   }),
   methods: {
     ...mapMutations({
@@ -645,6 +665,7 @@ export default {
       }
     },
     getProducts: async function() {
+      this.productItems = [];
       const data = await this.$store.dispatch('getRecords', this.opportunityId);
       Object.keys(data).forEach(key => {
         const product = {
@@ -707,10 +728,40 @@ export default {
       if (this.productItems[this.productItems.length - 1].cry === null) {
         this.productItems.splice(this.productItems.length - 1);
       } else {
+        this.toBeDeletedProductId = item.id;
+        this.deleteProductDialog = true;
       }
     },
     onProductNameChange(tob) {
       // console.log(tob);
+    },
+    deleteExistingProduct() {
+      this.$store.dispatch('setCurrentTable', 'Product');
+      try {
+        this.$store.dispatch('deleteRecord', this.toBeDeletedProductId);
+        this.deleteProductDialog = false;
+        this.$toast.open({
+          message: 'Product Deleted',
+          type: 'success',
+          duration: 2000,
+          dismissible: true,
+          onClose: () => {
+            this.getProducts();
+          }
+        });
+      } catch (e) {
+        this.deleteProductDialog = false;
+        this.$toast.open({
+          message: 'Delete failed please contact system Admin',
+          type: 'error',
+          duration: 3000,
+          dismissible: true
+          // onClose: () => {
+          //   this.$router.push({ name: 'Dashboard' });
+          //   this.newOppLoading = false;
+          // }
+        });
+      }
     }
   },
   computed: {
@@ -759,3 +810,8 @@ export default {
   }
 };
 </script>
+<style>
+.vdp-datepicker input {
+  width: 110px;
+}
+</style>
