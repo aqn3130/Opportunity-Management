@@ -3,14 +3,14 @@
 </template>
 
 <script>
-import Opportunity from "../components/Opportunity";
+import Opportunity from '../components/Opportunity';
 export default {
   components: {
     Opportunity
   },
   data() {
     return {
-      title: "New Opportunity"
+      title: 'New Opportunity'
     };
   },
   methods: {}

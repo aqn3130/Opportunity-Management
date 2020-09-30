@@ -5,19 +5,19 @@
   </v-container>
 </template>
 <script>
-import UserList from "../components/UserList";
-import UserTable from "../components/UserTable";
-import { mapMutations } from "vuex";
+import UserList from '../components/UserList';
+import UserTable from '../components/UserTable';
+import { mapMutations } from 'vuex';
 export default {
-  name: "Users",
+  name: 'Users',
   components: {
     UserList,
     UserTable
   },
   methods: {
-    ...mapMutations(["getRecords"]),
+    ...mapMutations(['getRecords']),
     onUserAdd() {
-      alert("user added");
+      alert('user added');
     }
   }
 };

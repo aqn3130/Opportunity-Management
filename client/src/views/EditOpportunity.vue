@@ -30,7 +30,7 @@
         </v-tab-item>
         <v-tab-item value="tab-2">
           <v-card flat>
-            <v-card-text></v-card-text>
+            <Notes />
           </v-card>
         </v-tab-item>
         <v-tab-item value="tab-3">
@@ -44,13 +44,14 @@
 </template>
 <script>
 import EditOpp from '../components/EditOpp';
+import Notes from '../components/Notes';
 export default {
   name: 'EditOpportunity',
-  components: { EditOpp },
+  components: { EditOpp, Notes },
   data() {
     return {
       tab: null,
-      containerWidth: '1350px',
+      containerWidth: '1350px'
     };
   }
 };

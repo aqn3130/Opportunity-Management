@@ -20,6 +20,7 @@ Route.group(function () {
   Route.resource('opportunity','MainController').apiOnly();
   Route.resource('salesrep','MainController').apiOnly();
   Route.resource('product','MainController').apiOnly();
+  Route.resource('note','NoteController').apiOnly();
   Route.resource('products','MainController').apiOnly();
   Route.resource('country_region_territory','MainController').apiOnly();
   Route.resource('states','MainController').apiOnly();

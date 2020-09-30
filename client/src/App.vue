@@ -1,19 +1,19 @@
 <template>
   <v-app>
     <NavBar v-if="currentUser" />
-    <v-content style="background-color: #eceff1">
+    <v-main style="background-color: #eceff1">
       <router-view></router-view>
-    </v-content>
+    </v-main>
     <v-footer app></v-footer>
   </v-app>
 </template>
 
 <script>
-import NavBar from "./components/Navbar";
-import { mapState } from "vuex";
+import NavBar from './components/Navbar';
+import { mapState } from 'vuex';
 
 export default {
-  name: "App",
+  name: 'App',
 
   components: {
     NavBar
@@ -21,7 +21,7 @@ export default {
 
   data: () => ({}),
   computed: {
-    ...mapState("auth", ["currentUser"])
+    ...mapState('auth', ['currentUser'])
   }
 };
 </script>

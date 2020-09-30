@@ -304,9 +304,7 @@
                   :format="dateFormat"
                 ></Datepicker>
               </div>
-              <v-list-item-content
-                class="mr-2 ml-3"
-              >
+              <v-list-item-content class="mr-2 ml-3">
                 <v-select
                   :items="likelihood"
                   v-model="item.likelihood"
@@ -547,6 +545,7 @@ export default {
           type: 'success',
           duration: 2000,
           dismissible: true,
+          position: 'bottom',
           onClose: () => {
             this.$router.push({ name: 'Dashboard' });
             this.newOppLoading = false;
@@ -559,6 +558,7 @@ export default {
           type: 'error',
           duration: 3000,
           dismissible: true,
+          position: 'bottom',
           onClose: () => {
             this.$router.push({ name: 'Dashboard' });
             this.newOppLoading = false;
@@ -666,6 +666,7 @@ export default {
     },
     getProducts: async function() {
       this.productItems = [];
+      await this.$store.dispatch('setCurrentTable', 'Opportunity');
       const data = await this.$store.dispatch('getRecords', this.opportunityId);
       Object.keys(data).forEach(key => {
         const product = {
@@ -740,14 +741,16 @@ export default {
       try {
         this.$store.dispatch('deleteRecord', this.toBeDeletedProductId);
         this.deleteProductDialog = false;
+        this.getProducts();
         this.$toast.open({
           message: 'Product Deleted',
           type: 'success',
           duration: 2000,
           dismissible: true,
-          onClose: () => {
-            this.getProducts();
-          }
+          position: 'bottom'
+          // onClose: () => {
+          // this.getProducts();
+          // }
         });
       } catch (e) {
         this.deleteProductDialog = false;
@@ -755,7 +758,8 @@ export default {
           message: 'Delete failed please contact system Admin',
           type: 'error',
           duration: 3000,
-          dismissible: true
+          dismissible: true,
+          position: 'bottom'
           // onClose: () => {
           //   this.$router.push({ name: 'Dashboard' });
           //   this.newOppLoading = false;

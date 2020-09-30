@@ -72,47 +72,47 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 
 export default {
-  name: "Navbar",
+  name: 'Navbar',
   data() {
     return {
       items: [
         {
-          title: "Dashboard",
-          icon: "dashboard",
-          action: "/dashboard"
+          title: 'Dashboard',
+          icon: 'dashboard',
+          action: '/dashboard'
         },
         {
-          title: "New Opportunity",
-          icon: "add",
-          action: "/new-opportunity"
+          title: 'New Opportunity',
+          icon: 'add',
+          action: '/new-opportunity'
         },
         {
-          title: "Edit Opportunity",
-          icon: "edit",
-          action: "/edit-opportunity"
+          title: 'Edit Opportunity',
+          icon: 'edit',
+          action: '/edit-opportunity'
         },
         {
-          title: "Accounts",
-          icon: "supervisor_account",
-          action: "/users"
+          title: 'Accounts',
+          icon: 'supervisor_account',
+          action: '/users'
         },
         {
-          title: "Admin Console",
-          icon: "settings"
+          title: 'Admin Console',
+          icon: 'settings'
         }
       ],
       drawer: false,
       group: null,
-      color: "#fff",
+      color: '#fff',
       background: false,
       current_page: null,
       destinations: this.$store.destinations,
       isLoggedIn: false,
-      currentPageName: "",
-      drawerHeight: "600"
+      currentPageName: '',
+      drawerHeight: '600'
     };
   },
   methods: {
@@ -120,11 +120,11 @@ export default {
       this.drawer = !this.drawer;
     },
     toHome() {
-      this.$router.push({ path: "/" });
+      this.$router.push({ path: '/' });
     },
     logout() {
-      this.$store.dispatch("auth/logout");
-      this.$router.push({ name: "Login" });
+      this.$store.dispatch('auth/logout');
+      this.$router.push({ name: 'Login' });
     }
   },
   watch: {
@@ -133,10 +133,10 @@ export default {
     }
   },
   computed: {
-    ...mapState("auth", ["token", "currentUser"])
+    ...mapState('auth', ['token', 'currentUser'])
   },
   created() {
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       this.drawerHeight = window.innerHeight - 200;
     });
   },
