@@ -16,8 +16,10 @@
           <v-col md="12">
             <v-text-field
               v-model="note"
-              label="New Note"
+              label="Add Note"
               class="body-2"
+              @change="addNote"
+              placeholder="Write your notes here and then press on Enter key to save it"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -29,45 +31,41 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-card tile :style="{ paddingLeft: '200px', paddingRight: '200px' }">
-      <v-list dense>
-        <v-list-item-group v-model="notes" color="primary">
-          <v-list-item v-for="item in notes" :key="item.id">
-            <v-list-item-content :style="{ minWidth: '600px' }">
-              <v-textarea
-                v-model="item.Message"
-                label="Note"
-                class="body-2"
-                rows="2"
-                no-resize
-              ></v-textarea>
-            </v-list-item-content>
-            <v-list-item-content class="mb-lg-10 ml-5">
-              <span class="body-2">Create Date</span>
-              {{ item.CreateDate | formatDate }}
-            </v-list-item-content>
-            <v-btn icon small @click="deleteProduct(item)">
-              <v-icon small>delete</v-icon>
-            </v-btn>
-          </v-list-item>
-        </v-list-item-group>
+      <v-list>
+        <v-list-item v-for="(item, i) in notes" :key="i">
+          <v-list-item-content :style="{ minWidth: '600px' }">
+            <v-textarea
+              v-model="item.Message"
+              label="Note"
+              class="body-2"
+              rows="2"
+              no-resize
+              @blur="onNoteChange(item)"
+            ></v-textarea>
+          </v-list-item-content>
+          <v-list-item-content class="mb-lg-10 ml-5">
+            <span class="body-2">Create Date</span>
+            {{ item.CreateDate | formatDate }}
+          </v-list-item-content>
+          <v-btn icon small @click="deleteProduct(item)">
+            <v-icon small>delete</v-icon>
+          </v-btn>
+        </v-list-item>
       </v-list>
     </v-card>
   </v-container>
 </template>
-
 <script>
 import { mapState } from 'vuex';
 import moment from 'moment';
 
 export default {
   name: 'Notes',
-  data() {
-    return {
-      note: null,
-      notes: [],
-      valid: true
-    };
-  },
+  data: () => ({
+    note: null,
+    notes: [],
+    valid: true
+  }),
   computed: {
     ...mapState(['opportunityId'])
   },
@@ -82,13 +80,107 @@ export default {
     }
   },
   async created() {
-    await this.$store.dispatch('setCurrentTable', 'Note');
-    this.notes = await this.$store.dispatch('getRecords', this.opportunityId);
+    await this.init();
     // console.log(this.notes);
   },
   methods: {
-    deleteProduct(item) {
-      console.log(item);
+    async init() {
+      await this.$store.dispatch('setCurrentTable', 'Note');
+      this.notes = await this.$store.dispatch('getRecords', this.opportunityId);
+    },
+    async deleteProduct(item) {
+      await this.$store.dispatch('setCurrentTable', 'Note');
+      try {
+        await this.$store.dispatch('deleteRecord', item.Id);
+        await this.init();
+        this.$toast.open({
+          message: 'Note Deleted',
+          type: 'success',
+          duration: 2000,
+          dismissible: true,
+          position: 'bottom'
+          // onClose: () => {
+          // this.getProducts();
+          // }
+        });
+      } catch (e) {
+        this.$toast.open({
+          message: 'Note deletion failed, please contact your system admin',
+          type: 'error',
+          duration: 2000,
+          dismissible: true,
+          position: 'bottom'
+          // onClose: () => {
+          // this.getProducts();
+          // }
+        });
+      }
+    },
+    async onNoteChange(note) {
+      const format = 'YYYY-MM-DD HH:mm:ss';
+      const formattedDate = moment(note.CreateDate).format(format);
+      note.CreateDate = formattedDate;
+      // console.log('here', note);
+      await this.$store.dispatch('setCurrentTable', 'Note');
+      await this.$store.dispatch('updateRecord', note);
+    },
+    isDuplicate(note, notes) {
+      let isDuplicate = false;
+      Object.keys(notes).forEach(key => {
+        if (notes[key].Message === note) {
+          isDuplicate = true;
+          this.$toast.open({
+            message: 'Note exists',
+            type: 'info',
+            duration: 2000,
+            dismissible: true,
+            position: 'bottom'
+            // onClose: () => {
+            // this.getProducts();
+            // }
+          });
+        }
+      });
+      return isDuplicate;
+    },
+    async addNote(note) {
+      const createDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      const newNote = {
+        CreateDate: createDate,
+        Message: note,
+        Opportunity_fk: this.opportunityId
+      };
+      await this.init();
+      const isDuplicate = this.isDuplicate(newNote.Message, this.notes);
+      await this.$store.dispatch('setCurrentTable', 'Note');
+      if (newNote.Message && !isDuplicate) {
+        try {
+          await this.$store.dispatch('createRecord', newNote);
+          await this.init();
+          this.note = null;
+          this.$toast.open({
+            message: 'Note Added',
+            type: 'success',
+            duration: 2000,
+            dismissible: true,
+            position: 'bottom'
+            // onClose: () => {
+            // this.getProducts();
+            // }
+          });
+        } catch (e) {
+          this.$toast.open({
+            message: 'Adding new note failed, please contact your system admin',
+            type: 'error',
+            duration: 2000,
+            dismissible: true,
+            position: 'bottom'
+            // onClose: () => {
+            // this.getProducts();
+            // }
+          });
+        }
+      }
     }
   }
 };

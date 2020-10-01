@@ -54,6 +54,13 @@ class NoteController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const { data } = request.all();
+    delete data.CreationDate;
+    try {
+      await request.Knex.table(request.Table).insert(data);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -89,6 +96,10 @@ class NoteController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const { data } = request.all();
+    delete data.updated_at;
+    // console.log(data.Id, data);
+    await request.Knex.select('*').from(request.Table).where({ id: data.Id }).update(data)
   }
 
   /**
@@ -100,6 +111,8 @@ class NoteController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+    const id = params.id;
+    await request.Knex(request.Table).where({ id: id }).delete()
   }
 }
 
