@@ -45,6 +45,7 @@
 <script>
 import EditOpp from '../components/EditOpp';
 import Notes from '../components/Notes';
+import { mapMutations, mapState } from 'vuex';
 export default {
   name: 'EditOpportunity',
   components: { EditOpp, Notes },
@@ -53,6 +54,17 @@ export default {
       tab: null,
       containerWidth: '1350px'
     };
+  },
+  computed: {
+    ...mapState(['openedTab'])
+  },
+  created() {
+    this.openedTab;
+  },
+  methods: {
+    ...mapMutations({
+      setTab: 'setTab'
+    })
   }
 };
 </script>

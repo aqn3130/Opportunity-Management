@@ -18,7 +18,7 @@
               v-model="note"
               label="Add Note"
               class="body-2"
-              @change="addNote"
+              @keyup="addNote"
               placeholder="Write your notes here and then press on Enter key to save it"
             ></v-text-field>
           </v-col>
@@ -143,17 +143,17 @@ export default {
       });
       return isDuplicate;
     },
-    async addNote(note) {
+    async addNote(e) {
       const createDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
       const newNote = {
         CreateDate: createDate,
-        Message: note,
+        Message: this.note,
         Opportunity_fk: this.opportunityId
       };
       await this.init();
       const isDuplicate = this.isDuplicate(newNote.Message, this.notes);
       await this.$store.dispatch('setCurrentTable', 'Note');
-      if (newNote.Message && !isDuplicate) {
+      if (e.keyCode === 13 && newNote.Message && !isDuplicate) {
         try {
           await this.$store.dispatch('createRecord', newNote);
           await this.init();

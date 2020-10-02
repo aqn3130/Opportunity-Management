@@ -16,7 +16,9 @@ export default new Vuex.Store({
     opportunityId: null,
     opportunity: null,
     page: 0,
-    perPage: 10
+    perPage: 10,
+    openedTab: null,
+    products: []
   },
   mutations: {
     setTable(state, value) {
@@ -39,6 +41,12 @@ export default new Vuex.Store({
     },
     setPerPage(state, perPage) {
       state.perPage = perPage;
+    },
+    setTab(state, tab) {
+      state.openedTab = tab;
+    },
+    setProducts(state, products) {
+      state.products = products;
     }
   },
   actions: {

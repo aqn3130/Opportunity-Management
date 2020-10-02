@@ -10,6 +10,7 @@
       color="#ffffff"
       light
       :style="{ paddingLeft: '200px', paddingRight: '200px' }"
+      id="opp_container"
     >
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row style="padding: 15px 20px 25px 20px">
@@ -516,7 +517,10 @@ export default {
   methods: {
     ...mapMutations({
       setPage: 'setPage',
-      setPerPage: 'setPerPage'
+      setPerPage: 'setPerPage',
+      setTab: 'setTab',
+      setProducts: 'setProducts',
+      setOpp: 'setOpp'
     }),
     getFormData() {
       const data_map = new Map();
@@ -688,6 +692,7 @@ export default {
         };
         this.productItems.push(product);
       });
+      // this.setProducts(this.temp);
       // console.log('productItems', this.productItems);
     },
     formatDate(date) {
@@ -774,6 +779,7 @@ export default {
   },
   async created() {
     this.setPage('');
+    this.setTab('opp');
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
     await this.getProducts();
     await this.$store.dispatch('setCurrentTable', 'Products');
