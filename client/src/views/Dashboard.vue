@@ -55,6 +55,8 @@
                       dense
                       class="mt-5"
                       light
+                      @change="search"
+                      @click:clear="clearSearch"
                     ></v-text-field>
                     <v-spacer></v-spacer>
                   </v-toolbar>
@@ -108,9 +110,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-
 import moment from 'moment';
 import { mapMutations, mapState } from 'vuex';
 
@@ -173,6 +172,7 @@ export default {
   watch: {
     options: {
       handler() {
+        this.setSearchStr(this.searchStr);
         this.getDataFromApi().then(data => {
           this.rows = data.items;
           this.totalLeads = data.total;
@@ -196,7 +196,8 @@ export default {
       setOppId: 'setOppId',
       setOpp: 'setOpp',
       setPage: 'setPage',
-      setPerPage: 'setPerPage'
+      setPerPage: 'setPerPage',
+      setSearchStr: 'setSearchStr'
     }),
     editOpportunity(item) {
       this.setOppId(item.Id);
@@ -205,18 +206,17 @@ export default {
       // console.log(item);
     },
     onSelectChange(status) {
-      console.log(status);
     },
     getDataFromApi() {
       return new Promise(async (resolve, reject) => {
         const { sortBy, sortDesc, page, itemsPerPage } = this.options;
         this.setPage(page);
         this.setPerPage(itemsPerPage);
+        let total = undefined;
+        let items = undefined;
         const { opts, totalOpts } = await this.getRecords();
-        const total = totalOpts;
-        let items = opts;
-
-        // console.log(items);
+        total = totalOpts;
+        items = opts;
         if (sortBy.length === 1 && sortDesc.length === 1) {
           items = items.sort((a, b) => {
             const sortA = a[sortBy[0]];
@@ -238,6 +238,17 @@ export default {
           total
         });
       });
+    },
+    async search() {
+      this.setSearchStr(this.searchStr);
+      this.getDataFromApi().then(data => {
+        this.rows = data.items;
+        this.totalLeads = data.total;
+      });
+    },
+    clearSearch() {
+      this.searchStr = '';
+      this.search();
     }
   }
 };

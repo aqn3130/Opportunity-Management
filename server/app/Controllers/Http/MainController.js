@@ -32,11 +32,39 @@ class MainController {
           .from(request.Table)
           .where('Email', params.email)
       }
+      else if (params.searchStr){
+        let page = params.page || 1;
+        let perPage = params.perPage || 10;
+        const pageInt = parseInt(page);
+        let perPageInt = parseInt(perPage);
+        if (perPageInt === -1) perPageInt = 100000000000000000;
+        let total = 0;
+        if ( pageInt === 1 ) page = 0;
+        const offset = pageInt * perPageInt - perPageInt;
+        if (params.searchStr === null) params.searchStr = '';
+        const str = `%${params.searchStr}%`;
+        const queryTotal = await request.Knex(request.Table).where(function() {
+          this.where('Type','like', str)
+            .orWhere('SalesRep', 'like', str)
+            .orWhere('OpportunityName','like', str)
+        })
+        query = await request.Knex(request.Table).where(function() {
+          this.where('Type','like', str)
+            .orWhere('SalesRep', 'like', str)
+            .orWhere('OpportunityName','like', str)
+        }).limit(perPageInt).offset(offset)
+        total = queryTotal.length;
+        return {
+          totalOpts: total,
+          opts: query
+        }
+      }
       else {
         let page = params.page || 1;
-        const perPage = params.perPage || 10;
+        let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
-        const perPageInt = parseInt(perPage);
+        let perPageInt = parseInt(perPage);
+        if (perPageInt === -1) perPageInt = 100000000000000000;
         let total = await request.Knex.select('*').from(request.Table);
         if (!params.page) {
           return total;
@@ -44,7 +72,7 @@ class MainController {
         total = total.length;
         if ( pageInt === 1 ) page = 0;
         const offset = pageInt * perPageInt - perPageInt;
-        query = await request.Knex.select('*').from(request.Table).limit(perPage).offset(offset);
+        query = await request.Knex.select('*').from(request.Table).limit(perPageInt).offset(offset);
         // console.log(page, offset);
         return {
           totalOpts: total,

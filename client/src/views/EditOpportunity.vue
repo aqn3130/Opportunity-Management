@@ -17,7 +17,7 @@
           Notes
         </v-tab>
 
-        <v-tab href="#tab-3">
+        <v-tab href="#tab-3" v-if="opportunity.Type === 'SPS'">
           SPS
         </v-tab>
       </v-tabs>
@@ -56,7 +56,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['openedTab'])
+    ...mapState(['openedTab', 'opportunity'])
   },
   created() {
     this.openedTab;
