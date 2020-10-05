@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-toolbar color="#455A64" height="30" dark class="subtitle-2">
+    <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
       <v-spacer></v-spacer>
       {{ title }}
       <v-spacer></v-spacer>
@@ -248,7 +248,7 @@
         </v-row>
       </v-form>
     </v-card>
-    <v-toolbar color="#455A64" height="30" dark class="subtitle-2">
+    <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
       <v-spacer></v-spacer>
       Products
       <v-spacer></v-spacer>
@@ -775,6 +775,54 @@ export default {
           // }
         });
       }
+    },
+    async init() {
+      if (this.opportunityId) {
+        this.setPage('');
+        this.setTab('opp');
+        await this.$store.dispatch('setCurrentTable', 'Opportunity');
+        await this.getProducts();
+        await this.$store.dispatch('setCurrentTable', 'Products');
+        const data = await this.$store.dispatch('getRecords', '');
+        Object.keys(data).forEach(key => {
+          this.products.push(data[key].Category_Description);
+        });
+        this.salesRepType = this.opportunity.Type;
+        this.salesRep = this.opportunity.SalesRep;
+        this.opportunityName = this.opportunity.OpportunityName;
+        this.customerName = this.opportunity.CustomerName;
+        this.bpId = this.opportunity.BPID;
+        this.memberOfConsortia = this.opportunity.MemberOfConsortia;
+        this.country = this.opportunity.Country;
+        this.state = this.opportunity.State;
+        this.channelType = this.opportunity.ChannelType;
+        await this.setIndustryType(this.channelType);
+        this.industryType = this.opportunity.IndustryType;
+        this.origin = this.opportunity.Origin;
+        this.leadId = this.opportunity.LeadID;
+        this.status = this.opportunity.Status;
+        this.onStatusChange(this.status);
+        this.salesStage = this.opportunity.SalesStage;
+        this.lostOpportunityReason = this.opportunity.LostOpportunityReason;
+        this.licenseId = this.opportunity.LicenseID;
+        this.forecastCategory = this.opportunity.ForecastCategory;
+        this.agentName = this.opportunity.AgentName;
+        this.currency = this.opportunity.Currency;
+        this.expectedCloseDate = this.formatDate(
+          this.opportunity.ExpectedCloseDate
+        );
+        await this.$store.dispatch(
+          'setCurrentTable',
+          'Country_Region_Territory'
+        );
+        const countries = await this.$store.dispatch('getRecords', '');
+        Object.keys(countries).forEach((value, index) => {
+          if (countries[index])
+            this.countryItems.push(countries[index].Country);
+        });
+      } else {
+        await this.$router.push({ name: 'Dashboard' });
+      }
     }
   },
   computed: {
@@ -782,45 +830,12 @@ export default {
     ...mapState(['loading', 'opportunityId', 'opportunity'])
   },
   async created() {
-    this.setPage('');
-    this.setTab('opp');
-    await this.$store.dispatch('setCurrentTable', 'Opportunity');
-    await this.getProducts();
-    await this.$store.dispatch('setCurrentTable', 'Products');
-    const data = await this.$store.dispatch('getRecords', '');
-    Object.keys(data).forEach(key => {
-      this.products.push(data[key].Category_Description);
-    });
-    // this.products = data;
-    this.salesRepType = this.opportunity.Type;
-    this.salesRep = this.opportunity.SalesRep;
-    this.opportunityName = this.opportunity.OpportunityName;
-    this.customerName = this.opportunity.CustomerName;
-    this.bpId = this.opportunity.BPID;
-    this.memberOfConsortia = this.opportunity.MemberOfConsortia;
-    this.country = this.opportunity.Country;
-    this.state = this.opportunity.State;
-    this.channelType = this.opportunity.ChannelType;
-    await this.setIndustryType(this.channelType);
-    this.industryType = this.opportunity.IndustryType;
-    this.origin = this.opportunity.Origin;
-    this.leadId = this.opportunity.LeadID;
-    this.status = this.opportunity.Status;
-    this.onStatusChange(this.status);
-    this.salesStage = this.opportunity.SalesStage;
-    this.lostOpportunityReason = this.opportunity.LostOpportunityReason;
-    this.licenseId = this.opportunity.LicenseID;
-    this.forecastCategory = this.opportunity.ForecastCategory;
-    this.agentName = this.opportunity.AgentName;
-    this.currency = this.opportunity.Currency;
-    this.expectedCloseDate = this.formatDate(
-      this.opportunity.ExpectedCloseDate
-    );
-    await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
-    const countries = await this.$store.dispatch('getRecords', '');
-    Object.keys(countries).forEach((value, index) => {
-      if (countries[index]) this.countryItems.push(countries[index].Country);
-    });
+    try {
+      await this.init();
+    } catch (e) {
+      console.log(e);
+      await this.$router.push({name: 'Dashboard'});
+    }
   }
 };
 </script>

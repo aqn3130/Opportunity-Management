@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-toolbar color="#455A64" height="30" dark class="subtitle-2">
+    <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
       <v-spacer></v-spacer>
       New Note
       <v-spacer></v-spacer>
@@ -25,7 +25,7 @@
         </v-row>
       </v-form>
     </v-card>
-    <v-toolbar color="#455A64" height="30" dark class="subtitle-2">
+    <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
       <v-spacer></v-spacer>
       Notes
       <v-spacer></v-spacer>

@@ -29,13 +29,13 @@
           </v-card>
         </v-tab-item>
         <v-tab-item value="tab-2">
-          <v-card flat>
+          <v-card flat color="#eceff1">
             <Notes />
           </v-card>
         </v-tab-item>
         <v-tab-item value="tab-3">
-          <v-card flat>
-            <v-card-text></v-card-text>
+          <v-card flat color="#eceff1">
+            <SPS />
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -45,10 +45,11 @@
 <script>
 import EditOpp from '../components/EditOpp';
 import Notes from '../components/Notes';
+import SPS from '../components/SPS';
 import { mapMutations, mapState } from 'vuex';
 export default {
   name: 'EditOpportunity',
-  components: { EditOpp, Notes },
+  components: { EditOpp, Notes, SPS },
   data() {
     return {
       tab: null,
@@ -59,7 +60,9 @@ export default {
     ...mapState(['openedTab', 'opportunity'])
   },
   created() {
+    if (!this.opportunity) this.$router.push({ name: 'Dashboard'});
     this.openedTab;
+    // window.BUS.$on('sps-updated', () => {})
   },
   methods: {
     ...mapMutations({
