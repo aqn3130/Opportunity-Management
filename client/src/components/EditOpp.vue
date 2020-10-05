@@ -719,15 +719,19 @@ export default {
         agentDiscount: null,
         grossValue: null,
         renewal: 0,
-        opportunity_fk: parseInt(this.opportunityId, 11)
+        opportunity_fk: parseInt(this.opportunityId)
       };
-      if (this.productItems[this.productItems.length - 1].cry === null) {
+      if (
+        this.productItems[this.productItems.length - 1] &&
+        this.productItems[this.productItems.length - 1].cry === null
+      ) {
         if (this.$refs.productForm.validate()) {
           this.productItems.push(product);
         }
       } else {
         this.productItems.push(product);
       }
+      console.log(this.productItems);
     },
     deleteProduct(item) {
       // console.log(item);

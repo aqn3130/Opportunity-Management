@@ -200,6 +200,8 @@ export default {
       setSearchStr: 'setSearchStr'
     }),
     editOpportunity(item) {
+      this.searchStr = '';
+      this.setSearchStr(this.searchStr);
       this.setOppId(item.Id);
       this.setOpp(item);
       this.$router.push({ name: 'Edit Opportunity' });
