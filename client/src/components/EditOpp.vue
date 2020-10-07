@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid id="oppEditContainer">
     <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
       <v-spacer></v-spacer>
       {{ title }}
@@ -364,6 +364,40 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog
+            v-model="unsavedChangesDialog"
+            width="500"
+    >
+      <v-card>
+        <v-card-title class="headline grey lighten-2">
+          Are you sure?
+        </v-card-title>
+
+        <v-card-text>
+          There are unsaved changes to this Opportunity, please confirm leaving this page.
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+                  color="primary"
+                  text
+                  @click="saveChanges"
+          >
+            Complete this action
+          </v-btn>
+          <v-btn
+                  color="primary"
+                  text
+                  @click="leavePageWithoutSave"
+          >
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -512,7 +546,8 @@ export default {
     ],
     dateFormat: 'yyyy-MM-dd',
     deleteProductDialog: false,
-    toBeDeletedProductId: null
+    toBeDeletedProductId: null,
+    unsavedChangesDialog: false
   }),
   methods: {
     ...mapMutations({
@@ -520,7 +555,9 @@ export default {
       setPerPage: 'setPerPage',
       setTab: 'setTab',
       setProducts: 'setProducts',
-      setOpp: 'setOpp'
+      setOpp: 'setOpp',
+      setCurrentOpp: 'setCurrentOpp',
+      setFormData: 'setFormData'
     }),
     getFormData() {
       const data_map = new Map();
@@ -826,20 +863,49 @@ export default {
     },
     formatCurrency(amount) {
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    getCurrentOpp() {
+      const data = this.getFormData();
+      const currentOpp = {};
+      for (const [keyOpp,valueOpp] of Object.entries(this.opportunity)){
+        for(const [keyForm, valueForm] of Object.entries(data)){
+          if(keyOpp === keyForm) {
+            currentOpp[keyForm] = valueForm
+          }
+        }
+      }
+      currentOpp.id = this.opportunityId;
+      this.setCurrentOpp(currentOpp);
+    },
+    saveChanges(){
+      this.unsavedChangesDialog = false;
+    },
+    leavePageWithoutSave(){
+      this.unsavedChangesDialog = false;
     }
   },
   computed: {
     ...mapState('auth', ['currentUser']),
-    ...mapState(['loading', 'opportunityId', 'opportunity'])
+    ...mapState(['loading', 'opportunityId', 'opportunity', 'currentOpp'])
   },
   async created() {
+    window.BUS.$on('opp-changed', () => {
+      this.unsavedChangesDialog = true;
+    });
     try {
       await this.init();
+      // this.getCurrentOpp();
+      const formData = this.getFormData();
+      this.setCurrentOpp(formData);
     } catch (e) {
       console.log(e);
       await this.$router.push({name: 'Dashboard'});
     }
-  }
+  },
+  updated() {
+    const formData = this.getFormData();
+    this.setFormData(formData);
+  },
 };
 </script>
 <style>

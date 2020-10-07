@@ -19,7 +19,9 @@ export default new Vuex.Store({
     perPage: 10,
     openedTab: null,
     products: [],
-    searchStr: ''
+    searchStr: '',
+    currentOpp: null,
+    formData: null
   },
   mutations: {
     setTable(state, value) {
@@ -51,6 +53,12 @@ export default new Vuex.Store({
     },
     setSearchStr(state, searchStr) {
       state.searchStr = searchStr;
+    },
+    setCurrentOpp(state, currentOpp) {
+      state.currentOpp = currentOpp;
+    },
+    setFormData(state, formData) {
+      state.formData = formData;
     }
   },
   actions: {

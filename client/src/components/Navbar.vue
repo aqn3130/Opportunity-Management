@@ -117,7 +117,9 @@ export default {
   },
   methods: {
     onSandwichMenuClick() {
+      if (JSON.stringify(this.formData) === JSON.stringify(this.currentOpp))
       this.drawer = !this.drawer;
+      else window.BUS.$emit('opp-changed');
     },
     toHome() {
       this.$router.push({ path: '/' });
@@ -133,7 +135,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('auth', ['token', 'currentUser'])
+    ...mapState('auth', ['token', 'currentUser']),
+    ...mapState(['formData', 'currentOpp'])
   },
   created() {
     window.addEventListener('resize', () => {
