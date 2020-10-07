@@ -201,7 +201,7 @@
               ></v-date-picker>
             </v-menu>
 
-            <v-text-field v-model="agentName" label="Agent Name"></v-text-field>
+            <v-text-field v-model="agentName" label="Agent Name" class="body-2"></v-text-field>
             <v-select
               v-model="currency"
               :items="currencyItems"
@@ -253,7 +253,7 @@
       Products
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card tile>
+    <v-card tile class="caption">
       <v-form ref="productForm" v-model="productValid" lazy-validation>
         <v-list dense>
           <v-list-item-group v-model="productItem" color="primary">
@@ -264,7 +264,7 @@
                   v-model="item.cry"
                   label="CRY"
                   :rules="nameRules"
-                  class="body-2"
+                  class="caption"
                   :style="{ maxWidth: '80px' }"
                 ></v-select>
               </v-list-item-content>
@@ -274,7 +274,7 @@
                   v-model="item.typeOfBusiness"
                   label="Type of Business"
                   :rules="nameRules"
-                  class="body-2"
+                  class="caption"
                 ></v-select>
               </v-list-item-content>
               <v-list-item-content class="mr-2">
@@ -283,7 +283,7 @@
                   v-model="item.productName"
                   label="Product Name"
                   :rules="nameRules"
-                  class="body-2"
+                  class="caption"
                   @input="onProductNameChange"
                 ></v-select>
               </v-list-item-content>
@@ -311,7 +311,7 @@
                   v-model="item.likelihood"
                   label="Likelihood"
                   :rules="nameRules"
-                  class="body-2"
+                  class="caption"
                 ></v-select>
               </v-list-item-content>
               <v-list-item-content>
@@ -326,7 +326,7 @@
                   :items="agentDiscountOptions"
                   v-model="item.agentDiscount"
                   label="Agent Discount"
-                  class="body-2"
+                  class="caption"
                 ></v-select>
               </v-list-item-content>
               <v-list-item-content class="ml-2">
@@ -334,7 +334,7 @@
                   v-model="item.grossValue"
                   label="Gross Value"
                   :rules="nameRules"
-                  class="body-2"
+                  class="caption"
                 ></v-text-field>
               </v-list-item-content>
               <v-btn icon small @click="deleteProduct(item)"
@@ -688,7 +688,7 @@ export default {
           likelihood: data[key].Likelihood,
           agent: data[key].Agent,
           agentDiscount: data[key].AgentDiscount,
-          grossValue: data[key].GrossValue
+          grossValue: this.formatCurrency(data[key].GrossValue)
         };
         this.productItems.push(product);
       });
@@ -823,6 +823,9 @@ export default {
       } else {
         await this.$router.push({ name: 'Dashboard' });
       }
+    },
+    formatCurrency(amount) {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   computed: {

@@ -87,6 +87,11 @@
                     {{ item.ExpectedCloseDate | convertDate }}
                   </span>
                 </template>
+                <template v-slot:item.GrossValue="{ item }">
+                  <span>
+                    {{ item.GrossValue | formatCurrency }}
+                  </span>
+                </template>
               </v-data-table>
             </v-col>
           </v-row>
@@ -135,6 +140,9 @@ export default {
       if (!value) return '';
       value = value.toString();
       return moment(value).format('YYYY-MM-DD');
+    },
+    formatCurrency(amount) {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   async created() {
