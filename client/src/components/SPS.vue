@@ -10,7 +10,7 @@
       light
       :style="{ paddingLeft: '200px', paddingRight: '200px' }"
     >
-      <v-form ref="spsForm" class="py-5">
+      <v-form ref="spsForm" class="py-5" v-model="spsValid" lazy-validation>
         <v-select
           :items="valuePropositionDoc"
           v-model="vpd"
@@ -107,11 +107,13 @@
         <v-text-field
           v-model="NoRL"
           label="Number Of Recommendation Letters"
+          :rules="NoRLRule"
         ></v-text-field>
 <!--        <v-text-field v-model="NoRLComment" label="NoRL Comment"></v-text-field>-->
       </v-form>
       <v-card-actions>
-        <v-btn @click="saveSPS" class="mb-5" color="#455A64" dark>Update</v-btn>
+        <v-btn @click="saveSPS" class="mb-5" color="#455A64" :disabled="!spsValid" v-if="!spsValid">Update</v-btn>
+        <v-btn @click="saveSPS" class="mb-5" color="#455A64" dark v-else>Update</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -137,10 +139,20 @@ export default {
     trialStartDate: null,
     trialEndDate: null,
     NoRL: null,
-    NoRLComment: null
+    NoRLComment: null,
+    NoRLRule: [v => /^[0-9]+$/.test(v) || 'Numeric values only']
   }),
   computed: {
-    ...mapState(['opportunityId'])
+    ...mapState(['opportunityId', 'opportunity'])
+  },
+  created() {
+    this.vpd = this.opportunity.ValuePropositionDocument;
+    this.pds = this.opportunity.ProductDemoStatus;
+    this.productDemoDate = this.opportunity.ProductDemoDate;
+    this.trialStatus = this.opportunity.TrialStatus;
+    this.trialStartDate = this.opportunity.TrialStartDate;
+    this.trialEndDate = this.opportunity.TrialEndDate;
+    this.NoRL = this.opportunity.NumberOfRecommendationLetters;
   },
   methods: {
     getFormData() {
@@ -162,7 +174,6 @@ export default {
         await this.$store.dispatch('setCurrentTable', 'Opportunity');
         await this.$store.dispatch('updateRecord', data);
         // console.log(data);
-        this.$refs.spsForm.reset();
         this.$toast.open({
           message: 'Opportunity Updated',
           type: 'success',
@@ -171,11 +182,22 @@ export default {
           position: 'bottom',
           onClose: () => {
             // window.BUS.$emit('sps-updated');
-            this.$router.push({ name: 'Dashboard' });
+            // this.$router.push({ name: 'Dashboard' });
           }
         });
       } catch (e) {
         console.log(e);
+        this.$toast.open({
+          message: 'Opportunity updated failed, please contact your system admin',
+          type: 'error',
+          duration: 2000,
+          dismissible: true,
+          position: 'bottom',
+          onClose: () => {
+            // window.BUS.$emit('sps-updated');
+            // this.$router.push({ name: 'Dashboard' });
+          }
+        });
       }
     }
   }

@@ -43,6 +43,7 @@
                 color="primary"
                 class="mr-4"
                 @click="validate"
+                :loading="loading"
                 >Login</v-btn
               >
               <!--                            <v-btn color="error" class="mr-4" @click="reset">Reset</v-btn>-->
@@ -69,7 +70,8 @@ export default {
       // emailMatch: () => ('The email and password you entered don\'t match'),
     },
     show1: false,
-    show2: false
+    show2: false,
+    loading: false
   }),
   computed: {
     ...mapState('auth', ['username', 'password', 'loginError'])
@@ -78,17 +80,21 @@ export default {
     ...mapMutations('auth', ['setUsername', 'setPassword', 'setError']),
     ...mapActions('auth', ['login']),
     async validate() {
+      this.loading = true;
       if (this.$refs.form.validate()) {
         try {
           // await this.$store.dispatch('auth/login');
           await this.login();
+          this.loading = false;
           await this.$router.push({ name: 'Dashboard' });
         } catch (e) {
+          this.loading = false;
           this.setError(e);
         }
       }
     },
     reset() {
+      this.loading = false;
       this.$refs.form.reset();
       this.setError(null);
     }

@@ -44,7 +44,7 @@
                 :options.sync="options"
               >
                 <template v-slot:top>
-                  <v-toolbar flat color="grey lighten-3">
+                  <v-toolbar flat color="grey lighten-2">
                     <v-spacer></v-spacer>
                     <v-text-field
                       v-model="searchStr"
@@ -100,9 +100,10 @@
       bottom
       right
       color="#455A64"
-      class="mb-10 mr-10"
+      class="mb-16 mr-1"
       link
       to="/new-opportunity"
+      fixed
     >
       <v-icon>mdi-plus</v-icon>
     </v-btn>

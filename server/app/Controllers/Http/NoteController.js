@@ -4,6 +4,9 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const env = use('Env');
+const axios = require('axios');
+
 /**
  * Resourceful controller for interacting with notes
  */
