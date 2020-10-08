@@ -118,11 +118,13 @@ export default {
   methods: {
     onSandwichMenuClick() {
       if (JSON.stringify(this.formData) === JSON.stringify(this.currentOpp))
-      this.drawer = !this.drawer;
+        this.drawer = !this.drawer;
       else window.BUS.$emit('opp-changed');
     },
     toHome() {
-      this.$router.push({ path: '/' });
+      if (JSON.stringify(this.formData) === JSON.stringify(this.currentOpp))
+        this.$router.push({ path: '/' });
+      else window.BUS.$emit('go-home');
     },
     logout() {
       this.$store.dispatch('auth/logout');
@@ -142,6 +144,12 @@ export default {
     window.addEventListener('resize', () => {
       this.drawerHeight = window.innerHeight - 200;
     });
+    window.BUS.$on('leave-page', () => {
+      this.drawer = !this.drawer;
+    })
+    window.BUS.$on('nav-home', () => {
+      this.$router.push({ name: 'Dashboard'});
+    })
   },
   beforeCreate() {},
   mounted() {

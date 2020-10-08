@@ -383,10 +383,10 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="saveChanges">
+          <v-btn color="primary" text @click="leavePageWithoutSave">
             Complete this action
           </v-btn>
-          <v-btn color="primary" text @click="leavePageWithoutSave">
+          <v-btn color="primary" text @click="saveChanges">
             Cancel
           </v-btn>
         </v-card-actions>
@@ -541,7 +541,8 @@ export default {
     dateFormat: 'yyyy-MM-dd',
     deleteProductDialog: false,
     toBeDeletedProductId: null,
-    unsavedChangesDialog: false
+    unsavedChangesDialog: false,
+    goHome: false
   }),
   methods: {
     ...mapMutations({
@@ -879,7 +880,13 @@ export default {
       this.unsavedChangesDialog = false;
     },
     leavePageWithoutSave() {
-      this.unsavedChangesDialog = false;
+      if(this.goHome) {
+        window.BUS.$emit('nav-home');
+        this.goHome = false;
+        } else {
+          window.BUS.$emit('leave-page');
+          this.unsavedChangesDialog = false;
+        }
     },
     formatGrossValue(value) {
       value = value.replace(/,/g, '');
@@ -893,6 +900,10 @@ export default {
   async created() {
     window.BUS.$on('opp-changed', () => {
       this.unsavedChangesDialog = true;
+    });
+    window.BUS.$on('go-home', () => {
+      this.unsavedChangesDialog = true;
+      this.goHome = true;
     });
     try {
       await this.init();

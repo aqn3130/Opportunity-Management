@@ -83,13 +83,33 @@
                   </v-tooltip>
                 </template>
                 <template v-slot:item.ExpectedCloseDate="{ item }">
-                  <span>
+                  <span class="caption">
                     {{ item.ExpectedCloseDate | convertDate }}
                   </span>
                 </template>
                 <template v-slot:item.GrossValue="{ item }">
-                  <span>
+                  <span class="caption">
                     {{ item.GrossValue | formatCurrency }}
+                  </span>
+                </template>
+                <template v-slot:item.Currency="{ item }">
+                  <span class="caption">
+                    {{ item.Currency }}
+                  </span>
+                </template>
+                <template v-slot:item.Status="{ item }">
+                  <span class="caption">
+                    {{ item.Status }}
+                  </span>
+                </template>
+                <template v-slot:item.ChannelType="{ item }">
+                  <span class="caption">
+                    {{ item.ChannelType }}
+                  </span>
+                </template>
+                <template v-slot:item.Country="{ item }">
+                  <span class="caption">
+                    {{ item.Country }}
                   </span>
                 </template>
               </v-data-table>
