@@ -201,7 +201,11 @@
               ></v-date-picker>
             </v-menu>
 
-            <v-text-field v-model="agentName" label="Agent Name" class="body-2"></v-text-field>
+            <v-text-field
+              v-model="agentName"
+              label="Agent Name"
+              class="body-2"
+            ></v-text-field>
             <v-select
               v-model="currency"
               :items="currencyItems"
@@ -364,35 +368,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-            v-model="unsavedChangesDialog"
-            width="500"
-    >
+    <v-dialog v-model="unsavedChangesDialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2">
           Are you sure?
         </v-card-title>
 
         <v-card-text>
-          There are unsaved changes to this Opportunity, please confirm leaving this page.
+          There are unsaved changes to this Opportunity, please confirm leaving
+          this page.
         </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-                  color="primary"
-                  text
-                  @click="saveChanges"
-          >
+          <v-btn color="primary" text @click="saveChanges">
             Complete this action
           </v-btn>
-          <v-btn
-                  color="primary"
-                  text
-                  @click="leavePageWithoutSave"
-          >
+          <v-btn color="primary" text @click="leavePageWithoutSave">
             Cancel
           </v-btn>
         </v-card-actions>
@@ -626,8 +620,12 @@ export default {
           await this.$store.dispatch('createRecord', this.productItems[key]);
           // delete this.productItems[key];
         }
-        if (this.productItems[key].id)
+        if (this.productItems[key].id) {
+          this.productItems[key].grossValue = this.formatGrossValue(
+            this.productItems[key].grossValue
+          );
           await this.$store.dispatch('updateRecord', this.productItems[key]);
+        }
       }
     },
     async validate() {
@@ -768,7 +766,7 @@ export default {
       } else {
         this.productItems.push(product);
       }
-      console.log(this.productItems);
+      // console.log(this.productItems);
     },
     deleteProduct(item) {
       // console.log(item);
@@ -862,26 +860,30 @@ export default {
       }
     },
     formatCurrency(amount) {
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     getCurrentOpp() {
       const data = this.getFormData();
       const currentOpp = {};
-      for (const [keyOpp,valueOpp] of Object.entries(this.opportunity)){
-        for(const [keyForm, valueForm] of Object.entries(data)){
-          if(keyOpp === keyForm) {
-            currentOpp[keyForm] = valueForm
+      for (const [keyOpp, valueOpp] of Object.entries(this.opportunity)) {
+        for (const [keyForm, valueForm] of Object.entries(data)) {
+          if (keyOpp === keyForm) {
+            currentOpp[keyForm] = valueForm;
           }
         }
       }
       currentOpp.id = this.opportunityId;
       this.setCurrentOpp(currentOpp);
     },
-    saveChanges(){
+    saveChanges() {
       this.unsavedChangesDialog = false;
     },
-    leavePageWithoutSave(){
+    leavePageWithoutSave() {
       this.unsavedChangesDialog = false;
+    },
+    formatGrossValue(value) {
+      value = value.replace(/,/g, '');
+      return value;
     }
   },
   computed: {
@@ -899,13 +901,13 @@ export default {
       this.setCurrentOpp(formData);
     } catch (e) {
       console.log(e);
-      await this.$router.push({name: 'Dashboard'});
+      await this.$router.push({ name: 'Dashboard' });
     }
   },
   updated() {
     const formData = this.getFormData();
     this.setFormData(formData);
-  },
+  }
 };
 </script>
 <style>
