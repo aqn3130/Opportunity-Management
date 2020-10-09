@@ -392,6 +392,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="loadingDialog" width="200">
+      <v-card>
+        <v-card-text class="pa-8 body-2">
+          Loading...
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -405,6 +412,7 @@ export default {
   },
   name: 'EditOpp',
   data: () => ({
+    loadingDialog: false,
     title: 'Edit Opportunity',
     valid: true,
     productValid: true,
@@ -553,7 +561,8 @@ export default {
       setProducts: 'setProducts',
       setOpp: 'setOpp',
       setCurrentOpp: 'setCurrentOpp',
-      setFormData: 'setFormData'
+      setFormData: 'setFormData',
+      setLoading: 'setLoading'
     }),
     getFormData() {
       const data_map = new Map();
@@ -911,6 +920,7 @@ export default {
     ...mapState(['loading', 'opportunityId', 'opportunity', 'currentOpp'])
   },
   async created() {
+    this.loadingDialog = true;
     window.BUS.$on('opp-changed', () => {
       this.unsavedChangesDialog = true;
     });
@@ -920,13 +930,13 @@ export default {
     });
     try {
       await this.init();
-      // this.getCurrentOpp();
       const formData = this.getFormData();
       this.setCurrentOpp(formData);
     } catch (e) {
       console.log(e);
       await this.$router.push({ name: 'Dashboard' });
     }
+    this.loadingDialog = false;
   },
   updated() {
     const formData = this.getFormData();

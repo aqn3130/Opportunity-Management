@@ -57,10 +57,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(['openedTab', 'opportunity'])
+    ...mapState(['openedTab', 'opportunity', 'loading'])
   },
   created() {
-    if (!this.opportunity) this.$router.push({ name: 'Dashboard'});
+    if (!this.opportunity) this.$router.push({ name: 'Dashboard' });
     this.openedTab;
     // window.BUS.$on('sps-updated', () => {})
   },

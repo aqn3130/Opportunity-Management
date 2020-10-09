@@ -212,10 +212,6 @@ export default {
     }
   },
   mounted() {
-    // this.getDataFromApi().then(data => {
-    //   this.rows = data.items;
-    //   this.totalLeads = data.total;
-    // });
   },
   methods: {
     getRecords: async function() {
