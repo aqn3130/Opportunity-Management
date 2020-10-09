@@ -162,7 +162,7 @@ export default {
       return moment(value).format('YYYY-MM-DD');
     },
     formatCurrency(amount) {
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
   },
   async created() {
@@ -236,8 +236,7 @@ export default {
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },
-    onSelectChange(status) {
-    },
+    onSelectChange(status) {},
     getDataFromApi() {
       return new Promise(async (resolve, reject) => {
         const { sortBy, sortDesc, page, itemsPerPage } = this.options;

@@ -42,7 +42,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="date"
+                  v-model="opportunityStartDate"
                   label="Opportunity Start Date"
                   prepend-icon="event"
                   readonly
@@ -52,7 +52,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="date"
+                v-model="opportunityStartDate"
                 @input="menu = false"
               ></v-date-picker>
             </v-menu>
@@ -429,6 +429,7 @@ export default {
     salesRepType: null,
     date: new Date().toISOString().substr(0, 10),
     expectedCloseDate: null,
+    opportunityStartDate: null,
     menu: false,
     menu2: false,
     menu3: false,
@@ -610,12 +611,13 @@ export default {
         delete this.productItems[key].TOBItems;
         // console.log(this.productItems[key]);
         if (!this.productItems[key].id) {
-          if (this.productItems[key].typeOfBusiness === 'Renewal')
+          if (this.productItems[key].typeOfBusiness === 'Renewal') {
             this.productItems[key].renewal = 1;
-          this.productItems[key].licenseStartDate = this.formatDate(
+          }
+          this.productItems[key].licenseStartDate = this.formatDateUpdate(
             this.productItems[key].licenseStartDate
           );
-          this.productItems[key].licenseEndDate = this.formatDate(
+          this.productItems[key].licenseEndDate = this.formatDateUpdate(
             this.productItems[key].licenseEndDate
           );
           await this.$store.dispatch('createRecord', this.productItems[key]);
@@ -624,6 +626,12 @@ export default {
         if (this.productItems[key].id) {
           this.productItems[key].grossValue = this.formatGrossValue(
             this.productItems[key].grossValue
+          );
+          this.productItems[key].licenseStartDate = this.formatDate(
+            this.productItems[key].licenseStartDate
+          );
+          this.productItems[key].licenseEndDate = this.formatDate(
+            this.productItems[key].licenseEndDate
           );
           await this.$store.dispatch('updateRecord', this.productItems[key]);
         }
@@ -735,9 +743,11 @@ export default {
       if (!date) return '';
       date = date.toString();
       const format = 'YYYY-MM-DD';
-      return moment(date)
-        .utc()
-        .format(format);
+      return (
+        moment(date)
+          // .utc()
+          .format(format)
+      );
     },
     addProduct() {
       const product = {
@@ -846,6 +856,9 @@ export default {
         this.currency = this.opportunity.Currency;
         this.expectedCloseDate = this.formatDate(
           this.opportunity.ExpectedCloseDate
+        );
+        this.opportunityStartDate = this.formatDate(
+          this.opportunity.OpportunityStartDate
         );
         await this.$store.dispatch(
           'setCurrentTable',
