@@ -880,13 +880,13 @@ export default {
       this.unsavedChangesDialog = false;
     },
     leavePageWithoutSave() {
-      if(this.goHome) {
+      if (this.goHome) {
         window.BUS.$emit('nav-home');
         this.goHome = false;
-        } else {
-          window.BUS.$emit('leave-page');
-          this.unsavedChangesDialog = false;
-        }
+      } else {
+        window.BUS.$emit('leave-page');
+        this.unsavedChangesDialog = false;
+      }
     },
     formatGrossValue(value) {
       value = value.replace(/,/g, '');

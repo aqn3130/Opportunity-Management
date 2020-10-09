@@ -109,11 +109,20 @@
           label="Number Of Recommendation Letters"
           :rules="NoRLRule"
         ></v-text-field>
-<!--        <v-text-field v-model="NoRLComment" label="NoRL Comment"></v-text-field>-->
+        <!--        <v-text-field v-model="NoRLComment" label="NoRL Comment"></v-text-field>-->
       </v-form>
       <v-card-actions>
-        <v-btn @click="saveSPS" class="mb-5" color="#455A64" :disabled="!spsValid" v-if="!spsValid">Update</v-btn>
-        <v-btn @click="saveSPS" class="mb-5" color="#455A64" dark v-else>Update</v-btn>
+        <v-btn
+          @click="saveSPS"
+          class="mb-5"
+          color="#455A64"
+          :disabled="!spsValid"
+          v-if="!spsValid"
+          >Update</v-btn
+        >
+        <v-btn @click="saveSPS" class="mb-5" color="#455A64" dark v-else
+          >Update</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-container>
@@ -121,6 +130,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import moment from 'moment';
 
 export default {
   name: 'SPS',
@@ -148,13 +158,18 @@ export default {
   created() {
     this.vpd = this.opportunity.ValuePropositionDocument;
     this.pds = this.opportunity.ProductDemoStatus;
-    this.productDemoDate = this.opportunity.ProductDemoDate;
+    this.productDemoDate = this.convertDate(this.opportunity.ProductDemoDate);
     this.trialStatus = this.opportunity.TrialStatus;
-    this.trialStartDate = this.opportunity.TrialStartDate;
-    this.trialEndDate = this.opportunity.TrialEndDate;
+    this.trialStartDate = this.convertDate(this.opportunity.TrialStartDate);
+    this.trialEndDate = this.convertDate(this.opportunity.TrialEndDate);
     this.NoRL = this.opportunity.NumberOfRecommendationLetters;
   },
   methods: {
+    convertDate: value => {
+      if (!value) return '';
+      value = value.toString();
+      return moment(value).format('YYYY-MM-DD');
+    },
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.spsForm._data.inputs) {
@@ -188,7 +203,8 @@ export default {
       } catch (e) {
         console.log(e);
         this.$toast.open({
-          message: 'Opportunity updated failed, please contact your system admin',
+          message:
+            'Opportunity updated failed, please contact your system admin',
           type: 'error',
           duration: 2000,
           dismissible: true,
