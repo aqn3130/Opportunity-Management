@@ -168,7 +168,6 @@ class MainController {
     } catch (e) {
       throw e;
     }
-
   }
 
   /**

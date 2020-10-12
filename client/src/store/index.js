@@ -18,11 +18,13 @@ export default new Vuex.Store({
     page: 0,
     perPage: 10,
     openedTab: null,
-    products: [],
+    productsOption: [],
     searchStr: '',
     currentOpp: null,
     formData: null,
-    filter: ''
+    filter: '',
+    countries: [],
+    stateOptions: []
   },
   mutations: {
     setTable(state, value) {
@@ -49,8 +51,8 @@ export default new Vuex.Store({
     setTab(state, tab) {
       state.openedTab = tab;
     },
-    setProducts(state, products) {
-      state.products = products;
+    setProductsOption(state, products) {
+      state.productsOption = products;
     },
     setSearchStr(state, searchStr) {
       state.searchStr = searchStr;
@@ -63,6 +65,12 @@ export default new Vuex.Store({
     },
     setFilter(state, filter) {
       state.filter = filter;
+    },
+    setCountries(state, countries) {
+      state.countries = countries;
+    },
+    setStateOptions(state, states) {
+      state.stateOptions = states;
     }
   },
   actions: {

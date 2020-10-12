@@ -91,7 +91,7 @@
               :rules="[v => !!v || 'This field is required']"
               label="Country *"
               required
-              @input="getStates(country)"
+              @input="onCountryChange(country)"
               class="body-2"
             ></v-select>
             <v-select
@@ -558,11 +558,13 @@ export default {
       setPage: 'setPage',
       setPerPage: 'setPerPage',
       setTab: 'setTab',
-      setProducts: 'setProducts',
+      setProductsOption: 'setProductsOption',
       setOpp: 'setOpp',
       setCurrentOpp: 'setCurrentOpp',
       setFormData: 'setFormData',
-      setLoading: 'setLoading'
+      setLoading: 'setLoading',
+      setCountries: 'setCountries',
+      setStateOptions: 'setStateOptions'
     }),
     getFormData() {
       const data_map = new Map();
@@ -659,16 +661,13 @@ export default {
     resetValidation() {
       this.$refs.form.resetValidation();
     },
-    async getStates(country) {
+    async getStatesForCurrentCountry(country, states) {
       this.states = [];
-      this.state = null;
-      await this.$store.dispatch('setCurrentTable', 'States');
-      const states = await this.$store.dispatch('getRecords', '');
       Object.keys(states).forEach((value, index) => {
         if (
-          states[index] &&
-          country.toLowerCase().trim() ===
-            states[index].Country.toLowerCase().trim()
+                states[index] && country &&
+                country.toLowerCase().trim() ===
+                states[index].Country.toLowerCase().trim()
         ) {
           this.states.push(states[index].Name);
         }
@@ -677,6 +676,25 @@ export default {
         this.states.push('N/A');
         this.state = this.states[0];
       }
+    },
+    async getStates() {
+      if (this.stateOptions.length){
+        this.states = this.stateOptions;
+      } else {
+        // this.states = [];
+        await this.$store.dispatch('setCurrentTable', 'States');
+        const states = await this.$store.dispatch('getRecords', '');
+        // Object.keys(states).forEach((value, index) => {
+        //   if (states[index]) {
+        //     this.states.push(states[index]);
+        //   }
+        // });
+        this.setStateOptions(states);
+      }
+    },
+    async onCountryChange(){
+      this.state = null;
+      await this.getStatesForCurrentCountry(this.country, this.stateOptions);
     },
     async setIndustryType(channelType) {
       this.industryTypeItems = [];
@@ -745,8 +763,6 @@ export default {
         };
         this.productItems.push(product);
       });
-      // this.setProducts(this.temp);
-      // console.log('productItems', this.productItems);
     },
     formatDate(date) {
       if (!date) return '';
@@ -831,17 +847,43 @@ export default {
         });
       }
     },
-    async init() {
-      if (this.opportunityId) {
-        this.setPage('');
-        this.setTab('opp');
-        await this.$store.dispatch('setCurrentTable', 'Opportunity');
-        await this.getProducts();
+    getProductOptions: async function () {
+      if (this.productsOption.length) {
+        this.products = this.productsOption;
+      } else {
         await this.$store.dispatch('setCurrentTable', 'Products');
         const data = await this.$store.dispatch('getRecords', '');
         Object.keys(data).forEach(key => {
           this.products.push(data[key].Category_Description);
         });
+        await this.setProductsOption(this.products);
+      }
+    },
+    getCountries: async function () {
+      if (this.countries.length) {
+        this.countryItems = this.countries;
+      } else {
+        await this.$store.dispatch(
+                'setCurrentTable',
+                'Country_Region_Territory'
+        );
+        const countries = await this.$store.dispatch('getRecords', '');
+        Object.keys(countries).forEach((value, index) => {
+          if (countries[index])
+            this.countryItems.push(countries[index].Country);
+        });
+        this.setCountries(this.countryItems);
+      }
+    },
+    async init() {
+      if (this.opportunityId) {
+        this.setPage('');
+        this.setTab('opp');
+        await this.$store.dispatch('setCurrentTable', 'Opportunity');
+        await this.getProductOptions();
+        await this.getProducts();
+        await this.getCountries();
+        await this.getStates();
         this.salesRepType = this.opportunity.Type;
         this.salesRep = this.opportunity.SalesRep;
         this.opportunityName = this.opportunity.OpportunityName;
@@ -850,6 +892,7 @@ export default {
         this.memberOfConsortia = this.opportunity.MemberOfConsortia;
         this.country = this.opportunity.Country;
         this.state = this.opportunity.State;
+        await this.getStatesForCurrentCountry(this.country, this.states);
         this.channelType = this.opportunity.ChannelType;
         await this.setIndustryType(this.channelType);
         this.industryType = this.opportunity.IndustryType;
@@ -869,15 +912,6 @@ export default {
         this.opportunityStartDate = this.formatDate(
           this.opportunity.OpportunityStartDate
         );
-        await this.$store.dispatch(
-          'setCurrentTable',
-          'Country_Region_Territory'
-        );
-        const countries = await this.$store.dispatch('getRecords', '');
-        Object.keys(countries).forEach((value, index) => {
-          if (countries[index])
-            this.countryItems.push(countries[index].Country);
-        });
       } else {
         await this.$router.push({ name: 'Dashboard' });
       }
@@ -918,7 +952,16 @@ export default {
   },
   computed: {
     ...mapState('auth', ['currentUser']),
-    ...mapState(['loading', 'opportunityId', 'opportunity', 'currentOpp'])
+    ...mapState(
+      [
+          'loading',
+          'opportunityId',
+          'opportunity',
+          'currentOpp',
+          'productsOption',
+          'countries',
+          'stateOptions'
+      ])
   },
   async created() {
     this.loadingDialog = true;
