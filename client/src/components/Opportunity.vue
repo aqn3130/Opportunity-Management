@@ -188,7 +188,7 @@
               :disabled="!valid"
               color="#607D8B"
               class="mr-4 mt-5"
-              @click="validate"
+              @click="saveNewOpportunity"
               small
               :loading="newOppLoading"
               v-if="!valid"
@@ -198,7 +198,7 @@
             <v-btn
               color="#607D8B"
               class="mr-4 mt-5"
-              @click="validate"
+              @click="saveNewOpportunity"
               small
               :loading="newOppLoading"
               v-else
@@ -211,7 +211,7 @@
               :disabled="!valid"
               color="#607D8B"
               class="mr-4 mt-5"
-              @click="validate"
+              @click="saveEdit"
               small
               v-if="!valid"
               :loading="newOppLoading"
@@ -222,7 +222,7 @@
               v-else
               color="#607D8B"
               class="mr-4 mt-5"
-              @click="validate"
+              @click="saveEdit"
               dark
               small
               :loading="newOppLoading"
@@ -329,7 +329,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({ setPage: 'setPage' }),
+    ...mapMutations({ setPage: 'setPage', setOpp: 'setOpp', setOppId: 'setOppId' }),
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.form._data.inputs) {
@@ -344,27 +344,39 @@ export default {
       }
       return Object.fromEntries(data_map);
     },
-    async saveNewOpportunity(newOpportunity) {
-      // console.log(newOpportunity);
+    save: async function (newOpportunity, goToPage) {
       this.newOppLoading = true;
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
-      await this.$store.dispatch('createRecord', newOpportunity);
+      const response  = await this.$store.dispatch('createRecord', newOpportunity);
+      const newOppId = response.data[0];
+      this.setOppId(newOppId);
+      await this.$store.dispatch('getSingleOpp');
       this.$toast.open({
         message: 'New Opportunity Created',
         type: 'success',
         duration: 2000,
         dismissible: true,
         onClose: () => {
-          this.$router.push({ name: 'Dashboard' });
+          this.$router.push({name: goToPage});
           this.newOppLoading = false;
         }
       });
     },
-    async validate() {
+    async saveNewOpportunity() {
       if (this.$refs.form.validate()) {
-        await this.saveNewOpportunity(this.getFormData());
+        await this.save(this.getFormData(), 'Dashboard');
       }
     },
+    async saveEdit() {
+      if (this.$refs.form.validate()) {
+        await this.save(this.getFormData(), 'Edit Opportunity');
+      }
+    },
+    // async validate() {
+    //   if (this.$refs.form.validate()) {
+    //     await this.saveNewOpportunity(this.getFormData());
+    //   }
+    // },
     reset() {
       // this.$refs.form.reset()
       // this.$refs.form.resetValidation()

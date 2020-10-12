@@ -625,10 +625,10 @@ export default {
           if (this.productItems[key].typeOfBusiness === 'Renewal') {
             this.productItems[key].renewal = 1;
           }
-          this.productItems[key].licenseStartDate = this.formatDateUpdate(
+          this.productItems[key].licenseStartDate = this.formatDate(
             this.productItems[key].licenseStartDate
           );
-          this.productItems[key].licenseEndDate = this.formatDateUpdate(
+          this.productItems[key].licenseEndDate = this.formatDate(
             this.productItems[key].licenseEndDate
           );
           await this.$store.dispatch('createRecord', this.productItems[key]);
@@ -681,14 +681,8 @@ export default {
       if (this.stateOptions.length){
         this.states = this.stateOptions;
       } else {
-        // this.states = [];
         await this.$store.dispatch('setCurrentTable', 'States');
         const states = await this.$store.dispatch('getRecords', '');
-        // Object.keys(states).forEach((value, index) => {
-        //   if (states[index]) {
-        //     this.states.push(states[index]);
-        //   }
-        // });
         this.setStateOptions(states);
       }
     },
@@ -765,7 +759,7 @@ export default {
       });
     },
     formatDate(date) {
-      if (!date) return '';
+      if (!date) return null;
       date = date.toString();
       const format = 'YYYY-MM-DD';
       return (

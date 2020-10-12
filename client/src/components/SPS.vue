@@ -166,7 +166,7 @@ export default {
   },
   methods: {
     convertDate: value => {
-      if (!value) return '';
+      if (!value) return null;
       value = value.toString();
       return moment(value).format('YYYY-MM-DD');
     },

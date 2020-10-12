@@ -170,6 +170,18 @@ class MainController {
     }
   }
 
+  async getSingleOpp({ request, response }) {
+    const params = request.all();
+    let query = undefined;
+    if (params.opportunityId) {
+      console.log('getSingle');
+      query = await request.Knex('Opportunity')
+        .where('id', params.opportunityId)
+    }
+    console.log(query);
+    return query
+  }
+
   /**
    * Render a form to be used for creating a new main.
    * GET mains/create
@@ -194,7 +206,7 @@ class MainController {
     const { data } = request.all();
     if (request.Table === 'Product') delete data.CreationDate;
     try {
-      await request.Knex.table(request.Table).insert(data);
+      return await request.Knex.table(request.Table).insert(data);
     } catch (e) {
       console.log(e);
     }

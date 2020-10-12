@@ -18,6 +18,7 @@ const Route = use('Route')
 Route.group(function () {
   Route.on('/').render('welcome');
   Route.resource('opportunity','MainController').apiOnly();
+  Route.get('get-single-opp','MainController.getSingleOpp');
   Route.resource('salesrep','MainController').apiOnly();
   Route.resource('product','MainController').apiOnly();
   Route.resource('note','NoteController').apiOnly();

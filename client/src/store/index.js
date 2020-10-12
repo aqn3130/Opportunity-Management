@@ -88,6 +88,15 @@ export default new Vuex.Store({
       commit('setLoading', false);
       return data;
     },
+    async getSingleOpp({ commit }, id) {
+      commit('setLoading', true);
+      const { data } = await axios.get(
+          `get-single-opp?opportunityId=${this.state.opportunityId}`
+      );
+      // console.log(data[0]);
+      commit('setOpp', data[0]);
+      commit('setOppId', data[0].Id);
+    },
     async updateRecord({ commit }, data) {
       // console.log(data);
       commit('setLoading', true);
@@ -119,7 +128,7 @@ export default new Vuex.Store({
       let CreationDate = new Date();
       CreationDate = moment(CreationDate).format('YYYY-MM-DD h:mm:ss');
       data.CreationDate = CreationDate;
-      await axios({
+      return axios({
         method: 'post',
         url: `${this.state.table}`,
         data: {
