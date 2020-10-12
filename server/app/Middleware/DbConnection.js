@@ -1,5 +1,4 @@
 "use strict";
-const mysql = require("mysql");
 const Env = use("Env");
 let knex = undefined;
 const pool = undefined;
@@ -14,7 +13,7 @@ class DbConnection {
    * @param {Function} next
    */
   getDBConnection() {
-    console.log("1");
+    console.log("get-connection");
     return require("knex")({
       client: "mysql",
       connection: {
@@ -56,11 +55,9 @@ class DbConnection {
     }
 
     if (knex === undefined) knex = await this.getDBConnection();
-    // const Table = () => knex(table);
     const Table = table;
     request.Table = Table;
     request.Knex = knex;
-    // request.Table = Table();
     await next();
   }
 }

@@ -22,17 +22,20 @@ class MainController {
     try {
       let query = undefined;
       if (params.id) {
+        console.log('-1');
         query = await request.Knex.select('*')
           .from('Product')
           .joinRaw('Opportunity')
           .where('Opportunity_fk', params.id)
       }
-      else if (params.email){
+      if (params.email) {
+        console.log('0');
         query = await request.Knex.select('*')
           .from(request.Table)
           .where('Email', params.email)
       }
-      else if (params.searchStr){
+      if (params.searchStr && !params.filter) {
+        console.log('1');
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
@@ -56,7 +59,7 @@ class MainController {
             .orWhere('BPID','like', str)
             .orWhere('MemberOfConsortia','like', str)
         })
-        query = await request.Knex(request.Table).where(function() {
+        const qry = await request.Knex(request.Table).where(function() {
           this.where('Type','like', str)
             .orWhere('SalesRep', 'like', str)
             .orWhere('OpportunityName','like', str)
@@ -71,12 +74,77 @@ class MainController {
             .orWhere('MemberOfConsortia','like', str)
         }).limit(perPageInt).offset(offset)
         total = queryTotal.length;
-        return {
+        query = {
           totalOpts: total,
-          opts: query
+          opts: qry
         }
       }
-      else {
+      if (params.filter && !params.searchStr) {
+        console.log('2');
+        let page = params.page || 1;
+        let perPage = params.perPage || 10;
+        const pageInt = parseInt(page);
+        let perPageInt = parseInt(perPage);
+        if (perPageInt === -1) perPageInt = 100000000000000000;
+        let total = 0;
+        if ( pageInt === 1 ) page = 0;
+        const offset = pageInt * perPageInt - perPageInt;
+        const queryTotal = await request.Knex(request.Table).where('Status', params.filter)
+        const qry = await request.Knex(request.Table).where('Status', params.filter).limit(perPageInt).offset(offset)
+        total = queryTotal.length;
+        query = {
+          totalOpts: total,
+          opts: qry
+        }
+      }
+      if (params.filter && params.searchStr) {
+        console.log('3');
+        let page = params.page || 1;
+        let perPage = params.perPage || 10;
+        const pageInt = parseInt(page);
+        let perPageInt = parseInt(perPage);
+        if (perPageInt === -1) perPageInt = 100000000000000000;
+        let total = 0;
+        if ( pageInt === 1 ) page = 0;
+        const offset = pageInt * perPageInt - perPageInt;
+        const str = `%${params.searchStr}%`;
+        const queryTotal = await request.Knex(request.Table).where(function() {
+          this.where('Type','like', str)
+            .orWhere('SalesRep', 'like', str)
+            .orWhere('OpportunityName','like', str)
+            .orWhere('CustomerName','like', str)
+            .orWhere('Country','like', str)
+            .orWhere('ChannelType','like', str)
+            .orWhere('IndustryType','like', str)
+            .orWhere('Origin','like', str)
+            .orWhere('SalesStage','like', str)
+            .orWhere('GrossValue','like', str)
+            .orWhere('BPID','like', str)
+            .orWhere('MemberOfConsortia','like', str)
+        }).andWhere('Status', params.filter)
+        const qry = await request.Knex(request.Table).where(function() {
+          this.where('Type','like', str)
+            .orWhere('SalesRep', 'like', str)
+            .orWhere('OpportunityName','like', str)
+            .orWhere('CustomerName','like', str)
+            .orWhere('Country','like', str)
+            .orWhere('ChannelType','like', str)
+            .orWhere('IndustryType','like', str)
+            .orWhere('Origin','like', str)
+            .orWhere('SalesStage','like', str)
+            .orWhere('GrossValue','like', str)
+            .orWhere('BPID','like', str)
+            .orWhere('MemberOfConsortia','like', str)
+        }).andWhere('Status', params.filter)
+          .limit(perPageInt).offset(offset)
+        total = queryTotal.length;
+        query = {
+          totalOpts: total,
+          opts: qry
+        }
+      }
+      if (!params.filter && !params.searchStr && !params.email && !params.id) {
+        console.log('4');
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
@@ -89,11 +157,11 @@ class MainController {
         total = total.length;
         if ( pageInt === 1 ) page = 0;
         const offset = pageInt * perPageInt - perPageInt;
-        query = await request.Knex.select('*').from(request.Table).limit(perPageInt).offset(offset);
+        const qry = await request.Knex.select('*').from(request.Table).limit(perPageInt).offset(offset);
         // console.log(page, offset);
-        return {
+        query = {
           totalOpts: total,
-          opts: query
+          opts: qry
         }
       }
       return query;

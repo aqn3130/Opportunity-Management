@@ -90,11 +90,6 @@ export default {
           action: '/new-opportunity'
         },
         {
-          title: 'Edit Opportunity',
-          icon: 'edit',
-          action: '/edit-opportunity'
-        },
-        {
           title: 'Accounts',
           icon: 'supervisor_account',
           action: '/users'

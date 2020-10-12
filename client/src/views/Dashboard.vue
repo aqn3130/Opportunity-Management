@@ -162,6 +162,7 @@ export default {
       return moment(value).format('YYYY-MM-DD');
     },
     formatCurrency(amount) {
+      if (!amount) return '';
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
   },
@@ -202,6 +203,7 @@ export default {
     options: {
       handler() {
         this.setSearchStr(this.searchStr);
+        // this.setFilter(this.statuses[0]);
         this.getDataFromApi().then(data => {
           this.rows = data.items;
           this.totalLeads = data.total;
@@ -222,7 +224,8 @@ export default {
       setOpp: 'setOpp',
       setPage: 'setPage',
       setPerPage: 'setPerPage',
-      setSearchStr: 'setSearchStr'
+      setSearchStr: 'setSearchStr',
+      setFilter: 'setFilter'
     }),
     editOpportunity(item) {
       this.searchStr = '';
@@ -232,7 +235,19 @@ export default {
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },
-    onSelectChange(status) {},
+    async onSelectChange(status) {
+      let filter = '';
+      if (status.trim().toLowerCase() !== 'all') {
+        filter = status;
+      }
+      this.setFilter(filter);
+      if(this.searchStr)
+      this.setSearchStr(this.searchStr);
+      this.getDataFromApi().then(data => {
+        this.rows = data.items;
+        this.totalLeads = data.total;
+      });
+    },
     getDataFromApi() {
       return new Promise(async (resolve, reject) => {
         const { sortBy, sortDesc, page, itemsPerPage } = this.options;

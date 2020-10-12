@@ -21,7 +21,8 @@ export default new Vuex.Store({
     products: [],
     searchStr: '',
     currentOpp: null,
-    formData: null
+    formData: null,
+    filter: ''
   },
   mutations: {
     setTable(state, value) {
@@ -59,6 +60,9 @@ export default new Vuex.Store({
     },
     setFormData(state, formData) {
       state.formData = formData;
+    },
+    setFilter(state, filter) {
+      state.filter = filter;
     }
   },
   actions: {
@@ -69,7 +73,7 @@ export default new Vuex.Store({
       commit('setLoading', true);
       if(this.state.searchStr === null) this.state.searchStr = '';
       const { data } = await axios.get(
-        `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}`
+        `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}&&filter=${this.state.filter}`
       );
       // const { data } = (await axios.get('/api/' + this.state.table));
       // commit('setData', data);

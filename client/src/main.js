@@ -16,6 +16,7 @@ sync(store, router);
 const token = localStorage.getItem('token');
 window.USER = null;
 window.BUS = new Vue();
+
 if (token) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   axios
