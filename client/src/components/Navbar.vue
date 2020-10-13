@@ -90,6 +90,11 @@ export default {
           action: '/new-opportunity'
         },
         {
+          title: 'Activity Tracker',
+          icon: 'add',
+          action: '/activities'
+        },
+        {
           title: 'Accounts',
           icon: 'supervisor_account',
           action: '/users'

@@ -79,7 +79,7 @@ export default new Vuex.Store({
     },
     async getRecords({ commit }, id) {
       commit('setLoading', true);
-      if(this.state.searchStr === null) this.state.searchStr = '';
+      if (this.state.searchStr === null) this.state.searchStr = '';
       const { data } = await axios.get(
         `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}&&filter=${this.state.filter}`
       );
@@ -91,7 +91,7 @@ export default new Vuex.Store({
     async getSingleOpp({ commit }, id) {
       commit('setLoading', true);
       const { data } = await axios.get(
-          `get-single-opp?opportunityId=${this.state.opportunityId}`
+        `get-single-opp?opportunityId=${this.state.opportunityId}`
       );
       // console.log(data[0]);
       commit('setOpp', data[0]);

@@ -22,14 +22,14 @@ class MainController {
     try {
       let query = undefined;
       if (params.id) {
-        console.log('-1');
+        // console.log('-1');
         query = await request.Knex.select('*')
           .from('Product')
           .joinRaw('Opportunity')
           .where('Opportunity_fk', params.id)
       }
       if (params.email) {
-        console.log('0');
+        // console.log('0');
         query = await request.Knex.select('*')
           .from(request.Table)
           .where('Email', params.email)
@@ -80,7 +80,7 @@ class MainController {
         }
       }
       if (params.filter && !params.searchStr) {
-        console.log('2');
+        // console.log('2');
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
@@ -98,7 +98,7 @@ class MainController {
         }
       }
       if (params.filter && params.searchStr) {
-        console.log('3');
+        // console.log('3');
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
@@ -144,7 +144,7 @@ class MainController {
         }
       }
       if (!params.filter && !params.searchStr && !params.email && !params.id) {
-        console.log('4');
+        // console.log('4');
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
@@ -174,11 +174,11 @@ class MainController {
     const params = request.all();
     let query = undefined;
     if (params.opportunityId) {
-      console.log('getSingle');
+      // console.log('getSingle');
       query = await request.Knex('Opportunity')
         .where('id', params.opportunityId)
     }
-    console.log(query);
+    // console.log(query);
     return query
   }
 

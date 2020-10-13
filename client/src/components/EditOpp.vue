@@ -665,9 +665,10 @@ export default {
       this.states = [];
       Object.keys(states).forEach((value, index) => {
         if (
-                states[index] && country &&
-                country.toLowerCase().trim() ===
-                states[index].Country.toLowerCase().trim()
+          states[index] &&
+          country &&
+          country.toLowerCase().trim() ===
+            states[index].Country.toLowerCase().trim()
         ) {
           this.states.push(states[index].Name);
         }
@@ -678,7 +679,7 @@ export default {
       }
     },
     async getStates() {
-      if (this.stateOptions.length){
+      if (this.stateOptions.length) {
         this.states = this.stateOptions;
       } else {
         await this.$store.dispatch('setCurrentTable', 'States');
@@ -686,7 +687,7 @@ export default {
         this.setStateOptions(states);
       }
     },
-    async onCountryChange(){
+    async onCountryChange() {
       this.state = null;
       await this.getStatesForCurrentCountry(this.country, this.stateOptions);
     },
@@ -841,7 +842,7 @@ export default {
         });
       }
     },
-    getProductOptions: async function () {
+    getProductOptions: async function() {
       if (this.productsOption.length) {
         this.products = this.productsOption;
       } else {
@@ -853,13 +854,13 @@ export default {
         await this.setProductsOption(this.products);
       }
     },
-    getCountries: async function () {
+    getCountries: async function() {
       if (this.countries.length) {
         this.countryItems = this.countries;
       } else {
         await this.$store.dispatch(
-                'setCurrentTable',
-                'Country_Region_Territory'
+          'setCurrentTable',
+          'Country_Region_Territory'
         );
         const countries = await this.$store.dispatch('getRecords', '');
         Object.keys(countries).forEach((value, index) => {
@@ -946,16 +947,15 @@ export default {
   },
   computed: {
     ...mapState('auth', ['currentUser']),
-    ...mapState(
-      [
-          'loading',
-          'opportunityId',
-          'opportunity',
-          'currentOpp',
-          'productsOption',
-          'countries',
-          'stateOptions'
-      ])
+    ...mapState([
+      'loading',
+      'opportunityId',
+      'opportunity',
+      'currentOpp',
+      'productsOption',
+      'countries',
+      'stateOptions'
+    ])
   },
   async created() {
     this.loadingDialog = true;
