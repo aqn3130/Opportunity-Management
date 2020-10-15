@@ -25,7 +25,9 @@ export default new Vuex.Store({
     filter: '',
     countries: [],
     stateOptions: [],
-    relation: ''
+    relation: '',
+    currentActivity: {},
+    customers: []
   },
   mutations: {
     setTable(state, value) {
@@ -75,6 +77,12 @@ export default new Vuex.Store({
     },
     setRelation(state, relation) {
       state.relation = relation;
+    },
+    setCurrentActivity(state, currentActivity) {
+      state.currentActivity = currentActivity;
+    },
+    setCustomers(state, customers) {
+      state.customers = customers;
     }
   },
   actions: {

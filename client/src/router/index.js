@@ -44,6 +44,18 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/activitiesLog',
+    name: 'Activity Log',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+        import(
+            /* webpackChunkName: "ActivityLog'" */ '../views/ActivityLog.vue'
+            ),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/new-opportunity',
     name: 'New Opportunity',
     component: () =>

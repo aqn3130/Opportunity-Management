@@ -15,49 +15,6 @@
         <v-card class="d-flex justify-center transparent mt-n10" flat>
           <v-row>
             <v-col>
-              <v-data-table
-                :headers="headers"
-                :items="rows"
-                :items-per-page="perPage"
-                class="elevation-1 text-no-wrap"
-                :footer-props="{
-                  showFirstLastPage: true,
-                  firstIcon: 'mdi-arrow-collapse-left',
-                  lastIcon: 'mdi-arrow-collapse-right',
-                  prevIcon: 'mdi-minus',
-                  nextIcon: 'mdi-plus'
-                }"
-                @click:row="editActivity"
-                :search="searchStr"
-                :loading="loading"
-                :style="{ cursor: 'pointer' }"
-                :server-items-length="totalLeads"
-                :options.sync="options"
-              >
-                <template v-slot:top>
-                  <v-toolbar flat color="grey lighten-2">
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                      v-model="searchStr"
-                      clearable
-                      prepend-inner-icon="search"
-                      outlined
-                      flat
-                      dense
-                      class="mt-5"
-                      light
-                      @change="search"
-                      @click:clear="clearSearch"
-                    ></v-text-field>
-                    <v-spacer></v-spacer>
-                  </v-toolbar>
-                </template>
-                <template v-slot:item.ActivityDate="{ item }">
-                  <span class="caption">
-                    {{ item.ActivityDate | convertDate }}
-                  </span>
-                </template>
-              </v-data-table>
             </v-col>
           </v-row>
         </v-card>
@@ -67,7 +24,7 @@
       absolute
       dark
       fab
-      bottom
+      top
       right
       color="#455A64"
       class="mb-16 mr-1"
@@ -182,19 +139,13 @@
 
 <script>
 import moment from 'moment';
-import { mapMutations, mapState } from 'vuex';
+import {mapMutations, mapState} from 'vuex';
 
 export default {
-  name: 'ActivityTracker',
-  components: {},
+  name: 'ActivityLog',
   data() {
     return {
-      rows: [],
       searchStr: '',
-      page: 0,
-      perPage: 5,
-      totalLeads: 0,
-      options: {},
       dialog: false,
       valid: true,
       customerName: {},
@@ -215,7 +166,6 @@ export default {
       checkbox: false,
       date: null,
       menu: false,
-      customers: []
     };
   },
   filters: {
@@ -229,114 +179,21 @@ export default {
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
   },
-  async created() {},
   computed: {
-    headers() {
-      return [
-        { text: 'Customer Name', align: 'left', value: 'CustomerName' },
-        { text: 'BPID', align: 'left', value: 'BPID' },
-        { text: 'Last Activity', align: 'left', value: 'Type' },
-        { text: 'Last Activity Date', align: 'left', value: 'ActivityDate' }
-      ];
-    },
-    ...mapState(['loading'])
+    ...mapState(['customers'])
   },
-  watch: {
-    options: {
-      handler() {
-        this.setSearchStr(this.searchStr);
-        this.getDataFromApi().then(data => {
-          this.rows = data.items;
-          this.totalLeads = data.total;
-        });
-      },
-      deep: true
-    }
-  },
-  mounted() {},
   methods: {
     ...mapMutations({
-      setRelation: 'setRelation',
-      setCustomers: 'setCustomers'
+      setRelation: 'setRelation'
     }),
     getRecords: async function() {
-      this.setRelation('activities');
-      await this.$store.dispatch('setCurrentTable', 'customers');
-      const allActivities = await this.$store.dispatch('getRecords', '');
-      for (let c = 0; c < allActivities.opts.length; c += 1) {
-        for (let a = 0; a < allActivities.opts.length; a += 1) {
-          if (
-            allActivities.opts[a].CustomerName ===
-              allActivities.opts[c].CustomerName &&
-            allActivities.opts[a].id < allActivities.opts[c].id
-          ) {
-            allActivities.opts.splice(a, 1);
-            allActivities.totalOpts -= 1;
-          }
-        }
-      }
-      this.customers = allActivities.customers;
-      this.setCustomers(this.customers);
-      return allActivities;
     },
     ...mapMutations({
-      setOppId: 'setOppId',
-      setOpp: 'setOpp',
-      setPage: 'setPage',
-      setPerPage: 'setPerPage',
       setSearchStr: 'setSearchStr',
       setFilter: 'setFilter',
       setCurrentActivity: 'setCurrentActivity'
     }),
-    editActivity(currentActivity) {
-      this.searchStr = '';
-      this.setSearchStr(this.searchStr);
-      this.setCurrentActivity(currentActivity);
-      this.$router.push({ name: 'Activity Log' });
-      // console.log(currentActivity);
-    },
-    getDataFromApi() {
-      return new Promise(async (resolve, reject) => {
-        const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-        this.setPage(page);
-        this.setPerPage(itemsPerPage);
-        let total = undefined;
-        let items = undefined;
-        const { opts, totalOpts } = await this.getRecords();
-        total = totalOpts;
-        items = opts;
-        if (sortBy.length === 1 && sortDesc.length === 1) {
-          items = items.sort((a, b) => {
-            const sortA = a[sortBy[0]];
-            const sortB = b[sortBy[0]];
-
-            if (sortDesc[0]) {
-              if (sortA < sortB) return 1;
-              if (sortA > sortB) return -1;
-              return 0;
-            } else {
-              if (sortA < sortB) return -1;
-              if (sortA > sortB) return 1;
-              return 0;
-            }
-          });
-        }
-        resolve({
-          items,
-          total
-        });
-      });
-    },
-    async search() {
-      this.setSearchStr(this.searchStr);
-      this.getDataFromApi().then(data => {
-        this.rows = data.items;
-        this.totalLeads = data.total;
-      });
-    },
-    clearSearch() {
-      this.searchStr = '';
-      this.search();
+    editActivity() {
     },
     getFormData() {
       const data_map = new Map();
@@ -367,11 +224,6 @@ export default {
     async saveActivity(activity) {
       await this.$store.dispatch('setCurrentTable', 'activities');
       await this.$store.dispatch('createRecord', activity);
-      this.getDataFromApi().then(data => {
-        this.rows = data.items;
-        this.totalLeads = data.total;
-        // console.log(data);
-      });
       this.reset();
       this.$toast.open({
         message: 'Activity Saved',
