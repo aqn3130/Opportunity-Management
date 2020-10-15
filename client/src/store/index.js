@@ -24,7 +24,8 @@ export default new Vuex.Store({
     formData: null,
     filter: '',
     countries: [],
-    stateOptions: []
+    stateOptions: [],
+    relation: ''
   },
   mutations: {
     setTable(state, value) {
@@ -71,6 +72,9 @@ export default new Vuex.Store({
     },
     setStateOptions(state, states) {
       state.stateOptions = states;
+    },
+    setRelation(state, relation) {
+      state.relation = relation;
     }
   },
   actions: {
@@ -81,7 +85,7 @@ export default new Vuex.Store({
       commit('setLoading', true);
       if (this.state.searchStr === null) this.state.searchStr = '';
       const { data } = await axios.get(
-        `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}&&filter=${this.state.filter}`
+        `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}&&filter=${this.state.filter}&&with=${this.state.relation}`
       );
       // const { data } = (await axios.get('/api/' + this.state.table));
       // commit('setData', data);

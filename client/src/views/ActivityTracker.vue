@@ -86,11 +86,21 @@
           <template>
             <v-form ref="form" v-model="valid" lazy-validation class="pa-10">
               <v-card class="px-15" flat>
-                <v-text-field
+                <v-select
                   v-model="customerName"
+                  :hint="`${customerName.CustomerName}, ${customerName.id}`"
                   :rules="nameRules"
                   label="Customer Name"
+                  :items="customers"
+                  item-text="CustomerName"
+                  item-value="id"
                   required
+                  return-object
+                ></v-select>
+                <v-text-field
+                  v-show="false"
+                  label="customer_id"
+                  v-model="customerName"
                 ></v-text-field>
                 <v-text-field v-model="BPID" label="BPID"></v-text-field>
                 <v-select
@@ -187,7 +197,7 @@ export default {
       options: {},
       dialog: false,
       valid: true,
-      customerName: '',
+      customerName: {},
       BPID: '',
       followUpMeeting: '',
       likelihood: '',
@@ -204,7 +214,8 @@ export default {
       typeItems: ['Meeting', 'Phone Call', 'Note'],
       checkbox: false,
       date: null,
-      menu: false
+      menu: false,
+      customers: []
     };
   },
   filters: {
@@ -219,8 +230,12 @@ export default {
     }
   },
   async created() {
-    await this.$store.dispatch('setCurrentTable', 'activities');
+    // await this.$store.dispatch('setCurrentTable', 'activities');
     // await this.getRecords();
+    // await this.$store.dispatch('setCurrentTable', 'customers');
+    // this.setRelation('');
+    // const customers = await this.$store.dispatch('getRecords', '');
+    // this.customers = customers;
   },
   computed: {
     headers() {
@@ -249,8 +264,28 @@ export default {
   },
   mounted() {},
   methods: {
+    ...mapMutations({
+      setRelation: 'setRelation'
+    }),
     getRecords: async function() {
-      return await this.$store.dispatch('getRecords', '');
+      // return await this.$store.dispatch('getRecords', '');
+      this.setRelation('activities');
+      await this.$store.dispatch('setCurrentTable', 'customers');
+      const allActivities = await this.$store.dispatch('getRecords', '');
+      for (let c = 0; c < allActivities.opts.length; c += 1) {
+        for (let a = 0; a < allActivities.opts.length; a += 1) {
+          if (
+            allActivities.opts[a].CustomerName ===
+              allActivities.opts[c].CustomerName &&
+            allActivities.opts[a].id < allActivities.opts[c].id
+          ) {
+            allActivities.opts.splice(a, 1);
+            allActivities.totalOpts -= 1;
+          }
+        }
+      }
+      this.customers = allActivities.customers;
+      return allActivities;
     },
     ...mapMutations({
       setOppId: 'setOppId',
@@ -324,9 +359,13 @@ export default {
           formLable = 'Likelihood';
         if (formLable === 'Whodidyoucommunicatewith?')
           formLable = 'ContactPerson';
-        if (formLable === 'Activity')
-          formLable = 'Type';
+        if (formLable === 'Activity') formLable = 'Type';
         let formValue = this.$refs.form._data.inputs[i].value;
+        if (formLable === 'CustomerName') {
+          formValue = this.$refs.form._data.inputs[i].value.CustomerName;
+        }
+        if (formLable === 'customer_id')
+          formValue = this.$refs.form._data.inputs[i].value.id;
         data_map.set(formLable, formValue);
       }
       return Object.fromEntries(data_map);
@@ -339,7 +378,7 @@ export default {
         this.totalLeads = data.total;
         // console.log(data);
       });
-      this.dialog = false;
+      this.reset();
       this.$toast.open({
         message: 'Activity Saved',
         type: 'success',
@@ -348,7 +387,7 @@ export default {
         position: 'bottom',
         onClose: () => {}
       });
-      console.log(activity);
+      // console.log(activity);
     },
     validate() {
       if (this.$refs.form.validate()) {
@@ -356,7 +395,13 @@ export default {
       }
     },
     reset() {
-      this.$refs.form.reset();
+      this.customerName = {};
+      this.BPID = '';
+      this.followUpMeeting = '';
+      this.likelihood = '';
+      this.note = '';
+      this.type = '';
+      this.contactPerson = '';
       this.dialog = false;
     },
     resetValidation() {

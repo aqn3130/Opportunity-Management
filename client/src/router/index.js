@@ -33,12 +33,14 @@ const routes = [
   },
   {
     path: '/activities',
-    name: 'ActivityTracker',
+    name: 'Activity Tracker',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(/* webpackChunkName: "ActivityTracker'" */ '../views/ActivityTracker.vue'),
+      import(
+        /* webpackChunkName: "ActivityTracker'" */ '../views/ActivityTracker.vue'
+      ),
     meta: { requiresAuth: true }
   },
   {

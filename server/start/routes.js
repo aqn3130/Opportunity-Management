@@ -23,6 +23,7 @@ Route.group(function () {
   Route.resource('product','MainController').apiOnly();
   Route.resource('note','NoteController').apiOnly();
   Route.resource('activities','ActivityController').apiOnly();
+  Route.resource('customers','CustomerController').apiOnly();
   Route.put('note','NoteController.update');
   Route.resource('products','MainController').apiOnly();
   Route.resource('country_region_territory','MainController').apiOnly();

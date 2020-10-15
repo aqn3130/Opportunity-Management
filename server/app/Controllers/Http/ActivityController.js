@@ -1,5 +1,5 @@
 'use strict'
-
+const Activity = use('App/Models/Activity')
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
@@ -63,7 +63,7 @@ class ActivityController {
         }
       }
       if (!params.searchStr && !params.email && !params.id) {
-        // console.log('4');
+        // console.log('4-act');
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
@@ -76,8 +76,12 @@ class ActivityController {
         total = total.length;
         if ( pageInt === 1 ) page = 0;
         const offset = pageInt * perPageInt - perPageInt;
-        const qry = await request.Knex.select('*').from(request.Table).limit(perPageInt).offset(offset);
-        // console.log(page, offset);
+        const qry = await request.Knex.select('*')
+          .from(request.Table)
+          .distinct('CustomerName', 'Type')
+          .orderBy('ActivityDate', 'desc')
+          .limit(perPageInt)
+          .offset(offset);
         query = {
           totalOpts: total,
           opts: qry
@@ -113,7 +117,8 @@ class ActivityController {
     const { data } = request.all();
     if (data.CreationDate) delete data.CreationDate;
     try {
-      await request.Knex.table(request.Table).insert(data);
+      // await request.Knex.table(request.Table).insert(data);
+      await Activity.create(data)
     } catch (e) {
       console.log(e);
     }
