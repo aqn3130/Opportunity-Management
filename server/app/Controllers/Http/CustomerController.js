@@ -27,7 +27,7 @@ class CustomerController {
         .joinRaw('customers')
         .where('customer_id', params.id)
     }
-    else if (params.with === 'activities') {
+    else if (params.with === 'activities' && !params.searchStr) {
       let page = params.page || 1;
       let perPage = params.perPage || 10;
       const pageInt = parseInt(page);
@@ -44,6 +44,50 @@ class CustomerController {
         .join('activities', 'customers.id', '=', 'activities.customer_id').orderBy('activities.id','DESC')
         .select('*')
         // .limit(perPageInt).offset(offset)
+      const customers = await request.Knex(request.Table);
+      total = queryTotal.length;
+      query = {
+        totalOpts: total,
+        opts: qry,
+        customers: customers
+      }
+    }
+    else if (params.searchStr) {
+      // console.log('searched')
+      let page = params.page || 1;
+      let perPage = params.perPage || 10;
+      const pageInt = parseInt(page);
+      let perPageInt = parseInt(perPage);
+      if (perPageInt === -1) perPageInt = 100000000000000000;
+      let total = 0;
+      if ( pageInt === 1 ) page = 0;
+      const offset = pageInt * perPageInt - perPageInt;
+      const str = `%${params.searchStr}%`;
+      const queryTotal = await request.Knex(request.Table)
+        .join('activities', 'customers.id', '=', 'activities.customer_id')
+        .select('*')
+
+      // const qry = await request.Knex(request.Table)
+      //   .join('activities', 'customers.id', '=', 'activities.customer_id').orderBy('activities.id','DESC')
+      //   .select('*')
+
+      // .limit(perPageInt).offset(offset)
+
+      const qry = await request.Knex.select('*').from(request.Table).join('activities', function() {
+        this.on(function() {
+          this.on('customers.id', '=', 'activities.customer_id')
+        })
+      })
+        .where(function() {
+          this.where('activities.CustomerName','like', str)
+            .orWhere('activities.Type', 'like', str)
+            .orWhere('activities.BPID','like', str)
+            .orWhere('activities.FollowUpMeeting','like', str)
+            .orWhere('activities.Likelihood','like', str)
+            .orWhere('activities.Note','like', str)
+            .orWhere('activities.ActivityDate','like', str)
+        })
+
       const customers = await request.Knex(request.Table);
       total = queryTotal.length;
       query = {

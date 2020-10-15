@@ -230,12 +230,6 @@ export default {
     }
   },
   async created() {
-    // await this.$store.dispatch('setCurrentTable', 'activities');
-    // await this.getRecords();
-    // await this.$store.dispatch('setCurrentTable', 'customers');
-    // this.setRelation('');
-    // const customers = await this.$store.dispatch('getRecords', '');
-    // this.customers = customers;
   },
   computed: {
     headers() {
@@ -252,11 +246,9 @@ export default {
     options: {
       handler() {
         this.setSearchStr(this.searchStr);
-        // this.setFilter(this.statuses[0]);
         this.getDataFromApi().then(data => {
           this.rows = data.items;
           this.totalLeads = data.total;
-          // console.log(data);
         });
       },
       deep: true
@@ -268,7 +260,6 @@ export default {
       setRelation: 'setRelation'
     }),
     getRecords: async function() {
-      // return await this.$store.dispatch('getRecords', '');
       this.setRelation('activities');
       await this.$store.dispatch('setCurrentTable', 'customers');
       const allActivities = await this.$store.dispatch('getRecords', '');
