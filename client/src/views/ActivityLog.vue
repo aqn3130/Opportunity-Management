@@ -12,9 +12,44 @@
     </v-card>
     <v-layout>
       <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
-        <v-card class="d-flex justify-center transparent mt-n10" flat>
+        <v-card class="d-flex justify-center mt-n10" flat>
           <v-row>
-            <v-col>
+            <v-col cols="12">
+              <v-toolbar flat>
+                <v-spacer></v-spacer>
+                <v-btn small color="#607D8B" dark to="/activities">Back</v-btn>
+              </v-toolbar>
+            </v-col>
+            <v-col cols="4">
+              <v-card width="auto" height="200" class="py-10 ml-2">
+                <v-img
+                  height="70"
+                  width="60"
+                  src="../assets/customer_img.png"
+                  class="ml-auto mr-auto"
+                ></v-img>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title class="tile" align="center">
+                      {{ currentActivity.CustomerName }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle class="tile" align="center">
+                      {{ currentActivity.BPID }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card>
+            </v-col>
+            <v-col cols="8">
+              <v-card class="mr-2 pa-3">
+                <v-toolbar flat>
+                  <v-toolbar-title>Note</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-btn fab right small color="#607D8B" dark><v-icon>add</v-icon></v-btn>
+                </v-toolbar>
+                <v-divider></v-divider>
+                <v-textarea no-resize></v-textarea>
+              </v-card>
             </v-col>
           </v-row>
         </v-card>
@@ -139,7 +174,7 @@
 
 <script>
 import moment from 'moment';
-import {mapMutations, mapState} from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ActivityLog',
@@ -165,7 +200,7 @@ export default {
       typeItems: ['Meeting', 'Phone Call', 'Note'],
       checkbox: false,
       date: null,
-      menu: false,
+      menu: false
     };
   },
   filters: {
@@ -180,21 +215,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customers'])
+    ...mapState(['customers', 'currentActivity'])
   },
   methods: {
     ...mapMutations({
       setRelation: 'setRelation'
     }),
-    getRecords: async function() {
-    },
+    getRecords: async function() {},
     ...mapMutations({
       setSearchStr: 'setSearchStr',
       setFilter: 'setFilter',
       setCurrentActivity: 'setCurrentActivity'
     }),
-    editActivity() {
-    },
+    editActivity() {},
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.form._data.inputs) {
