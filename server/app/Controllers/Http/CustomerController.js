@@ -1,5 +1,7 @@
 'use strict'
+const Database = use('Database');
 const Customer = use('App/Models/Customer')
+const Activity = use('App/Models/Activity')
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
@@ -26,6 +28,7 @@ class CustomerController {
         .from('activities')
         .joinRaw('customers')
         .where('customer_id', params.id)
+        .orderBy('id', 'DESC')
     }
     else if (params.with === 'activities' && !params.searchStr) {
       let page = params.page || 1;
@@ -40,10 +43,12 @@ class CustomerController {
       const queryTotal = await request.Knex(request.Table)
         .join('activities', 'customers.id', '=', 'activities.customer_id')
         .select('*')
+      // const qry = await request.Knex(request.Table)
       const qry = await request.Knex(request.Table)
         .join('activities', 'customers.id', '=', 'activities.customer_id').orderBy('activities.id','DESC')
-        .select('*')
+        // .select('*')
         // .limit(perPageInt).offset(offset)
+
       const customers = await request.Knex(request.Table);
       total = queryTotal.length;
       query = {

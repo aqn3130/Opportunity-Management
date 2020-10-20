@@ -183,6 +183,7 @@
 <script>
 import moment from 'moment';
 import { mapMutations, mapState } from 'vuex';
+const _ = require('lodash');
 
 export default {
   name: 'ActivityTracker',
@@ -263,18 +264,10 @@ export default {
       this.setRelation('activities');
       await this.$store.dispatch('setCurrentTable', 'customers');
       const allActivities = await this.$store.dispatch('getRecords', '');
-      for (let c = 0; c < allActivities.opts.length; c += 1) {
-        for (let a = 0; a < allActivities.opts.length; a += 1) {
-          if (
-            allActivities.opts[a].CustomerName ===
-              allActivities.opts[c].CustomerName &&
-            allActivities.opts[a].id < allActivities.opts[c].id
-          ) {
-            allActivities.opts.splice(a, 1);
-            allActivities.totalOpts -= 1;
-          }
-        }
-      }
+      const uniq_activities = _.uniqBy(allActivities.opts, 'CustomerName');
+      // console.log(uniq_activities);
+      allActivities.opts = uniq_activities;
+      allActivities.totalOpts = uniq_activities.length;
       this.customers = allActivities.customers;
       this.setCustomers(this.customers);
       return allActivities;

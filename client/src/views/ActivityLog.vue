@@ -11,7 +11,7 @@
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
     <v-layout>
-      <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
+      <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -100px;">
         <v-card class="d-flex justify-center mt-n10" flat>
           <v-row>
             <v-col cols="12">
@@ -39,16 +39,80 @@
                   </v-list-item-content>
                 </v-list-item>
               </v-card>
+              <v-card width="auto" min-height="287" max-height="287" class="pa-3 mt-5 ml-2">
+                <span class="overline ml-2">Active Opportunities</span>
+                <v-divider></v-divider>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title class="tile" align="center">
+                      {{ 'to be implemented' }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle class="tile" align="center">
+                      {{''}}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card>
             </v-col>
             <v-col cols="8">
               <v-card class="mr-2 pa-3">
                 <v-toolbar flat>
                   <v-toolbar-title>Note</v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-btn fab right small color="#607D8B" dark><v-icon>add</v-icon></v-btn>
+                  <v-btn fab right small color="#607D8B" dark
+                    ><v-icon>add</v-icon></v-btn
+                  >
                 </v-toolbar>
                 <v-divider></v-divider>
                 <v-textarea no-resize></v-textarea>
+                <v-card-subtitle>Activity Timeline</v-card-subtitle>
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-avatar>
+                      <v-img
+                        :alt="calendarAltTxt"
+                        src="../assets/calendar.png"
+                      ></v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title
+                        v-text="meetingContent.Type"
+                      ></v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-icon>
+                      {{ meetingContent.created_at | convertDate }}
+                    </v-list-item-icon>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-avatar>
+                      <v-img :alt="noteAltTxt" src="../assets/note.png"></v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title
+                        v-text="noteContent.Note"
+                      ></v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-icon>
+                      {{ noteContent.created_at | convertDate }}
+                    </v-list-item-icon>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-avatar>
+                      <v-img
+                        :alt="noteAltTxt"
+                        src="../assets/phone.png"
+                      ></v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title
+                        v-text="phoneCallContent.Type"
+                      ></v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-icon>
+                      {{ phoneCallContent.created_at | convertDate }}
+                    </v-list-item-icon>
+                  </v-list-item>
+                </v-list>
               </v-card>
             </v-col>
           </v-row>
@@ -200,7 +264,14 @@ export default {
       typeItems: ['Meeting', 'Phone Call', 'Note'],
       checkbox: false,
       date: null,
-      menu: false
+      menu: false,
+      calendarAltTxt: 'calendar image',
+      noteAltTxt: 'note image',
+      phoneAltTxt: 'phone image',
+      allActivities: [],
+      noteContent: {},
+      phoneCallContent: {},
+      meetingContent: {}
     };
   },
   filters: {
@@ -217,11 +288,32 @@ export default {
   computed: {
     ...mapState(['customers', 'currentActivity'])
   },
+  created() {
+    this.getRecords();
+  },
   methods: {
     ...mapMutations({
       setRelation: 'setRelation'
     }),
-    getRecords: async function() {},
+    getRecords: async function() {
+      await this.$store.dispatch('setCurrentTable', 'customers');
+      this.allActivities = await this.$store.dispatch(
+        'getRecords',
+        this.currentActivity.customer_id
+      );
+      // console.log(this.allActivities);
+      this.allActivities = _.uniqBy(this.allActivities, 'Type');
+      // console.log(this.allActivities);
+      Object.keys(this.allActivities).forEach(key => {
+        if (this.allActivities[key].Type === 'Phone Call') {
+          this.phoneCallContent = this.allActivities[key];
+        } else if (this.allActivities[key].Type === 'Note') {
+          this.noteContent = this.allActivities[key];
+        } else if (this.allActivities[key].Type === 'Meeting') {
+          this.meetingContent = this.allActivities[key];
+        }
+      });
+    },
     ...mapMutations({
       setSearchStr: 'setSearchStr',
       setFilter: 'setFilter',
