@@ -152,6 +152,10 @@ export default new Vuex.Store({
     async getSalesRep(ctx, email) {
       const { data } = await axios.get(`${this.state.table}?email=${email}`);
       return data;
+    },
+    async getCurrentCustomerOpts(ctx, customerName) {
+      const { data } = await axios.get(`opts-by-customer-name?customerName=${customerName}`);
+      return data;
     }
   },
   modules: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="Object.keys(currentActivity).length">
+    <div v-if="rows">
       <v-card
         style="z-index: 1;margin-top: -50px"
         color="#607D8B"

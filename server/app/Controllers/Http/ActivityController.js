@@ -157,10 +157,11 @@ class ActivityController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
-    const { data } = request.all();
+    const { id, data } = request.all();
     if (data.updated_at) delete data.updated_at;
     // console.log(data.Id, data);
-    await request.Knex.select('*').from(request.Table).where({ id: data.Id }).update(data)
+    // await request.Knex.select('*').from(request.Table).where({ id: id }).update(data)
+    await Activity.query().where('id', id).update(data);
   }
 
   /**

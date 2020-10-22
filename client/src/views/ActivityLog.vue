@@ -50,16 +50,24 @@
                 >
                   <span class="overline ml-2">Active Opportunities</span>
                   <v-divider></v-divider>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title class="tile" align="center">
-                        {{ 'to be implemented' }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="tile" align="center">
-                        {{ '' }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
+                  <v-list dense>
+                    <v-list-item
+                      v-for="(item, i) in currentCustomerOpts"
+                      :key="i"
+                    >
+                      <!--                      <v-list-item-avatar>-->
+                      <!--                        <v-icon>star</v-icon>-->
+                      <!--                      </v-list-item-avatar>-->
+                      <v-list-item-content>
+                        <v-list-item-subtitle
+                          class="tile text--primary"
+                          align="left"
+                        >
+                          {{ item.OpportunityName }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
                 </v-card>
               </v-col>
               <v-col cols="8">
@@ -67,12 +75,23 @@
                   <v-toolbar flat>
                     <v-toolbar-title>Note</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn fab right small color="#607D8B" dark
-                      ><v-icon>add</v-icon></v-btn
-                    >
+                    <v-btn
+                      fab
+                      right
+                      small
+                      color="#607D8B"
+                      dark
+                      @click="dialog = true"
+                      ><v-icon>add</v-icon>
+                    </v-btn>
                   </v-toolbar>
                   <v-divider></v-divider>
-                  <v-textarea no-resize></v-textarea>
+                  <v-textarea
+                    no-resize
+                    v-model="activityLogNote"
+                    @keyup="saveNote"
+                    placeholder="Add a note and then press enter key on your keyboard to save it"
+                  ></v-textarea>
                   <v-card-subtitle>Activity Timeline</v-card-subtitle>
                   <v-timeline dense>
                     <v-timeline-item small right>
@@ -81,22 +100,19 @@
                           <img src="../assets/calendar.png" />
                         </v-avatar>
                       </template>
-                      <v-card class="elevation-2">
-                        <v-card-text>
+                      <v-card class="elevation-3">
+                        <v-card-text class="white text--primary">
                           <v-layout class="align-content-space-between d-flex">
-                            <p class="caption">Logged a meeting with:</p>
+                            <p>Logged a meeting with:</p>
                             <v-spacer></v-spacer>
-                            <p class="caption">
+                            <p>
                               {{ meetingContent.created_at | convertDate }}
                             </p>
                           </v-layout>
-                          <span
-                            class="caption font-weight-black"
-                            v-if="currentActivity.ContactPerson"
-                          >
+                          <span v-if="currentActivity.ContactPerson">
                             {{ currentActivity.ContactPerson }}
                           </span>
-                          <span class="caption font-weight-black" v-else>
+                          <span v-else>
                             {{ 'Contact person not available' }}
                           </span>
                         </v-card-text>
@@ -108,17 +124,17 @@
                           <img src="../assets/note.png" />
                         </v-avatar>
                       </template>
-                      <v-card class="elevation-2">
-                        <v-card-text>
+                      <v-card class="elevation-3">
+                        <v-card-text class="white text--primary">
                           <v-layout class="align-content-space-between d-flex">
-                            <p class="caption">Logged a note</p>
+                            <p>Logged a note</p>
                             <v-spacer></v-spacer>
-                            <p class="caption">
+                            <p>
                               {{ noteContent.created_at | convertDate }}
                             </p>
                           </v-layout>
                           <div
-                            class="caption overflow-auto font-weight-black"
+                            class="overflow-auto"
                             :style="{ maxHeight: '50px' }"
                           >
                             {{ noteContent.Note }}
@@ -132,22 +148,19 @@
                           <img src="../assets/phone.png" />
                         </v-avatar>
                       </template>
-                      <v-card class="elevation-2">
-                        <v-card-text>
+                      <v-card class="elevation-3">
+                        <v-card-text class="white text--primary">
                           <v-layout class="align-content-space-between d-flex">
-                            <p class="caption">Logged a phone call with:</p>
+                            <p>Logged a phone call with:</p>
                             <v-spacer></v-spacer>
-                            <p class="caption">
+                            <p>
                               {{ phoneCallContent.created_at | convertDate }}
                             </p>
                           </v-layout>
-                          <span
-                            class="caption font-weight-black"
-                            v-if="currentActivity.ContactPerson"
-                          >
+                          <span v-if="currentActivity.ContactPerson">
                             {{ currentActivity.ContactPerson }}
                           </span>
-                          <span class="caption font-weight-black" v-else>
+                          <span v-else>
                             {{ 'Contact person not available' }}
                           </span>
                         </v-card-text>
@@ -327,7 +340,9 @@ export default {
       allActivities: [],
       noteContent: {},
       phoneCallContent: {},
-      meetingContent: {}
+      meetingContent: {},
+      currentCustomerOpts: [],
+      activityLogNote: ''
     };
   },
   filters: {
@@ -342,14 +357,15 @@ export default {
     }
   },
   mounted() {
-    if (!this.currentActivity) this.$router.push({ name: 'Login' });
+    // if (!this.currentActivity) this.$router.push({ name: 'Login' });
   },
   computed: {
     ...mapState(['customers', 'currentActivity'])
   },
-  created() {
-    if (!this.currentActivity) this.$router.push({ name: 'Login' });
-    this.getRecords();
+  async created() {
+    // if (!this.currentActivity) this.$router.push({ name: 'Login' });
+    await this.getRecords();
+    await this.getCurrentCustomerOpts();
   },
   methods: {
     ...mapMutations({
@@ -364,7 +380,7 @@ export default {
       );
       // console.log(this.allActivities);
       this.allActivities = _.uniqBy(this.allActivities, 'Type');
-      // console.log(this.allActivities);
+      console.log(this.allActivities);
       Object.keys(this.allActivities).forEach(key => {
         if (this.allActivities[key].Type === 'Phone Call') {
           this.phoneCallContent = this.allActivities[key];
@@ -417,7 +433,10 @@ export default {
         duration: 2000,
         dismissible: true,
         position: 'bottom',
-        onClose: () => {}
+        onClose: async () => {
+          await this.getRecords();
+          await this.getCurrentCustomerOpts();
+        }
       });
       // console.log(activity);
     },
@@ -443,6 +462,57 @@ export default {
       this.sessionEndedDialog = false;
       this.logout();
       this.$router.push({ name: 'Login' });
+    },
+    async getCurrentCustomerOpts() {
+      await this.$store.dispatch('setCurrentTable', 'Opportunity');
+      this.currentCustomerOpts = await this.$store.dispatch(
+        'getCurrentCustomerOpts',
+        this.currentActivity.CustomerName
+      );
+      // console.log(this.currentCustomerOpts);
+    },
+    async saveNote(e) {
+      if (e.keyCode === 13 && this.activityLogNote) {
+        try {
+          this.currentActivity.Note = this.activityLogNote;
+          this.currentActivity.ActivityDate = this.formatDate(
+            this.currentActivity.ActivityDate
+          );
+          await this.$store.dispatch('setCurrentTable', 'activities');
+          await this.$store.dispatch('updateRecord', this.currentActivity);
+          this.$toast.open({
+            message: 'Note added',
+            type: 'success',
+            duration: 2000,
+            dismissible: true,
+            position: 'bottom',
+            onClose: async () => {
+              await this.getRecords();
+              await this.getCurrentCustomerOpts();
+            }
+          });
+        } catch (e) {
+          console.log(e);
+          this.$toast.open({
+            message: 'Note add failed',
+            type: 'error',
+            duration: 2000,
+            dismissible: true,
+            position: 'bottom',
+            onClose: () => {}
+          });
+        }
+      }
+    },
+    formatDate(date) {
+      if (!date) return null;
+      date = date.toString();
+      const format = 'YYYY-MM-DD hh:mm:ss';
+      return (
+        moment(date, 'YYYY-MM-DD hh:mm:ss a')
+          // .utc()
+          .format(format)
+      );
     }
   }
 };

@@ -182,6 +182,18 @@ class MainController {
     return query
   }
 
+  async getOptsByCustomerName({ request, response }) {
+    const params = request.all();
+    let query = undefined;
+    if (params.customerName) {
+      // console.log('getSingle');
+      query = await request.Knex('Opportunity')
+        .where('CustomerName', params.customerName)
+    }
+    // console.log(query);
+    return query
+  }
+
   /**
    * Render a form to be used for creating a new main.
    * GET mains/create

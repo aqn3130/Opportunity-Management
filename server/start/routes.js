@@ -19,10 +19,12 @@ Route.group(function () {
   Route.on('/').render('welcome');
   Route.resource('opportunity','MainController').apiOnly();
   Route.get('get-single-opp','MainController.getSingleOpp');
+  Route.get('opts-by-customer-name','MainController.getOptsByCustomerName');
   Route.resource('salesrep','MainController').apiOnly();
   Route.resource('product','MainController').apiOnly();
   Route.resource('note','NoteController').apiOnly();
   Route.resource('activities','ActivityController').apiOnly();
+  Route.put('activities','ActivityController.update');
   Route.resource('customers','CustomerController').apiOnly();
   Route.put('note','NoteController.update');
   Route.resource('products','MainController').apiOnly();
