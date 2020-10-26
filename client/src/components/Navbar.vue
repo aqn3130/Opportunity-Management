@@ -91,8 +91,13 @@ export default {
         },
         {
           title: 'Activity Tracker',
-          icon: 'add',
+          icon: 'local_activity',
           action: '/activities'
+        },
+        {
+          title: 'All Opportunities',
+          icon: 'select_all',
+          action: '/opportunities'
         },
         {
           title: 'Accounts',

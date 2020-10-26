@@ -50,9 +50,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(
-            /* webpackChunkName: "ActivityLog'" */ '../views/ActivityLog.vue'
-            ),
+      import(/* webpackChunkName: "ActivityLog'" */ '../views/ActivityLog.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -70,6 +68,15 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "EditOpportunity" */ '../views/EditOpportunity.vue'
+      ),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/opportunities',
+    name: 'Opportunities',
+    component: () =>
+      import(
+        /* webpackChunkName: "Opportunities" */ '../views/Opportunities.vue'
       ),
     meta: { requiresAuth: true }
   },
