@@ -18,7 +18,7 @@
           prevIcon: 'mdi-minus',
           nextIcon: 'mdi-plus'
         }"
-        @click:row="editOpportunity"
+        @click:row="onOpportunitySelect"
         :search="searchStr"
         :loading="loading"
         :style="{ cursor: 'pointer' }"
@@ -61,7 +61,52 @@
         {{ productTitle }}
         <v-spacer></v-spacer>
       </v-toolbar>
-      <v-data-table :items="products" :headers="productHeaders"> </v-data-table>
+      <v-data-table :items="products" :headers="productHeaders">
+        <template v-slot:item.LicenseStartDate="{ item }">
+          <span class="caption">
+            {{ item.LicenseStartDate | convertDate }}
+          </span>
+        </template>
+        <template v-slot:item.GrossValue="{ item }">
+          <span class="caption">
+            {{ item.GrossValue | formatCurrency }}
+          </span>
+        </template>
+        <template v-slot:item.Currency="{ item }">
+          <span class="caption">
+            {{ item.Currency }}
+          </span>
+        </template>
+      </v-data-table>
+    </v-container>
+    <v-container>
+      <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
+        <v-spacer></v-spacer>
+        {{ noteTitle }}
+        <v-spacer></v-spacer>
+      </v-toolbar>
+      <v-data-table :items="notes" :headers="notesHeader">
+        <template v-slot:item.CreateDate="{ item }">
+          <span class="caption">
+            {{ item.CreateDate | convertDate }}
+          </span>
+        </template>
+        <template v-slot:item.Message="{ item }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <div
+                class="caption text-truncate"
+                :style="{ maxWidth: '800px' }"
+                v-on="on"
+                v-bind="attrs"
+              >
+                {{ item.Message }}
+              </div>
+            </template>
+            <span>{{ item.Message }}</span>
+          </v-tooltip>
+        </template>
+      </v-data-table>
     </v-container>
   </div>
 </template>
@@ -84,7 +129,9 @@ export default {
       totalLeads: 0,
       options: {},
       products: [],
+      notes: [],
       productTitle: 'Products',
+      noteTitle: 'Notes',
       oppTitle: 'Opportunities'
     };
   },
@@ -119,8 +166,34 @@ export default {
       return [
         { text: 'Id', align: 'left', value: 'id' },
         { text: 'Renewal', align: 'left', value: 'typeOfBusiness' },
-        { text: 'Product', align: 'left', value: 'productName' },
-      ]
+        { text: 'Product', align: 'left', value: 'product' },
+        { text: 'Product Name', align: 'left', value: 'productName' },
+        {
+          text: 'Product Description',
+          align: 'left',
+          value: 'productDescription'
+        },
+        { text: 'CRY', align: 'left', value: 'cry' },
+        {
+          text: 'License Start Date',
+          align: 'left',
+          value: 'licenseStartDate'
+        },
+        { text: 'License End Date', align: 'left', value: 'licenseEndDate' },
+        { text: 'Likelihood', align: 'left', value: 'likelihood' },
+        { text: 'Agent', align: 'left', value: 'agent' },
+        { text: 'Agent Discount', align: 'left', value: 'agentDiscount' },
+        { text: 'Gross Value', align: 'left', value: 'grossValue' },
+        { text: 'Op_Id', align: 'left', value: 'opportunity_fk' }
+      ];
+    },
+    notesHeader() {
+      return [
+        { text: 'Id', align: 'left', value: 'Id' },
+        { text: 'Note', align: 'left', value: 'Message' },
+        { text: 'Create Date', align: 'left', value: 'CreateDate' },
+        { text: 'Op_Id', align: 'left', value: 'Opportunity_fk' }
+      ];
     }
   },
   watch: {
@@ -164,11 +237,12 @@ export default {
       setSearchStr: 'setSearchStr',
       setFilter: 'setFilter'
     }),
-    async editOpportunity(item) {
+    async onOpportunitySelect(item) {
       this.searchStr = '';
       this.setSearchStr(this.searchStr);
       this.products = await this.getProducts(item.Id);
-      console.log(item);
+      this.notes = await this.getNotes(item.Id);
+      // console.log(item.Id, this.notes);
     },
     async onSelectChange(status) {
       let filter = '';
@@ -235,6 +309,7 @@ export default {
           id: data[key].Id,
           cry: data[key].CRY,
           typeOfBusiness: data[key].TypeOfBusiness,
+          product: data[key].Product,
           productName: data[key].ProductName,
           productDescription: data[key].ProductDescription,
           licenseStartDate: this.formatDate(data[key].LicenseStartDate),
@@ -247,6 +322,10 @@ export default {
         productItems.push(product);
       });
       return productItems;
+    },
+    async getNotes(opId) {
+      await this.$store.dispatch('setCurrentTable', 'Note');
+      return await this.$store.dispatch('getRecords', opId);
     },
     formatDate(date) {
       if (!date) return null;
@@ -261,7 +340,7 @@ export default {
     formatCurrency(amount) {
       if (!amount) return '';
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    },
+    }
   }
 };
 </script>
