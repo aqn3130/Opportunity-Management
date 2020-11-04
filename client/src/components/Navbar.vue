@@ -100,6 +100,11 @@ export default {
           action: '/opportunities'
         },
         {
+          title: 'Sales Rep',
+          icon: 'groups',
+          action: '/sales-rep'
+        },
+        {
           title: 'Accounts',
           icon: 'supervisor_account',
           action: '/users'
