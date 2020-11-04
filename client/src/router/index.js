@@ -88,6 +88,15 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/country-region-territory',
+    name: 'Country Region Territory',
+    component: () =>
+      import(
+        /* webpackChunkName: "CountryRegionTerritory" */ '../views/CountryRegionTerritory.vue'
+      ),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/users',
     name: 'Users',
     component: Users,

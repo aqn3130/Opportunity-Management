@@ -156,6 +156,21 @@ export default new Vuex.Store({
     async getCurrentCustomerOpts(ctx, customerName) {
       const { data } = await axios.get(`opts-by-customer-name?customerName=${customerName}`);
       return data;
+    },
+    async getCountryRegionTerritory(ctx, id) {
+      const { data } = await axios.get(`country-region-territories?id=${id}`);
+      return data;
+    },
+    async updateCountryRegionTerritory(ctx, payload) {
+      const { data } = payload;
+      return await axios.put(`country-region-territories/${data.id}`, data);
+    },
+    async createCountryRegionTerritory(ctx, payload) {
+      const data = payload;
+      return await axios.post(`country-region-territories`, data);
+    },
+    async deleteCountryRegionTerritory(ctx, id) {
+      return await axios.delete(`country-region-territories/${id}`);
     }
   },
   modules: {

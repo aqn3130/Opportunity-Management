@@ -105,6 +105,11 @@ export default {
           action: '/sales-rep'
         },
         {
+          title: 'Country Region Territory',
+          icon: 'flag',
+          action: '/country-region-territory'
+        },
+        {
           title: 'Accounts',
           icon: 'supervisor_account',
           action: '/users'

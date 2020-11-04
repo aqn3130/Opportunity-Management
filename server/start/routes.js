@@ -40,6 +40,10 @@ Route.group(function () {
   Route.get('user/:name','AuthController.fetchUsers');
   Route.get('get-current-user','AuthController.getCurrentUser');
   Route.get('add-user/:user','AuthController.addUser');
+  Route.get('country-region-territories','CountryRegionTerritoryController.index');
+  Route.put('country-region-territories/:id','CountryRegionTerritoryController.update');
+  Route.delete('country-region-territories/:id','CountryRegionTerritoryController.delete');
+  Route.post('country-region-territories','CountryRegionTerritoryController.create');
   // Route.resource('main','MainController');
 }).prefix('api');
 
