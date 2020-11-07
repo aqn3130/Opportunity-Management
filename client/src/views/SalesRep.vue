@@ -307,13 +307,14 @@ export default {
         const id = this.editedItem.Id;
         delete this.editedItem.Id;
         this.editedItem.id = id;
-        // console.log('1', this.editedItem);
+        await this.$store.dispatch('setCurrentTable', 'SalesRep');
         await this.$store.dispatch('updateRecord', this.editedItem);
         await this.initialize();
       } else {
         // this.salesReps.push(this.editedItem);
         // console.log('2', this.editedItem);
         this.editedItem.Id = parseInt(this.editedItem.Id);
+        await this.$store.dispatch('setCurrentTable', 'SalesRep');
         await this.$store.dispatch('createRecord', this.editedItem);
         await this.initialize();
       }

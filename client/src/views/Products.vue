@@ -154,7 +154,7 @@ export default {
       Finance_Category: ''
     },
     defaultItem: {
-      // Id: '',
+      Id: '',
       Category_ID: '',
       Category_Description: '',
       Title_Category: '',
@@ -236,11 +236,11 @@ export default {
         const id = this.editedItem.Id;
         delete this.editedItem.Id;
         this.editedItem.id = id;
+        await this.$store.dispatch('setCurrentTable', 'Products');
         await this.$store.dispatch('updateRecord', this.editedItem);
         await this.initialize();
       } else {
-        // this.salesReps.push(this.editedItem);
-        // console.log('2', this.editedItem);
+        await this.$store.dispatch('setCurrentTable', 'Products');
         this.editedItem.Id = parseInt(this.editedItem.Id);
         await this.$store.dispatch(
           'createRecord',
