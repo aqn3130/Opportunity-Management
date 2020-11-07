@@ -216,7 +216,7 @@ class MainController {
    */
   async store ({ request, response }) {
     const { data } = request.all();
-    if (request.Table === 'Product' || request.Table === 'SalesRep') delete data.CreationDate;
+    if (request.Table === 'Product' || request.Table === 'SalesRep' || request.Table === 'Products') delete data.CreationDate;
     try {
       return await request.Knex.table(request.Table).insert(data);
     } catch (e) {
@@ -260,7 +260,7 @@ class MainController {
   async update ({ params, request, response }) {
     const { id , data } = request.all();
     // console.log(id, data);
-    if (request.Table === 'Product' || request.Table === 'SalesRep') delete data.updated_at;
+    if (request.Table === 'Product' || request.Table === 'SalesRep' || request.Table === 'Products') delete data.updated_at;
     await request.Knex.select('*').from(request.Table).where({ id: id }).update(data)
     // console.log(rec);
   }

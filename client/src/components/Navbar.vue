@@ -110,6 +110,11 @@ export default {
           action: '/country-region-territory'
         },
         {
+          title: 'Products',
+          icon: 'storefront',
+          action: '/product'
+        },
+        {
           title: 'Accounts',
           icon: 'supervisor_account',
           action: '/users'

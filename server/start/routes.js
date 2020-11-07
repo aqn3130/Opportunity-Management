@@ -21,6 +21,7 @@ Route.group(function () {
   Route.get('get-single-opp','MainController.getSingleOpp');
   Route.get('opts-by-customer-name','MainController.getOptsByCustomerName');
   Route.resource('salesrep','MainController').apiOnly();
+  Route.resource('products','MainController').apiOnly();
   Route.resource('product','MainController').apiOnly();
   Route.resource('note','NoteController').apiOnly();
   Route.resource('activities','ActivityController').apiOnly();
@@ -35,6 +36,7 @@ Route.group(function () {
   Route.put('opportunity','MainController.update');
   Route.put('product','MainController.update');
   Route.put('salesrep','MainController.update');
+  Route.put('products','MainController.update');
   Route.resource('revenue_account','MainController').apiOnly();
   Route.post('auth/login','AuthController.login');
   Route.get('user/:name','AuthController.fetchUsers');
