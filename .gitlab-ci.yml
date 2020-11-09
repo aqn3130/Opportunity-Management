@@ -27,3 +27,53 @@ development:
   #     - server # artifact path must be /public for GitLab Pages to pick it up
   only:
     - dev
+
+uat:
+  stage: deploy
+  script:
+    - cd client
+    - npm install
+    - npm run build
+    - cd ..
+    - cd server
+    - curl --location "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar zx
+    - ./cf login -u $CF_USERNAME -p $CF_PASSWORD -a $CF_API_ENDPOINT
+    - ./cf target -s uat
+    - ./cf push plm -f ./deploy-configs/manifest-gcp-uat.yml --no-start
+    - ./cf set-env plm HOST $HOST
+    - ./cf set-env plm APP_KEY $APP_KEY
+    - ./cf set-env plm DB_HOST $DB_HOST
+    - ./cf set-env plm DB_USER $DB_USER
+    - ./cf set-env plm DB_PASSWORD $DB_PASSWORD
+    - ./cf set-env plm DB_DATABASE $DB_DATABASE
+    - ./cf start plm
+  # artifacts:
+  #   paths:
+  #     - server # artifact path must be /public for GitLab Pages to pick it up
+  only:
+    - uat
+
+live:
+  stage: deploy
+  script:
+    - cd client
+    - npm install
+    - npm run build
+    - cd ..
+    - cd server
+    - curl --location "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar zx
+    - ./cf login -u $CF_USERNAME -p $CF_PASSWORD -a $CF_API_ENDPOINT
+    - ./cf target -s live
+    - ./cf push plm -f ./deploy-configs/manifest-gcp-live.yml --no-start
+    - ./cf set-env plm HOST $HOST
+    - ./cf set-env plm APP_KEY $APP_KEY
+    - ./cf set-env plm DB_HOST $DB_HOST_LIVE
+    - ./cf set-env plm DB_USER $DB_USER_LIVE
+    - ./cf set-env plm DB_PASSWORD $DB_PASSWORD_LIVE
+    - ./cf set-env plm DB_DATABASE $DB_DATABASE_LIVE
+    - ./cf start plm
+  # artifacts:
+  #   paths:
+  #     - server # artifact path must be /public for GitLab Pages to pick it up
+  only:
+    - live

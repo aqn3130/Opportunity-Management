@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: imdm
+  - name: plm
     memory: 256M
     instances: 1
     random-route: false
@@ -10,4 +10,5 @@ applications:
       ENV_SILENT: true
       DB_CONNECTION: mysql
     routes:
-      - route: imdm-live.springernature.app
+      - route: plm.springernature.app
+      - route: plm.public.springernature.app

@@ -40,6 +40,7 @@ export default {
       commit('setCurrentUser', data.user);
       commit('setPassword', null);
       commit('setUsername', null);
+      commit('setError', null);
       window.USER = data.user;
     },
     logout({ commit }) {
