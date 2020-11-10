@@ -115,6 +115,11 @@ export default {
           action: '/product'
         },
         {
+          title: 'Campaign',
+          icon: 'campaign',
+          action: '/campaign'
+        },
+        {
           title: 'Accounts',
           icon: 'supervisor_account',
           action: '/users'

@@ -157,6 +157,10 @@ export default new Vuex.Store({
       const { data } = await axios.get(`${this.state.table}?id=${id}`);
       return data;
     },
+    async getCampaign(ctx, id) {
+      const { data } = await axios.get(`${this.state.table}?id=${id}`);
+      return data;
+    },
     async getCurrentCustomerOpts(ctx, customerName) {
       const { data } = await axios.get(`opts-by-customer-name?customerName=${customerName}`);
       return data;

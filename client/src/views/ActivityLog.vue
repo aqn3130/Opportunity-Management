@@ -380,7 +380,7 @@ export default {
       );
       // console.log(this.allActivities);
       this.allActivities = _.uniqBy(this.allActivities, 'Type');
-      console.log(this.allActivities);
+      // console.log(this.allActivities);
       Object.keys(this.allActivities).forEach(key => {
         if (this.allActivities[key].Type === 'Phone Call') {
           this.phoneCallContent = this.allActivities[key];

@@ -29,6 +29,7 @@ Route.group(function () {
   Route.resource('customers','CustomerController').apiOnly();
   Route.put('note','NoteController.update');
   Route.resource('products','MainController').apiOnly();
+  Route.resource('campaign','MainController').apiOnly();
   Route.resource('country_region_territory','MainController').apiOnly();
   Route.resource('states','MainController').apiOnly();
   Route.resource('industry','MainController').apiOnly();
@@ -37,6 +38,7 @@ Route.group(function () {
   Route.put('product','MainController.update');
   Route.put('salesrep','MainController.update');
   Route.put('products','MainController.update');
+  Route.put('campaign','MainController.update');
   Route.resource('revenue_account','MainController').apiOnly();
   Route.post('auth/login','AuthController.login');
   Route.get('user/:name','AuthController.fetchUsers');

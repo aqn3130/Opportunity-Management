@@ -105,6 +105,13 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/campaign',
+    name: 'Campaign',
+    component: () =>
+      import(/* webpackChunkName: "Campaign" */ '../views/Campaign.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/users',
     name: 'Users',
     component: Users,
