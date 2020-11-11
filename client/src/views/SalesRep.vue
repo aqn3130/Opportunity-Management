@@ -8,13 +8,13 @@
       :loading="loading"
     >
       <template v-slot:top>
-        <v-toolbar flat color="grey lighten-2">
+        <v-toolbar flat color="#4b636e" dense dark>
           <v-toolbar-title>Sales Reps</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="700px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="#455A64" dark v-bind="attrs" v-on="on" small fab>
+              <v-btn color="#bb4d00" dark v-bind="attrs" v-on="on" small fab top right absolute>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </template>

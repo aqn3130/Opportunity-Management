@@ -5,12 +5,12 @@
         <template>
           <v-fab-transition>
             <v-btn
-              color="#455A64"
+              color="#bb4d00"
               fab
               dark
               small
               absolute
-              bottom
+              top
               right
               @click="userPickerDialog = true"
             >

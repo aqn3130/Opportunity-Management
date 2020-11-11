@@ -3,7 +3,7 @@
     <v-card v-if="$auth.isAdmin() || $auth.isITSupport()">
       <v-tabs
         v-model="tab"
-        background-color="#455A64"
+        background-color="#4b636e"
         centered
         dark
       >
