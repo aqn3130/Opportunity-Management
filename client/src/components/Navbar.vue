@@ -13,7 +13,7 @@
       <v-spacer></v-spacer>
       <v-btn text class="text-lowercase" v-if="currentUser"
         ><v-icon left>mdi-account-circle</v-icon
-        >{{ currentUser.username }}</v-btn
+        >{{ currentUser.user.username }}</v-btn
       >
     </v-app-bar>
 
@@ -124,10 +124,10 @@ export default {
           icon: 'supervisor_account',
           action: '/users'
         },
-        {
-          title: 'Admin Console',
-          icon: 'settings'
-        }
+        // {
+        //   title: 'Admin Console',
+        //   icon: 'settings'
+        // }
       ],
       drawer: false,
       group: null,

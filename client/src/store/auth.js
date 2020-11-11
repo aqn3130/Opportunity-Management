@@ -1,4 +1,9 @@
+import Vue from 'vue';
+import Vuex from 'vuex';
 import axios from '../plugins/axios';
+import Auth from '@/helpers/auth';
+Vue.use(Vuex);
+
 export default {
   namespaced: true,
   state: {
@@ -50,12 +55,13 @@ export default {
       window.USER = null;
     },
     async getCurrentUser({ commit }) {
-      await axios({
+      const data = await axios({
         method: 'get',
         url: `get-current-user`
       })
         .then(function({ data }) {
           commit('setCurrentUser', data);
+          Vue.prototype.$auth = new Auth(data.permissions, data.roles);
         })
         .catch(function(e) {
           console.log(e);

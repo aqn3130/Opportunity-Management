@@ -8,7 +8,8 @@ export default {
     username: null,
     user: null,
     loading: false,
-    userAdded: false
+    userAdded: false,
+    setRoleError: null
   },
   mutations: {
     setUsers(state, users) {
@@ -28,6 +29,9 @@ export default {
     },
     setUserAdded(state, value) {
       state.userAdded = value;
+    },
+    setRoleError(state, error) {
+      state.setRoleError = error;
     }
   },
   actions: {
@@ -70,6 +74,83 @@ export default {
       commit('setName', null);
       await commit('setUsers', []);
       commit('setLoading', false);
+    },
+    async setRole({ commit }, data) {
+      // console.log(data);
+      return axios({
+        method: 'post',
+        url: '/set-role/',
+        data: data
+      })
+        .then(function() {
+          commit('setLoading', false);
+        })
+        .catch(function(e) {
+          console.log(e);
+          commit('setRoleError', e.message ? e.message : e);
+          commit('setLoading', false);
+        });
+    },
+    async getAllRoles({ commit }, data) {
+      // console.log(data);
+      return axios({
+        method: 'get',
+        url: '/all-roles/'
+      });
+    },
+    async getUserRoles({ commit }, data) {
+      // console.log(data);
+      return axios({
+        method: 'post',
+        url: '/user-roles/',
+        data: {
+          name: data
+        }
+      });
+    },
+    async getRolePermissions({ commit }, data) {
+      // console.log(data);
+      return axios({
+        method: 'post',
+        url: '/role-permissions/',
+        data: {
+          name: data
+        }
+      });
+    },
+    async detachRole({ commit }, data) {
+      return axios({
+        method: 'post',
+        url: '/detach-role/',
+        data: {
+          username: data.user,
+          role: data.role
+        }
+      });
+    },
+    async deleteRole({ commit }, data) {
+      // console.log(data);
+      return axios({
+        method: 'post',
+        url: '/role-delete/',
+        data: {
+          name: data
+        }
+      });
+    },
+    async saveRole({ commit }, data) {
+      await axios({
+        method: 'post',
+        url: '/create-role/',
+        data: data
+      });
+    },
+    async saveRoleAction({ commit }, data) {
+      await axios({
+        method: 'post',
+        url: '/create-role-permission/',
+        data: data
+      });
     }
     // async getUsers({ commit, state }) {
     //     const { data } = (await axios.get(this.state.table));

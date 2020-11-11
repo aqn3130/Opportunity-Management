@@ -10,7 +10,7 @@
         <v-row style="padding: 15px 20px 25px 20px">
           <v-col md="6">
             <v-text-field
-              v-model="currentUser.username"
+              v-model="currentUser.user.username"
               :rules="nameRules"
               label="Sales Rep"
               required
@@ -456,7 +456,7 @@ export default {
     await this.$store.dispatch('setCurrentTable', 'SalesRep');
     const response = await this.$store.dispatch(
       'getSalesRep',
-      this.currentUser.email
+      this.currentUser.user.email
     );
     this.salesRepType = response[0].Type;
     await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');

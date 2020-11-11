@@ -48,6 +48,14 @@ Route.group(function () {
   Route.put('country-region-territories/:id','CountryRegionTerritoryController.update');
   Route.delete('country-region-territories/:id','CountryRegionTerritoryController.delete');
   Route.post('country-region-territories','CountryRegionTerritoryController.create');
+  Route.post("set-role", "RoleController.setRole").middleware("auth");
+  Route.get("all-roles", "RoleController.getAllRoles").middleware("auth");
+  Route.post("user-roles", "RoleController.getUserRoles").middleware("auth");
+  Route.post("detach-role", "RoleController.detachRole").middleware("auth");
+  Route.post("role-delete", "RoleController.deleteRole").middleware("auth");
+  Route.post("create-role", "RoleController.createRole").middleware("auth");
+  Route.post("create-role-permission", "RoleController.createRolePermission").middleware("auth");
+  Route.post("role-permissions", "RoleController.getRolePermissions").middleware("auth");
   // Route.resource('main','MainController');
 }).prefix('api');
 

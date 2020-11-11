@@ -85,8 +85,20 @@ class AuthController {
   }
 
   async getCurrentUser({ request, response, auth }){
-    const currentUser = await auth.getUser();
-    return currentUser;
+    // const currentUser = await auth.getUser();
+    // return currentUser;
+    try {
+      const user = await auth.getUser();
+      const userPermissions = await user.getPermissions();
+      const userRoles = await user.getRoles();
+      const userAcc = {};
+      userAcc.user = user.toJSON();
+      userAcc.roles = userRoles;
+      userAcc.permissions = userPermissions;
+      return userAcc;
+    } catch (e) {
+      throw e;
+    }
   }
 
   async fetchUsers({ request, response, auth}){
