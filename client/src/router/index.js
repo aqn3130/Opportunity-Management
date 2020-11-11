@@ -112,6 +112,20 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/industry',
+    name: 'Industries',
+    component: () =>
+      import(/* webpackChunkName: "Industries" */ '../views/Industries.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/states',
+    name: 'States',
+    component: () =>
+      import(/* webpackChunkName: "States" */ '../views/States.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/users',
     name: 'Users',
     component: Users,

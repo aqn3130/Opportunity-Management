@@ -2,25 +2,15 @@
   <v-container fluid class="px-8">
     <v-data-table
       :headers="headers"
-      :items="campaigns"
+      :items="industries"
       sort-by="Id"
       class="elevation-1 text-no-wrap"
       :loading="loading"
       :search="searchStr"
     >
-      <template v-slot:item.StartDate="{ item }">
-        <span class="caption">
-          {{ item.StartDate | convertDate }}
-        </span>
-      </template>
-      <template v-slot:item.EndDate="{ item }">
-        <span class="caption">
-          {{ item.EndDate | convertDate }}
-        </span>
-      </template>
       <template v-slot:top>
         <v-toolbar flat color="grey lighten-2">
-          <v-toolbar-title>Campaign</v-toolbar-title>
+          <v-toolbar-title>Industries</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
@@ -36,7 +26,17 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="700px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="#455A64" dark v-bind="attrs" v-on="on" small fab top right absolute>
+              <v-btn
+                color="#455A64"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                small
+                fab
+                top
+                right
+                absolute
+              >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </template>
@@ -47,7 +47,7 @@
 
               <v-card-text>
                 <v-container>
-                  <v-form ref="campaignForm" lazy-validation v-model="valid">
+                  <v-form ref="industriesForm" lazy-validation v-model="valid">
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -59,65 +59,19 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.CampaignName"
-                          label="Campaign Name *"
+                          v-model="editedItem.Channel"
+                          label="Channel *"
                           :rules="nameRules"
                           required
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-menu
-                          v-model="campaignStartDateMenu"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="290px"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              :value="editedItem.StartDate"
-                              label="Start Date *"
-                              prepend-icon="event"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                              :rules="nameRules"
-                              class="body-2"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                            v-model="editedItem.StartDate"
-                            @input="campaignStartDateMenu = false"
-                          ></v-date-picker>
-                        </v-menu>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-menu
-                          v-model="campaignEndDateMenu"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="290px"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              :value="editedItem.EndDate"
-                              label="End Date *"
-                              prepend-icon="event"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                              :rules="nameRules"
-                              class="body-2"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                            v-model="editedItem.EndDate"
-                            @input="campaignEndDateMenu = false"
-                          ></v-date-picker>
-                        </v-menu>
+                        <v-text-field
+                          v-model="editedItem.Industry"
+                          label="Industry *"
+                          :rules="nameRules"
+                          required
+                        ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-form>
@@ -175,7 +129,7 @@
 import moment from 'moment';
 
 export default {
-  name: 'Campaign',
+  name: 'Industries',
   components: {},
   data: () => ({
     searchStr: '',
@@ -189,48 +143,29 @@ export default {
         sortable: true,
         value: 'Id'
       },
-      { text: 'Campaign Name', value: 'CampaignName' },
-      { text: 'Start Date', value: 'StartDate' },
-      { text: 'End Date', value: 'EndDate' },
-      { text: 'Actions', value: 'actions' }
+      { text: 'Channel', value: 'Channel' },
+      { text: 'Industry', value: 'Industry' },
+      { text: 'Actions', value: 'actions' },
     ],
-    campaigns: [],
+    industries: [],
     editedIndex: -1,
     editedItem: {
       Id: '',
-      CampaignName: '',
-      StartDate: '',
-      EndDate: ''
+      Channel: '',
+      Industry: ''
     },
     defaultItem: {
       Id: '',
-      CampaignName: '',
-      StartDate: '',
-      EndDate: ''
+      Channel: '',
+      Industry: ''
     },
     valid: true,
-    nameRules: [v => !!v || 'This field is required'],
-    campaignStartDateMenu: false,
-    campaignEndDateMenu: false
+    nameRules: [v => !!v || 'This field is required']
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Campaign' : 'Edit Campaign';
-    },
-    computedStartDateFormat() {
-      const format = 'YYYY-MM-DD';
-      const convFormat = 'YYYY-MM-DD hh:mm:ss a';
-      return this.editedItem.StartDate
-        ? moment(this.editedItem.StartDate, convFormat).format(format)
-        : '';
-    },
-    computedEndDateFormat() {
-      const format = 'YYYY-MM-DD';
-      const convFormat = 'YYYY-MM-DD hh:mm:ss a';
-      return this.editedItem.EndDate
-        ? moment(this.editedItem.EndDate, convFormat).format(format)
-        : '';
+      return this.editedIndex === -1 ? 'New Industry' : 'Edit Industry';
     }
   },
   filters: {
@@ -256,23 +191,20 @@ export default {
   methods: {
     async initialize() {
       this.loading = true;
-      await this.$store.dispatch('setCurrentTable', 'Campaign');
-      this.campaigns = await this.$store.dispatch('getCampaign', '');
+      await this.$store.dispatch('setCurrentTable', 'Industry');
+      this.industries = await this.$store.dispatch('getIndustry', '');
       this.loading = false;
       // console.log(this.countryRegionTerritories);
     },
 
     editItem(item) {
-      const format = 'YYYY-MM-DD';
-      item.StartDate = this.formatDate(item.StartDate, format);
-      item.EndDate = this.formatDate(item.EndDate, format);
-      this.editedIndex = this.campaigns.indexOf(item);
+      this.editedIndex = this.industries.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.campaigns.indexOf(item);
+      this.editedIndex = this.industries.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
@@ -304,11 +236,11 @@ export default {
         const id = this.editedItem.Id;
         delete this.editedItem.Id;
         this.editedItem.id = id;
-        await this.$store.dispatch('setCurrentTable', 'Campaign');
+        await this.$store.dispatch('setCurrentTable', 'Industry');
         await this.$store.dispatch('updateRecord', this.editedItem);
         await this.initialize();
       } else {
-        await this.$store.dispatch('setCurrentTable', 'Campaign');
+        await this.$store.dispatch('setCurrentTable', 'Industry');
         delete this.editedItem.Id;
         await this.$store.dispatch('createRecord', this.editedItem);
         await this.initialize();
@@ -325,7 +257,7 @@ export default {
       );
     },
     validate() {
-      if (this.$refs.campaignForm.validate()) {
+      if (this.$refs.industriesForm.validate()) {
         this.save();
       }
     }

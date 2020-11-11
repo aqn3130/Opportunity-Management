@@ -79,6 +79,12 @@
               <v-list-item-title>Country Region Territory</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/industry" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>category</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Industries</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item to="/product" v-if="$auth.isAdmin()">
             <v-list-item-icon><v-icon>storefront</v-icon></v-list-item-icon>
             <v-list-item-content>
@@ -89,6 +95,12 @@
             <v-list-item-icon><v-icon>campaign</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Campaign</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/states" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>map</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>States</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item to="/users" v-if="$auth.isAdmin()">
