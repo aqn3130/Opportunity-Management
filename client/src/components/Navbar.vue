@@ -43,19 +43,58 @@
       <v-divider></v-divider>
       <v-card flat color="white" tile :height="drawerHeight">
         <v-list dense nav light class="pt-5">
-          <v-list-item
-            v-for="item in items"
-            :key="item.title"
-            link
-            v-model="group"
-            :to="item.action"
-          >
-            <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-
+          <v-list-item to="/dashboard">
+            <v-list-item-icon><v-icon>dashboard</v-icon></v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title>Dashboard</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/new-opportunity">
+            <v-list-item-icon><v-icon>add</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>New Opportunity</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/activities">
+            <v-list-item-icon><v-icon>local_activity</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Activity Tracker</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/opportunities" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>select_all</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>All Opportunities</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/sales-rep" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>groups</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Sales Rep</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/country-region-territory" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>flag</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Country Region Territory</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/product" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>storefront</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Products</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/campaign" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>campaign</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Campaign</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/users" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>supervisor_account</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Accounts</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -78,57 +117,6 @@ export default {
   name: 'Navbar',
   data() {
     return {
-      items: [
-        {
-          title: 'Dashboard',
-          icon: 'dashboard',
-          action: '/dashboard'
-        },
-        {
-          title: 'New Opportunity',
-          icon: 'add',
-          action: '/new-opportunity'
-        },
-        {
-          title: 'Activity Tracker',
-          icon: 'local_activity',
-          action: '/activities'
-        },
-        {
-          title: 'All Opportunities',
-          icon: 'select_all',
-          action: '/opportunities'
-        },
-        {
-          title: 'Sales Rep',
-          icon: 'groups',
-          action: '/sales-rep'
-        },
-        {
-          title: 'Country Region Territory',
-          icon: 'flag',
-          action: '/country-region-territory'
-        },
-        {
-          title: 'Products',
-          icon: 'storefront',
-          action: '/product'
-        },
-        {
-          title: 'Campaign',
-          icon: 'campaign',
-          action: '/campaign'
-        },
-        {
-          title: 'Accounts',
-          icon: 'supervisor_account',
-          action: '/users'
-        },
-        // {
-        //   title: 'Admin Console',
-        //   icon: 'settings'
-        // }
-      ],
       drawer: false,
       group: null,
       color: '#fff',
@@ -137,7 +125,7 @@ export default {
       destinations: this.$store.destinations,
       isLoggedIn: false,
       currentPageName: '',
-      drawerHeight: '600'
+      drawerHeight: '600',
     };
   },
   methods: {
@@ -163,7 +151,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['token', 'currentUser']),
-    ...mapState(['formData', 'currentOpp'])
+    ...mapState(['formData', 'currentOpp']),
   },
   created() {
     window.addEventListener('resize', () => {
