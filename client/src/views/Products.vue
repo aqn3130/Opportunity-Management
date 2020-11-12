@@ -9,7 +9,7 @@
       :search="searchStr"
     >
       <template v-slot:top>
-        <v-toolbar flat color="grey lighten-2">
+        <v-toolbar flat color="#4b636e" dense dark>
           <v-toolbar-title>Products</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
@@ -20,13 +20,12 @@
             outlined
             flat
             dense
-            class="mt-5"
-            light
+            class="mt-6"
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="700px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="#455A64" dark v-bind="attrs" v-on="on" small fab>
+              <v-btn color="#bb4d00" dark v-bind="attrs" v-on="on" small fab right top absolute>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </template>
@@ -43,6 +42,7 @@
                         v-model="editedItem.Id"
                         label="Id"
                         readonly
+                        disabled
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">

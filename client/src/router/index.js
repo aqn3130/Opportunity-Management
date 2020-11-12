@@ -33,6 +33,16 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/dashboardAdmin',
+    name: 'Dashboard Admin',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+        import(/* webpackChunkName: "DashboardAdmin" */ '../views/DashboardAdmin.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/activities',
     name: 'Activity Tracker',
     // route level code-splitting

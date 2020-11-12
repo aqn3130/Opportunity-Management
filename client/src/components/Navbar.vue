@@ -49,6 +49,12 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/dashboardAdmin" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>list_alt</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Dashboard Admin</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item to="/new-opportunity">
             <v-list-item-icon><v-icon>add</v-icon></v-list-item-icon>
             <v-list-item-content>

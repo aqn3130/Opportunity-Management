@@ -20,6 +20,7 @@ Route.group(function () {
   Route.resource('opportunity','MainController').apiOnly();
   Route.get('get-single-opp','MainController.getSingleOpp');
   Route.get('opts-by-customer-name','MainController.getOptsByCustomerName');
+  Route.get('opts-by-sales-rep','MainController.getOptsBySalesRep');
   Route.resource('salesrep','MainController').apiOnly();
   Route.resource('products','MainController').apiOnly();
   Route.resource('product','MainController').apiOnly();

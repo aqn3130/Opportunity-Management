@@ -654,9 +654,7 @@ export default {
       }
     },
     reset() {
-      // this.$refs.form.reset()
-      // this.$refs.form.resetValidation()
-      this.$router.push({ name: 'Dashboard' });
+      this.$router.back();
     },
     resetValidation() {
       this.$refs.form.resetValidation();

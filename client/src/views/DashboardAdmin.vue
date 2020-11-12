@@ -18,11 +18,11 @@
               <v-select
                 v-model="selectedStatus"
                 :items="statuses"
+                @change="onSelectChange"
                 style="width: 110px"
                 dark
                 class="caption"
                 dense
-                @change="onSelectChange"
               ></v-select>
               <v-data-table
                 :headers="headers"
@@ -40,6 +40,8 @@
                 :search="searchStr"
                 :loading="loading"
                 :style="{ cursor: 'pointer' }"
+                :server-items-length="totalLeads"
+                :options.sync="options"
               >
                 <template v-slot:top>
                   <v-toolbar flat color="grey lighten-2">
@@ -53,6 +55,7 @@
                       dense
                       class="mt-5"
                       light
+                      @change="search"
                       @click:clear="clearSearch"
                     ></v-text-field>
                     <v-spacer></v-spacer>
@@ -115,20 +118,20 @@
         </v-card>
       </v-container>
     </v-layout>
-    <v-btn
-      absolute
-      dark
-      fab
-      bottom
-      right
-      color="#455A64"
-      class="mb-16 mr-1"
-      link
-      to="/new-opportunity"
-      fixed
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+<!--    <v-btn-->
+<!--      absolute-->
+<!--      dark-->
+<!--      fab-->
+<!--      bottom-->
+<!--      right-->
+<!--      color="#455A64"-->
+<!--      class="mb-16 mr-1"-->
+<!--      link-->
+<!--      to="/new-opportunity"-->
+<!--      fixed-->
+<!--    >-->
+<!--      <v-icon>mdi-plus</v-icon>-->
+<!--    </v-btn>-->
   </div>
 </template>
 
@@ -137,7 +140,7 @@ import moment from 'moment';
 import { mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'Dashboard',
+  name: 'DashboardAdmin',
   components: {},
   data() {
     return {
@@ -165,7 +168,7 @@ export default {
   },
   async created() {
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
-    this.rows = await this.getRecords();
+    // await this.getRecords();
     this.selectedStatus = this.statuses[0];
   },
   computed: {
@@ -194,15 +197,27 @@ export default {
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
     },
-    ...mapState(['loading']),
-    ...mapState('auth',['currentUser'])
+    ...mapState(['loading'])
   },
   watch: {
+    options: {
+      handler() {
+        this.setSearchStr(this.searchStr);
+        // this.setFilter(this.statuses[0]);
+        this.getDataFromApi().then(data => {
+          this.rows = data.items;
+          this.totalLeads = data.total;
+          // console.log(data);
+        });
+      },
+      deep: true
+    }
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     getRecords: async function() {
-      return await this.$store.dispatch('getCurrentSalesRepOpts', this.currentUser.user.username);
+      return await this.$store.dispatch('getRecords', '');
     },
     ...mapMutations({
       setOppId: 'setOppId',
@@ -213,17 +228,69 @@ export default {
       setFilter: 'setFilter'
     }),
     editOpportunity(item) {
+      this.searchStr = '';
+      this.setSearchStr(this.searchStr);
       this.setOppId(item.Id);
       this.setOpp(item);
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },
+    async onSelectChange(status) {
+      let filter = '';
+      if (status.trim().toLowerCase() !== 'all') {
+        filter = status;
+      }
+      this.setFilter(filter);
+      if(this.searchStr)
+      this.setSearchStr(this.searchStr);
+      this.getDataFromApi().then(data => {
+        this.rows = data.items;
+        this.totalLeads = data.total;
+      });
+    },
+    getDataFromApi() {
+      return new Promise(async (resolve, reject) => {
+        const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+        this.setPage(page);
+        this.setPerPage(itemsPerPage);
+        let total = undefined;
+        let items = undefined;
+        const { opts, totalOpts } = await this.getRecords();
+        total = totalOpts;
+        items = opts;
+        if (sortBy.length === 1 && sortDesc.length === 1) {
+          items = items.sort((a, b) => {
+            const sortA = a[sortBy[0]];
+            const sortB = b[sortBy[0]];
+
+            if (sortDesc[0]) {
+              if (sortA < sortB) return 1;
+              if (sortA > sortB) return -1;
+              return 0;
+            } else {
+              if (sortA < sortB) return -1;
+              if (sortA > sortB) return 1;
+              return 0;
+            }
+          });
+        }
+        resolve({
+          items,
+          total
+        });
+      });
+    },
+    async search() {
+      this.setSearchStr(this.searchStr);
+      this.getDataFromApi().then(data => {
+        this.rows = data.items;
+        this.totalLeads = data.total;
+      });
+    },
     clearSearch() {
       this.searchStr = '';
-    },
-    async onSelectChange(status) {
-      this.selectedStatus = status;
-    },
+      this.search();
+    }
   }
 };
 </script>
