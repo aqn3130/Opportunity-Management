@@ -232,7 +232,8 @@ class MainController {
       request.Table === 'Products' ||
       request.Table === 'Campaign' ||
       request.Table === 'Industry' ||
-      request.Table === 'States'
+      request.Table === 'States' ||
+      request.Table === 'Sales_Funnel'
     ) delete data.CreationDate;
     try {
       return await request.Knex.table(request.Table).insert(data);
@@ -282,7 +283,8 @@ class MainController {
         request.Table === 'Products' ||
         request.Table === 'Campaign' ||
         request.Table === 'Industry' ||
-        request.Table === 'States' ) delete data.updated_at;
+        request.Table === 'States' ||
+        request.Table === 'Sales_Funnel') delete data.updated_at;
     await request.Knex.select('*').from(request.Table).where({ id: id }).update(data)
     // console.log(rec);
   }

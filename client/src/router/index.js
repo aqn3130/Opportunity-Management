@@ -39,7 +39,9 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(/* webpackChunkName: "DashboardAdmin" */ '../views/DashboardAdmin.vue'),
+      import(
+        /* webpackChunkName: "DashboardAdmin" */ '../views/DashboardAdmin.vue'
+      ),
     meta: { requiresAuth: true }
   },
   {
@@ -133,6 +135,13 @@ const routes = [
     name: 'States',
     component: () =>
       import(/* webpackChunkName: "States" */ '../views/States.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/salesFunnel',
+    name: 'Sales Funnel',
+    component: () =>
+      import(/* webpackChunkName: "SalesFunnel" */ '../views/SalesFunnel.vue'),
     meta: { requiresAuth: true }
   },
   {

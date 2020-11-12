@@ -103,6 +103,12 @@
               <v-list-item-title>Campaign</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/salesFunnel" v-if="$auth.isAdmin()">
+            <v-list-item-icon><v-icon>local_atm</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Sales Funnel</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item to="/states" v-if="$auth.isAdmin()">
             <v-list-item-icon><v-icon>map</v-icon></v-list-item-icon>
             <v-list-item-content>
@@ -110,9 +116,20 @@
             </v-list-item-content>
           </v-list-item>
           <v-list-item to="/users" v-if="$auth.isAdmin()">
-            <v-list-item-icon><v-icon>supervisor_account</v-icon></v-list-item-icon>
+            <v-list-item-icon
+              ><v-icon>supervisor_account</v-icon></v-list-item-icon
+            >
             <v-list-item-content>
               <v-list-item-title>Accounts</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            href="https://datastudio.google.com/reporting/1V3LWY3BX7uonW-cGBFDTiF3ffOE7yZNP/page/lAXy"
+            target="_blank"
+          >
+            <v-list-item-icon><v-icon>window</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>PLM Reports</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -143,7 +160,7 @@ export default {
       destinations: this.$store.destinations,
       isLoggedIn: false,
       currentPageName: '',
-      drawerHeight: '600',
+      drawerHeight: '600'
     };
   },
   methods: {
@@ -169,7 +186,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['token', 'currentUser']),
-    ...mapState(['formData', 'currentOpp']),
+    ...mapState(['formData', 'currentOpp'])
   },
   created() {
     window.addEventListener('resize', () => {
@@ -177,10 +194,10 @@ export default {
     });
     window.BUS.$on('leave-page', () => {
       this.drawer = !this.drawer;
-    })
+    });
     window.BUS.$on('nav-home', () => {
-      this.$router.push({ name: 'Dashboard'});
-    })
+      this.$router.push({ name: 'Dashboard' });
+    });
   },
   beforeCreate() {},
   mounted() {

@@ -42,7 +42,7 @@ export default {
       });
       commit('setToken', data.token);
       localStorage.setItem('token', data.token);
-      commit('setCurrentUser', data.user);
+      commit('setCurrentUser', data);
       commit('setPassword', null);
       commit('setUsername', null);
       commit('setError', null);

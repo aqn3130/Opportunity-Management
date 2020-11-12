@@ -19,10 +19,10 @@ window.BUS = new Vue();
 
 if (token) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  axios
-    .get(`api/get-current-user`)
-    .then(function({ data }) {
-      window.USER = data;
+  axios.get(`api/get-current-user`).then(function({ data }) {
+      window.USER = data.user;
+      store.commit('auth/setCurrentUser', data);
+      // console.log(data);
     })
     .catch(function() {
       window.USER = null;
