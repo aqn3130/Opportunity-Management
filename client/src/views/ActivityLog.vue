@@ -44,9 +44,8 @@
                 </v-card>
                 <v-card
                   width="auto"
-                  min-height="287"
-                  max-height="287"
-                  class="pa-3 mt-5 ml-2"
+                  height="287"
+                  class="pa-3 mt-5 ml-2 overflow-auto"
                 >
                   <span class="overline ml-2">Active Opportunities</span>
                   <v-divider></v-divider>

@@ -12,7 +12,7 @@
         <v-card-text class="text-center overline"> </v-card-text>
       </v-card>
       <v-layout>
-        <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
+        <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -100px;">
           <v-card class="d-flex justify-center transparent mt-n10" flat>
             <v-row>
               <v-col>
