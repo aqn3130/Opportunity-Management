@@ -33,7 +33,8 @@
     "adonis-acl": "^1.1.1",
     "axios": "^0.19.2",
     "knex": "^0.20.8",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "soap": "^0.34.0"
   },
   "devDependencies": {},
   "autoload": {

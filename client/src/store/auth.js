@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from '../plugins/axios';
 import Auth from '@/helpers/auth';
+import store from 'element-ui/packages/cascader-panel/src/store';
 Vue.use(Vuex);
 
 export default {
@@ -31,7 +32,7 @@ export default {
     }
   },
   actions: {
-    async login({ commit, state }) {
+    async login({ commit, state, dispatch }) {
       const { data } = await axios({
         method: 'post',
         url: `auth/login`,
@@ -42,11 +43,11 @@ export default {
       });
       commit('setToken', data.token);
       localStorage.setItem('token', data.token);
-      commit('setCurrentUser', data);
+      window.USER = data.user;
+      await dispatch('getCurrentUser');
       commit('setPassword', null);
       commit('setUsername', null);
       commit('setError', null);
-      window.USER = data.user;
     },
     logout({ commit }) {
       localStorage.removeItem('token');
