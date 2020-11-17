@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" md="8" offset-md="2">
+    <v-col cols="12" md="12" class="px-7">
       <v-data-table
         :headers="headers"
         :items="actions"
@@ -26,13 +26,20 @@
             <v-dialog v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on }">
                 <v-btn
-                  color="primary"
-                  dark
+                  color="#bb4d00"
                   class="mb-2"
                   v-on="on"
                   :disabled="!checkRoles"
-                  >Add Action</v-btn
+                  fab
+                  bottom
+                  right
+                  small
+                  absolute
+                  dark
+                  v-if="currentUser.user.username === 'aqn3130'"
                 >
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
               </template>
               <v-card>
                 <v-card-title>
@@ -43,15 +50,15 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12" md="12">
-<!--                        <v-select-->
-<!--                          :items="user_names"-->
-<!--                          label="Users*"-->
-<!--                          required-->
-<!--                          @change="onOptionChange"-->
-<!--                          chips-->
-<!--                          multiple-->
-<!--                          v-model="selectedActions"-->
-<!--                        ></v-select>-->
+                        <!--                        <v-select-->
+                        <!--                          :items="user_names"-->
+                        <!--                          label="Users*"-->
+                        <!--                          required-->
+                        <!--                          @change="onOptionChange"-->
+                        <!--                          chips-->
+                        <!--                          multiple-->
+                        <!--                          v-model="selectedActions"-->
+                        <!--                        ></v-select>-->
                         <v-text-field
                           v-model="action"
                           counter
@@ -95,6 +102,8 @@
   </v-row>
 </template>
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: 'RolePermission',
   data: () => ({
@@ -106,7 +115,7 @@ export default {
         sortable: false,
         value: 'name'
       },
-      { text: 'Description', value: 'description' },
+      { text: 'Description', value: 'description' }
       // { text: 'Actions', value: 'actions' },
     ],
     actionRules: [
@@ -144,7 +153,8 @@ export default {
     checkRoles() {
       return this.selectedRole;
       // return this.user_names.length > 0
-    }
+    },
+    ...mapState('auth', ['currentUser'])
   },
   watch: {
     dialog(val) {
@@ -201,7 +211,7 @@ export default {
     async add() {
       const data = {};
       data.action = this.action;
-      data.slug = this.action.toLowerCase().replace(/ /g,"_");
+      data.slug = this.action.toLowerCase().replace(/ /g, '_');
       data.description = this.action_description;
       data.role = this.selectedRole;
       // console.log(data);

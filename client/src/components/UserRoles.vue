@@ -1,118 +1,127 @@
 <template>
-  <v-row>
-    <v-col cols="12" md="8" offset-md="2">
-      <v-data-table
-        :headers="headers"
-        :items="users"
-        sort-by="calories"
-        class="elevation-1"
-        :loading="loading"
-        :loading-text="loadingText"
-      >
-        <template v-slot:top>
-          <v-toolbar flat color="grey lighten-3">
-            <v-toolbar-title>
-              <v-select
-                label="Roles"
-                v-model="selectedRole"
-                :items="availableRoles"
-                @change="initializeUsers"
-                hint="select a role to view who has it"
-                persistent-hint
-              ></v-select>
-            </v-toolbar-title>
-            <v-divider class="mx-4" inset vertical></v-divider>
-            <v-spacer></v-spacer>
-            <v-dialog v-model="dialog" max-width="700px">
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  color="primary"
-                  dark
-                  class="mb-2"
-                  v-on="on"
-                  :disabled="!checkRoles"
-                  small
-                  >Add User</v-btn
-                >
-              </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
-
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12" md="12">
-                        <v-data-table
-                          v-model="selectedUsers"
-                          :items="user_names"
-                          :headers="userList"
-                          :single-select="singleSelect"
-                          item-key="username"
-                          show-select
-                          class="elevation-1"
-                          :items-per-page="5"
-                        >
-                          <template v-slot:top>
-                            <v-switch
-                              v-model="singleSelect"
-                              label="Single select"
-                              class="pa-3"
-                            ></v-switch>
-                          </template>
-
-                          <template v-slot:item.first_name="{ item }">
-                            <p v-if="item.first_name">{{ item.first_name }}</p>
-                          </template>
-                          <template v-slot:item.name="{ item }">
-                            <p v-if="item.username">{{ item.username }}</p>
-                          </template>
-                          <template v-slot:item.name="{ item }">
-                            <p v-if="item.email">{{ item.email }}</p>
-                          </template>
-                        </v-data-table>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close"
-                    >Cancel</v-btn
-                  >
+  <v-container fluid>
+    <v-row>
+      <v-col cols="12" md="12">
+        <v-data-table
+          :headers="headers"
+          :items="users"
+          sort-by="calories"
+          class="elevation-1"
+          :loading="loading"
+          :loading-text="loadingText"
+        >
+          <template v-slot:top>
+            <v-toolbar flat color="grey lighten-3">
+              <v-toolbar-title>
+                <v-select
+                  label="Roles"
+                  v-model="selectedRole"
+                  :items="availableRoles"
+                  @change="initializeUsers"
+                  hint="select a role to view who has it"
+                  persistent-hint
+                ></v-select>
+              </v-toolbar-title>
+              <v-divider class="mx-4" inset vertical></v-divider>
+              <v-spacer></v-spacer>
+              <v-dialog v-model="dialog" max-width="700px">
+                <template v-slot:activator="{ on }">
                   <v-btn
-                    color="blue darken-1"
-                    text
-                    @click="add"
-                    :disabled="!selectedUsers.length > 0"
-                    >Add</v-btn
+                    color="#bb4d00"
+                    dark
+                    class="mb-2"
+                    v-on="on"
+                    :disabled="!checkRoles"
+                    small
+                    fab
+                    bottom
+                    right
+                    absolute
                   >
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-toolbar>
-        </template>
-        <template v-slot:item.action="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
-            edit
-          </v-icon>
-          <v-icon small @click="deleteItem(item)">
-            delete
-          </v-icon>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn text :loading="deleteRoleLoading" v-if="item.user === user">
-            <v-icon @click="deleteRole(item)" small>delete</v-icon>
-          </v-btn>
-          <v-btn text v-else>
-            <v-icon @click="deleteRole(item)" small>delete</v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
-    </v-col>
-  </v-row>
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12" md="12">
+                          <v-data-table
+                            v-model="selectedUsers"
+                            :items="user_names"
+                            :headers="userList"
+                            :single-select="singleSelect"
+                            item-key="username"
+                            show-select
+                            class="elevation-1"
+                            :items-per-page="5"
+                          >
+                            <template v-slot:top>
+                              <v-switch
+                                v-model="singleSelect"
+                                label="Single select"
+                                class="pa-3"
+                              ></v-switch>
+                            </template>
+
+                            <template v-slot:item.first_name="{ item }">
+                              <p v-if="item.first_name">
+                                {{ item.first_name }}
+                              </p>
+                            </template>
+                            <template v-slot:item.name="{ item }">
+                              <p v-if="item.username">{{ item.username }}</p>
+                            </template>
+                            <template v-slot:item.name="{ item }">
+                              <p v-if="item.email">{{ item.email }}</p>
+                            </template>
+                          </v-data-table>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="close"
+                      >Cancel</v-btn
+                    >
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="add"
+                      :disabled="!selectedUsers.length > 0"
+                      >Add</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-toolbar>
+          </template>
+          <template v-slot:item.action="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">
+              edit
+            </v-icon>
+            <v-icon small @click="deleteItem(item)">
+              delete
+            </v-icon>
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <v-btn text :loading="deleteRoleLoading" v-if="item.user === user">
+              <v-icon @click="deleteRole(item)" small>delete</v-icon>
+            </v-btn>
+            <v-btn text v-else>
+              <v-icon @click="deleteRole(item)" small>delete</v-icon>
+            </v-btn>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 <script>
 export default {

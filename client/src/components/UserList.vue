@@ -1,7 +1,8 @@
 <template>
   <v-card>
     <v-container>
-      <v-toolbar flat dense height="20">
+      <v-toolbar dense flat height="30">
+        <v-toolbar-title>Users</v-toolbar-title>
         <template>
           <v-fab-transition>
             <v-btn
@@ -10,7 +11,7 @@
               dark
               small
               absolute
-              top
+              bottom
               right
               @click="userPickerDialog = true"
             >

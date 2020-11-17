@@ -2,7 +2,7 @@
   <v-form ref="form" v-model="valid" lazy-validation>
     <v-container>
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="6" v-if="currentUser.user.username === 'aqn3130'">
           <v-card flat>
             <v-card-title>
               Create Roles
@@ -26,17 +26,18 @@
             <v-card-actions>
               <v-btn
                 :disabled="!valid"
-                color="success"
                 class="mr-4"
                 @click="validate"
                 small
+                text
+                outlined
               >
                 Create
               </v-btn>
 
-<!--              <v-btn color="error" class="mr-4" @click="reset" small>-->
-<!--                Reset Form-->
-<!--              </v-btn>-->
+              <v-btn class="mr-4" @click="reset" small text outlined>
+                Cancel
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
