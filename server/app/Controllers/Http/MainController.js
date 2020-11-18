@@ -1,4 +1,5 @@
 'use strict'
+const SoapController = require("./SoapController");
 const Env = use('Env');
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -202,6 +203,8 @@ class MainController {
         .where('SalesRep', params.salesRep)
     }
     // console.log(query);
+    // const sc = new SoapController();
+    // await sc.createClient();
     return query
   }
 

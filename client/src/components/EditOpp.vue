@@ -595,7 +595,7 @@ export default {
           dismissible: true,
           position: 'bottom',
           onClose: () => {
-            this.$router.push({ name: 'Dashboard' });
+            this.$router.back();
             this.newOppLoading = false;
           }
         });
@@ -681,7 +681,7 @@ export default {
         this.states = this.stateOptions;
       } else {
         await this.$store.dispatch('setCurrentTable', 'States');
-        const states = await this.$store.dispatch('getRecords', '');
+        const states = await this.$store.dispatch('getStates', '');
         this.setStateOptions(states);
       }
     },
@@ -692,7 +692,7 @@ export default {
     async setIndustryType(channelType) {
       this.industryTypeItems = [];
       await this.$store.dispatch('setCurrentTable', 'Industry');
-      const industries = await this.$store.dispatch('getRecords', '');
+      const industries = await this.$store.dispatch('getIndustry', '');
       Object.keys(industries).forEach((value, index) => {
         if (
           industries[index] &&
@@ -845,7 +845,7 @@ export default {
         this.products = this.productsOption;
       } else {
         await this.$store.dispatch('setCurrentTable', 'Products');
-        const data = await this.$store.dispatch('getRecords', '');
+        const data = await this.$store.dispatch('getProducts', '');
         Object.keys(data).forEach(key => {
           this.products.push(data[key].Category_Description);
         });
@@ -860,7 +860,7 @@ export default {
           'setCurrentTable',
           'Country_Region_Territory'
         );
-        const countries = await this.$store.dispatch('getRecords', '');
+        const countries = await this.$store.dispatch('getCountryRegionTerritory', '');
         Object.keys(countries).forEach((value, index) => {
           if (countries[index])
             this.countryItems.push(countries[index].Country);

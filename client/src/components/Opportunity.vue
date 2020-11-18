@@ -69,8 +69,7 @@
             <v-text-field v-model="bpId" label="BP ID" v-else></v-text-field>
             <v-text-field
               v-model="memberOfConsortia"
-              :rules="nameRules"
-              label="Member Of Consortia *"
+              label="Member Of Consortia"
             ></v-text-field>
             <v-select
               v-model="country"

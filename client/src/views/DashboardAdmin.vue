@@ -118,20 +118,20 @@
         </v-card>
       </v-container>
     </v-layout>
-<!--    <v-btn-->
-<!--      absolute-->
-<!--      dark-->
-<!--      fab-->
-<!--      bottom-->
-<!--      right-->
-<!--      color="#455A64"-->
-<!--      class="mb-16 mr-1"-->
-<!--      link-->
-<!--      to="/new-opportunity"-->
-<!--      fixed-->
-<!--    >-->
-<!--      <v-icon>mdi-plus</v-icon>-->
-<!--    </v-btn>-->
+    <!--    <v-btn-->
+    <!--      absolute-->
+    <!--      dark-->
+    <!--      fab-->
+    <!--      bottom-->
+    <!--      right-->
+    <!--      color="#455A64"-->
+    <!--      class="mb-16 mr-1"-->
+    <!--      link-->
+    <!--      to="/new-opportunity"-->
+    <!--      fixed-->
+    <!--    >-->
+    <!--      <v-icon>mdi-plus</v-icon>-->
+    <!--    </v-btn>-->
   </div>
 </template>
 
@@ -213,8 +213,7 @@ export default {
       deep: true
     }
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     getRecords: async function() {
       return await this.$store.dispatch('getRecords', '');
@@ -232,6 +231,7 @@ export default {
       this.setSearchStr(this.searchStr);
       this.setOppId(item.Id);
       this.setOpp(item);
+      this.setFilter('');
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },
@@ -241,8 +241,7 @@ export default {
         filter = status;
       }
       this.setFilter(filter);
-      if(this.searchStr)
-      this.setSearchStr(this.searchStr);
+      if (this.searchStr) this.setSearchStr(this.searchStr);
       this.getDataFromApi().then(data => {
         this.rows = data.items;
         this.totalLeads = data.total;

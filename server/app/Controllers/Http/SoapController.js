@@ -3,11 +3,13 @@ const soap = require('soap');
 
 class SoapController {
   async createClient() {
-    const url = 'https://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL';
+    // const url = 'https://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL';
+    // const url = 'http://localhost:8080/api/wscalc1?WSDL';
+    const url = 'http://0.0.0.0:80/wscalc1?WSDL';
     const args = {ubiNum: 123};
     soap.createClient(url, function(err, client) {
       client.NumberToWords(args, function(err, result, rawResponse, soapHeader, rawRequest) {
-        // console.log(result, rawResponse);
+        console.log(result, rawResponse);
       });
       // const srv = client.describe() // returns
       // {

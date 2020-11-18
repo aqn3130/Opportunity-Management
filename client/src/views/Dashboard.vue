@@ -15,15 +15,15 @@
         <v-card class="d-flex justify-center transparent mt-n10" flat>
           <v-row>
             <v-col>
-              <v-select
-                v-model="selectedStatus"
-                :items="statuses"
-                style="width: 110px"
-                dark
-                class="caption"
-                dense
-                @change="onSelectChange"
-              ></v-select>
+              <!--              <v-select-->
+              <!--                v-model="selectedStatus"-->
+              <!--                :items="statuses"-->
+              <!--                style="width: 300px"-->
+              <!--                dark-->
+              <!--                class="caption"-->
+              <!--                dense-->
+              <!--                multiple-->
+              <!--              ></v-select>-->
               <v-data-table
                 :headers="headers"
                 :items="rows"
@@ -41,6 +41,96 @@
                 :loading="loading"
                 :style="{ cursor: 'pointer' }"
               >
+                <template
+                  v-for="(col, i) in filters"
+                  v-slot:[`header.${i}`]="{ header }"
+                >
+                  <div style="display: inline-block; padding: 16px 0;" :key="i">
+                    {{ header.text }}
+                  </div>
+                  <div style="float: right; margin-top: 8px" :key="i + 'key'">
+                    <v-menu
+                      :close-on-content-click="false"
+                      :nudge-width="200"
+                      offset-y
+                      transition="slide-y-transition"
+                      left
+                      fixed
+                      style="position: absolute; right: 0"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn color="indigo" icon v-bind="attrs" v-on="on">
+                          <v-icon
+                            small
+                            :color="
+                              activeFilters[header.value] &&
+                              activeFilters[header.value].length <
+                                filters[header.value].length
+                                ? 'red'
+                                : 'default'
+                            "
+                          >
+                            mdi-filter-variant
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <v-list flat dense class="pa-0">
+                        <v-list-item-group
+                          multiple
+                          v-model="activeFilters[header.value]"
+                          class="py-2"
+                        >
+                          <template v-for="item in filters[header.value]">
+                            <v-list-item
+                              :key="`${item}`"
+                              :value="item"
+                              :ripple="false"
+                            >
+                              <template v-slot:default="{ active, toggle }">
+                                <v-list-item-action>
+                                  <v-checkbox
+                                    :input-value="active"
+                                    :true-value="item"
+                                    @click="toggle"
+                                    color="primary"
+                                    :ripple="false"
+                                    dense
+                                  ></v-checkbox>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                  <v-list-item-title
+                                    v-text="item"
+                                  ></v-list-item-title>
+                                </v-list-item-content>
+                              </template>
+                            </v-list-item>
+                          </template>
+                        </v-list-item-group>
+                        <v-divider></v-divider>
+                        <v-row no-gutters>
+                          <v-col cols="6">
+                            <v-btn
+                              text
+                              block
+                              @click="toggleAll(header.value)"
+                              color="success"
+                              >Toggle all</v-btn
+                            >
+                          </v-col>
+                          <v-col cols="6">
+                            <v-btn
+                              text
+                              block
+                              @click="clearAll(header.value)"
+                              color="warning"
+                              >Clear all</v-btn
+                            >
+                          </v-col>
+                        </v-row>
+                      </v-list>
+                    </v-menu>
+                  </div>
+                </template>
                 <template v-slot:top>
                   <v-toolbar flat color="grey lighten-2">
                     <v-spacer></v-spacer>
@@ -145,11 +235,13 @@ export default {
       OppStatus: null,
       statuses: ['All', 'In Process', 'Won', 'Closed Won', 'Closed Lost'],
       searchStr: '',
-      selectedStatus: null,
+      selectedStatus: [],
       page: 0,
       perPage: 5,
       totalLeads: 0,
-      options: {}
+      options: {},
+      filters: { Status: [], ChannelType: [], Currency: [] },
+      activeFilters: {}
     };
   },
   filters: {
@@ -166,22 +258,40 @@ export default {
   async created() {
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
     this.rows = await this.getRecords();
-    this.selectedStatus = this.statuses[0];
+    // this.selectedStatus.push(this.statuses[0]);
   },
   computed: {
     headers() {
       return [
-        { text: 'Opportunity Name', align: 'left', value: 'OpportunityName' },
+        {
+          text: 'Opportunity Name',
+          align: 'left',
+          value: 'OpportunityName'
+        },
         { text: 'Country', align: 'left', value: 'Country' },
-        { text: 'Channel Type', align: 'left', value: 'ChannelType' },
+        {
+          text: 'Channel Type',
+          align: 'left',
+          value: 'ChannelType',
+          filter: value => {
+            return this.activeFilters.ChannelType
+              ? this.activeFilters.ChannelType.includes(value)
+              : true;
+          }
+        },
         {
           text: 'Status',
           align: 'left',
           value: 'Status',
+          // filter: value => {
+          //   if (!this.selectedStatus) return true;
+          //   if (this.selectedStatus[0] && this.selectedStatus[0].length === 1 && this.selectedStatus[0] === this.statuses[0]) return true;
+          //   return value === this.selectedStatus;
+          // }
           filter: value => {
-            if (!this.selectedStatus) return true;
-            if (this.selectedStatus === this.statuses[0]) return true;
-            return value === this.selectedStatus;
+            return this.activeFilters.Status
+              ? this.activeFilters.Status.includes(value)
+              : true;
           }
         },
         { text: 'License ID', align: 'left', value: 'LicenseID' },
@@ -190,19 +300,36 @@ export default {
           align: 'left',
           value: 'ExpectedCloseDate'
         },
-        { text: 'Currency', align: 'left', value: 'Currency' },
+        {
+          text: 'Currency',
+          align: 'left',
+          value: 'Currency',
+          filter: value => {
+            return this.activeFilters.Currency
+              ? this.activeFilters.Currency.includes(value)
+              : true;
+          }
+        },
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
     },
     ...mapState(['loading']),
-    ...mapState('auth',['currentUser'])
+    ...mapState('auth', ['currentUser'])
   },
   watch: {
+    rows(val) {
+      this.initFilters();
+      //this.activeFilters = {} // TODO change this
+      //this.activeFilters = Object.assign({}, this.filters)
+    }
   },
   mounted() {},
   methods: {
     getRecords: async function() {
-      return await this.$store.dispatch('getCurrentSalesRepOpts', this.currentUser.user.username);
+      return await this.$store.dispatch(
+        'getCurrentSalesRepOpts',
+        this.currentUser.user.username
+      );
     },
     ...mapMutations({
       setOppId: 'setOppId',
@@ -221,9 +348,43 @@ export default {
     clearSearch() {
       this.searchStr = '';
     },
-    async onSelectChange(status) {
-      this.selectedStatus = status;
+    initFilters() {
+      for (let col in this.filters) {
+        this.filters[col] = this.rows
+          .map(d => {
+            return d[col];
+          })
+          .filter((value, index, self) => {
+            return self.indexOf(value) === index;
+          });
+      }
+      // TODO restore previous activeFilters before add/remove item
+      this.activeFilters = Object.assign({}, this.filters);
+      /*if (Object.keys(this.activeFilters).length === 0) this.activeFilters = Object.assign({}, this.filters)
+      else {
+        setTimeout(() => {
+          console.log(this.activeFilters)
+          //this.activeFilters = Object.assign({}, this.filters)
+        }, 1)
+      }*/
     },
+    toggleAll(col) {
+      this.activeFilters[col] = this.rows
+        .map(d => {
+          return d[col];
+        })
+        .filter((value, index, self) => {
+          return self.indexOf(value) === index;
+        });
+    },
+
+    clearAll(col) {
+      this.activeFilters[col] = [];
+    }
+    // async onSelectChange(status) {
+    // this.selectedStatus = status;
+    // console.log(status);
+    // },
   }
 };
 </script>

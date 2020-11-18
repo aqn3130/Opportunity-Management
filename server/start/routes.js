@@ -63,6 +63,7 @@ Route.group(function () {
   Route.post("create-role", "RoleController.createRole").middleware("auth");
   Route.post("create-role-permission", "RoleController.createRolePermission").middleware("auth");
   Route.post("role-permissions", "RoleController.getRolePermissions").middleware("auth");
+  Route.get('/wscalc1', 'SoapController');
   // Route.resource('main','MainController');
 }).prefix('api');
 
