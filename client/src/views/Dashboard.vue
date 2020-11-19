@@ -277,7 +277,8 @@ export default {
             return this.activeFilters.ChannelType
               ? this.activeFilters.ChannelType.includes(value)
               : true;
-          }
+          },
+          width: '150'
         },
         {
           text: 'Status',
@@ -292,7 +293,8 @@ export default {
             return this.activeFilters.Status
               ? this.activeFilters.Status.includes(value)
               : true;
-          }
+          },
+          width: '110'
         },
         { text: 'License ID', align: 'left', value: 'LicenseID' },
         {
@@ -308,7 +310,8 @@ export default {
             return this.activeFilters.Currency
               ? this.activeFilters.Currency.includes(value)
               : true;
-          }
+          },
+          width: '120'
         },
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];

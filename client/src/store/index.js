@@ -22,7 +22,7 @@ export default new Vuex.Store({
     searchStr: '',
     currentOpp: null,
     formData: null,
-    filter: '',
+    filter: [],
     countries: [],
     stateOptions: [],
     relation: '',

@@ -81,7 +81,7 @@ class MainController {
         }
       }
       if (params.filter && !params.searchStr) {
-        // console.log('2');
+        // console.log('2', params.filter);
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);
@@ -90,12 +90,20 @@ class MainController {
         let total = 0;
         if ( pageInt === 1 ) page = 0;
         const offset = pageInt * perPageInt - perPageInt;
-        const queryTotal = await request.Knex(request.Table).where('Status', params.filter)
-        const qry = await request.Knex(request.Table).where('Status', params.filter).limit(perPageInt).offset(offset)
-        total = queryTotal.length;
-        query = {
-          totalOpts: total,
-          opts: qry
+        const values = params.filter.split(',');
+        try {
+          const queryTotal = await request.Knex(request.Table)
+            .whereIn('Status', values)
+          const qry = await request.Knex(request.Table)
+            .whereIn('Status', values)
+            .limit(perPageInt).offset(offset)
+          total = queryTotal.length;
+          query = {
+            totalOpts: total,
+            opts: qry
+          }
+        } catch (e) {
+          console.log(e);
         }
       }
       if (params.filter && params.searchStr) {
@@ -109,6 +117,7 @@ class MainController {
         if ( pageInt === 1 ) page = 0;
         const offset = pageInt * perPageInt - perPageInt;
         const str = `%${params.searchStr}%`;
+        const statuses = params.filter.split(',');
         const queryTotal = await request.Knex(request.Table).where(function() {
           this.where('Type','like', str)
             .orWhere('SalesRep', 'like', str)
@@ -122,7 +131,7 @@ class MainController {
             .orWhere('GrossValue','like', str)
             .orWhere('BPID','like', str)
             .orWhere('MemberOfConsortia','like', str)
-        }).andWhere('Status', params.filter)
+        }).whereIn('Status', statuses)
         const qry = await request.Knex(request.Table).where(function() {
           this.where('Type','like', str)
             .orWhere('SalesRep', 'like', str)
@@ -136,7 +145,7 @@ class MainController {
             .orWhere('GrossValue','like', str)
             .orWhere('BPID','like', str)
             .orWhere('MemberOfConsortia','like', str)
-        }).andWhere('Status', params.filter)
+        }).whereIn('Status', statuses)
           .limit(perPageInt).offset(offset)
         total = queryTotal.length;
         query = {

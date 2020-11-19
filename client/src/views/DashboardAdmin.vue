@@ -19,11 +19,21 @@
                 v-model="selectedStatus"
                 :items="statuses"
                 @change="onSelectChange"
-                style="width: 110px"
+                style="width: 170px"
                 dark
                 class="caption"
                 dense
-              ></v-select>
+                multiple
+              >
+                <template v-slot:selection="{ item, index }">
+                  <span v-if="index === 0">
+                    <span>{{ item }}</span>
+                  </span>
+                  <span v-if="index === 1" class="caption">
+                    (+{{ selectedStatus.length - 1 }} others)
+                  </span>
+                </template>
+              </v-select>
               <v-data-table
                 :headers="headers"
                 :items="rows"
@@ -146,9 +156,9 @@ export default {
     return {
       rows: [],
       OppStatus: null,
-      statuses: ['All', 'In Process', 'Won', 'Closed Won', 'Closed Lost'],
+      statuses: ['In Process', 'Won', 'Closed Won', 'Closed Lost'],
       searchStr: '',
-      selectedStatus: null,
+      selectedStatus: ['In Process', 'Won', 'Closed Won', 'Closed Lost'],
       page: 0,
       perPage: 5,
       totalLeads: 0,
@@ -169,7 +179,7 @@ export default {
   async created() {
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
     // await this.getRecords();
-    this.selectedStatus = this.statuses[0];
+    // this.selectedStatus.push(this.statuses[0]);
   },
   computed: {
     headers() {
@@ -183,8 +193,8 @@ export default {
           value: 'Status',
           filter: value => {
             if (!this.selectedStatus) return true;
-            if (this.selectedStatus === this.statuses[0]) return true;
-            return value === this.selectedStatus;
+            if (_.isEqual(this.selectedStatus, this.statuses)) return true;
+            return this.selectedStatus.includes(value);
           }
         },
         { text: 'License ID', align: 'left', value: 'LicenseID' },
@@ -235,12 +245,12 @@ export default {
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },
-    async onSelectChange(status) {
-      let filter = '';
-      if (status.trim().toLowerCase() !== 'all') {
-        filter = status;
-      }
-      this.setFilter(filter);
+    async onSelectChange(statuses) {
+      // let filter = '';
+      // if (status.trim().toLowerCase() !== 'all') {
+      //   filter = status;
+      // }
+      this.setFilter(statuses);
       if (this.searchStr) this.setSearchStr(this.searchStr);
       this.getDataFromApi().then(data => {
         this.rows = data.items;
