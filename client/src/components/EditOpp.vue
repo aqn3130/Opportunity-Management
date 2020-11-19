@@ -81,8 +81,7 @@
             <v-text-field v-model="bpId" label="BP ID" v-else></v-text-field>
             <v-text-field
               v-model="memberOfConsortia"
-              :rules="nameRules"
-              label="Member Of Consortia *"
+              label="Member Of Consortia"
               class="body-2"
             ></v-text-field>
             <v-select

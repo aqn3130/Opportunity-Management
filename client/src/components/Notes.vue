@@ -18,8 +18,8 @@
               v-model="note"
               label="Add Note"
               class="body-2"
-              @keyup="addNote"
               placeholder="Write your notes here and then press on Enter key to save it"
+              v-on:keydown.enter.prevent="addNote"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -98,7 +98,8 @@ export default {
           type: 'success',
           duration: 2000,
           dismissible: true,
-          position: 'bottom'
+          position: 'bottom',
+          queue: true
           // onClose: () => {
           // this.getProducts();
           // }
@@ -163,7 +164,8 @@ export default {
             type: 'success',
             duration: 2000,
             dismissible: true,
-            position: 'bottom'
+            position: 'bottom',
+            queue: true
             // onClose: () => {
             // this.getProducts();
             // }
@@ -174,7 +176,8 @@ export default {
             type: 'error',
             duration: 2000,
             dismissible: true,
-            position: 'bottom'
+            position: 'bottom',
+            queue: true
             // onClose: () => {
             // this.getProducts();
             // }
