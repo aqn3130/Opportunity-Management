@@ -1,6 +1,6 @@
 <template>
-  <v-container :style="{ maxWidth: containerWidth }">
-    <v-card color="#eceff1" flat>
+  <v-container>
+    <v-card color="#eceff1" flat class="mt-n12">
       <v-tabs
         v-model="tab"
         background-color="transparent"

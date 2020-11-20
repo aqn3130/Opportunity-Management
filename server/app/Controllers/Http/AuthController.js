@@ -66,7 +66,7 @@ class AuthController {
   }
 
   async authenticate(auth, currentUser, response) {
-    const {token} = await auth.generate(currentUser);
+    const {token} = await auth.generate(currentUser, false, { expiresIn: '10h' });
     return response.json({
       token: token,
       user: currentUser
@@ -77,7 +77,7 @@ class AuthController {
     let isUser = undefined;
     Object.keys(salesReps).forEach((key) => {
       if (salesReps[key].Email === currentUser) {
-        console.log(salesReps[key].Email, currentUser);
+        // console.log(salesReps[key].Email, currentUser);
         isUser = salesReps[key];
       }
     });

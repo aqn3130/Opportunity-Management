@@ -92,9 +92,16 @@ export default new Vuex.Store({
     async getRecords({ commit }, id) {
       commit('setLoading', true);
       if (this.state.searchStr === null) this.state.searchStr = '';
-      const { data } = await axios.get(
-        `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}&&filter=${this.state.filter}&&with=${this.state.relation}`
-      );
+      const { data } = await axios
+        .get(
+          `${this.state.table}?id=${id}&&page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}&&filter=${this.state.filter}&&with=${this.state.relation}`
+        )
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       // const { data } = (await axios.get('/api/' + this.state.table));
       // commit('setData', data);
       commit('setLoading', false);
@@ -102,9 +109,14 @@ export default new Vuex.Store({
     },
     async getSingleOpp({ commit }, id) {
       commit('setLoading', true);
-      const { data } = await axios.get(
-        `get-single-opp?opportunityId=${this.state.opportunityId}`
-      );
+      const { data } = await axios
+        .get(`get-single-opp?opportunityId=${this.state.opportunityId}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       // console.log(data[0]);
       commit('setOpp', data[0]);
       commit('setOppId', data[0].Id);
@@ -123,6 +135,11 @@ export default new Vuex.Store({
           data: data,
           id: id
         }
+      }).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
       });
       commit('setLoading', false);
     },
@@ -131,6 +148,11 @@ export default new Vuex.Store({
       await axios({
         method: 'delete',
         url: `${this.state.table}/${id}`
+      }).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
       });
       commit('setLoading', false);
     },
@@ -146,6 +168,11 @@ export default new Vuex.Store({
         data: {
           data: data
         }
+      }).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
       });
       commit('setLoading', false);
     },
@@ -154,47 +181,120 @@ export default new Vuex.Store({
       return data;
     },
     async getProducts(ctx, id) {
-      const { data } = await axios.get(`${this.state.table}?id=${id}`);
+      const { data } = await axios
+        .get(`${this.state.table}?id=${id}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async getCampaign(ctx, id) {
-      const { data } = await axios.get(`${this.state.table}?id=${id}`);
+      const { data } = await axios
+        .get(`${this.state.table}?id=${id}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async getIndustry(ctx, id) {
-      const { data } = await axios.get(`${this.state.table}?id=${id}`);
+      const { data } = await axios
+        .get(`${this.state.table}?id=${id}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async getStates(ctx, id) {
-      const { data } = await axios.get(`${this.state.table}?id=${id}`);
+      const { data } = await axios
+        .get(`${this.state.table}?id=${id}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async getSalesFunnel(ctx, id) {
-      const { data } = await axios.get(`${this.state.table}?id=${id}`);
+      const { data } = await axios
+        .get(`${this.state.table}?id=${id}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async getCurrentSalesRepOpts(ctx, salesRep) {
-      const { data } = await axios.get(`opts-by-sales-rep?salesRep=${salesRep}`);
+      const { data } = await axios
+        .get(`opts-by-sales-rep?salesRep=${salesRep}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async getCurrentCustomerOpts(ctx, customerName) {
-      const { data } = await axios.get(`opts-by-customer-name?customerName=${customerName}`);
+      const { data } = await axios
+        .get(`opts-by-customer-name?customerName=${customerName}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async getCountryRegionTerritory(ctx, id) {
-      const { data } = await axios.get(`country-region-territories?id=${id}`);
+      const { data } = await axios
+        .get(`country-region-territories?id=${id}`)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
       return data;
     },
     async updateCountryRegionTerritory(ctx, payload) {
       const { data } = payload;
-      return await axios.put(`country-region-territories/${data.id}`, data);
+      return await axios
+        .put(`country-region-territories/${data.id}`, data)
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
     },
     async createCountryRegionTerritory(ctx, payload) {
       const data = payload;
-      return await axios.post(`country-region-territories`, data);
+      return await axios.post(`country-region-territories`, data).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
+      });
     },
     async deleteCountryRegionTerritory(ctx, id) {
-      return await axios.delete(`country-region-territories/${id}`);
+      return await axios.delete(`country-region-territories/${id}`).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
+      });
     }
   },
   modules: {

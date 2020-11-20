@@ -9,7 +9,7 @@
       tile
       color="#ffffff"
       light
-      :style="{ paddingLeft: '200px', paddingRight: '200px' }"
+      :style="{ paddingLeft: '100px', paddingRight: '100px' }"
       id="opp_container"
     >
       <v-form ref="form" v-model="valid" lazy-validation>
@@ -251,102 +251,104 @@
         </v-row>
       </v-form>
     </v-card>
-    <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
+    <v-toolbar color="#455A64" height="30" dark class="subtitle-2 mt-n7" flat>
       <v-spacer></v-spacer>
       Products
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-card tile class="caption">
-      <v-form ref="productForm" v-model="productValid" lazy-validation>
-        <v-list dense>
-          <v-list-item-group v-model="productItem" color="primary">
-            <v-list-item v-for="(item, i) in productItems" :key="i" two-line>
-              <v-list-item-content class="">
-                <v-select
-                  :items="item.cryItems"
-                  v-model="item.cry"
-                  label="CRY"
-                  :rules="nameRules"
-                  class="caption"
-                  :style="{ maxWidth: '80px' }"
-                ></v-select>
-              </v-list-item-content>
-              <v-list-item-content class="mr-2 ml-n5">
-                <v-select
-                  :items="item.TOBItems"
-                  v-model="item.typeOfBusiness"
-                  label="Type of Business"
-                  :rules="nameRules"
-                  class="caption"
-                ></v-select>
-              </v-list-item-content>
-              <v-list-item-content class="mr-2">
-                <v-select
-                  :items="item.products"
-                  v-model="item.productName"
-                  label="Product Name"
-                  :rules="nameRules"
-                  class="caption"
-                  @input="onProductNameChange"
-                ></v-select>
-              </v-list-item-content>
-              <div class="ml-2">
-                <span class="caption">License Start Date</span>
-                <Datepicker
-                  class="mb-5 vdp-datepicker mr-10"
-                  placeholder="Select Date"
-                  v-model="item.licenseStartDate"
-                  :format="dateFormat"
-                ></Datepicker>
-              </div>
-              <div class="ml-n8">
-                <span class="caption">License End Date</span>
-                <Datepicker
-                  class="mb-5 vdp-datepicker"
-                  placeholder="Select Date"
-                  v-model="item.licenseEndDate"
-                  :format="dateFormat"
-                ></Datepicker>
-              </div>
-              <v-list-item-content class="mr-2 ml-3">
-                <v-select
-                  :items="likelihood"
-                  v-model="item.likelihood"
-                  label="Likelihood"
-                  :rules="nameRules"
-                  class="caption"
-                ></v-select>
-              </v-list-item-content>
-              <v-list-item-content>
-                <v-checkbox
-                  v-model="item.agent"
-                  label="Agent"
-                  dense
-                ></v-checkbox>
-              </v-list-item-content>
-              <v-list-item-content class="ml-n8">
-                <v-select
-                  :items="agentDiscountOptions"
-                  v-model="item.agentDiscount"
-                  label="Agent Discount"
-                  class="caption"
-                ></v-select>
-              </v-list-item-content>
-              <v-list-item-content class="ml-2">
-                <v-text-field
-                  v-model="item.grossValue"
-                  label="Gross Value"
-                  :rules="nameRules"
-                  class="caption"
-                ></v-text-field>
-              </v-list-item-content>
-              <v-btn icon small @click="deleteProduct(item)"
-                ><v-icon small>delete</v-icon></v-btn
-              >
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-form>
+      <v-flex class="d-flex overflow-auto align-content-sm-space-around">
+        <v-form ref="productForm" v-model="productValid" lazy-validation>
+          <v-list dense>
+            <v-list-item-group v-model="productItem" color="primary">
+              <v-list-item v-for="(item, i) in productItems" :key="i" two-line>
+                <v-list-item-content class="">
+                  <v-select
+                    :items="item.cryItems"
+                    v-model="item.cry"
+                    label="CRY"
+                    :rules="nameRules"
+                    class="caption"
+                    :style="{ maxWidth: '80px' }"
+                  ></v-select>
+                </v-list-item-content>
+                <v-list-item-content class="mr-2 ml-n5">
+                  <v-select
+                    :items="item.TOBItems"
+                    v-model="item.typeOfBusiness"
+                    label="Type of Business"
+                    :rules="nameRules"
+                    class="caption"
+                  ></v-select>
+                </v-list-item-content>
+                <v-list-item-content class="mr-2">
+                  <v-select
+                    :items="item.products"
+                    v-model="item.productName"
+                    label="Product Name"
+                    :rules="nameRules"
+                    class="caption"
+                    @input="onProductNameChange"
+                  ></v-select>
+                </v-list-item-content>
+                <div class="ml-2">
+                  <span class="caption">License Start Date</span>
+                  <Datepicker
+                    class="mb-5 vdp-datepicker mr-10"
+                    placeholder="Select Date"
+                    v-model="item.licenseStartDate"
+                    :format="dateFormat"
+                  ></Datepicker>
+                </div>
+                <div class="ml-n8">
+                  <span class="caption">License End Date</span>
+                  <Datepicker
+                    class="mb-5 vdp-datepicker"
+                    placeholder="Select Date"
+                    v-model="item.licenseEndDate"
+                    :format="dateFormat"
+                  ></Datepicker>
+                </div>
+                <v-list-item-content class="mr-2 ml-3">
+                  <v-select
+                    :items="likelihood"
+                    v-model="item.likelihood"
+                    label="Likelihood"
+                    :rules="nameRules"
+                    class="caption"
+                  ></v-select>
+                </v-list-item-content>
+                <v-list-item-content>
+                  <v-checkbox
+                    v-model="item.agent"
+                    label="Agent"
+                    dense
+                  ></v-checkbox>
+                </v-list-item-content>
+                <v-list-item-content class="ml-n8">
+                  <v-select
+                    :items="agentDiscountOptions"
+                    v-model="item.agentDiscount"
+                    label="Agent Discount"
+                    class="caption"
+                  ></v-select>
+                </v-list-item-content>
+                <v-list-item-content class="ml-2">
+                  <v-text-field
+                    v-model="item.grossValue"
+                    label="Gross Value"
+                    :rules="nameRules"
+                    class="caption"
+                  ></v-text-field>
+                </v-list-item-content>
+                <v-btn icon small @click="deleteProduct(item)"
+                  ><v-icon small>delete</v-icon></v-btn
+                >
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-form>
+      </v-flex>
     </v-card>
     <v-card>
       <v-btn block @click="addProduct" class="mt-1">+ Add Product</v-btn>
@@ -607,7 +609,7 @@ export default {
           dismissible: true,
           position: 'bottom',
           onClose: () => {
-            this.$router.push({ name: 'Dashboard' });
+            this.$router.back();
             this.newOppLoading = false;
           }
         });
@@ -808,12 +810,12 @@ export default {
     onProductNameChange(tob) {
       // console.log(tob);
     },
-    deleteExistingProduct() {
-      this.$store.dispatch('setCurrentTable', 'Product');
+    async deleteExistingProduct() {
+      await this.$store.dispatch('setCurrentTable', 'Product');
       try {
-        this.$store.dispatch('deleteRecord', this.toBeDeletedProductId);
+        await this.$store.dispatch('deleteRecord', this.toBeDeletedProductId);
         this.deleteProductDialog = false;
-        this.getProducts();
+        await this.getProducts();
         this.$toast.open({
           message: 'Product Deleted',
           type: 'success',
@@ -859,7 +861,10 @@ export default {
           'setCurrentTable',
           'Country_Region_Territory'
         );
-        const countries = await this.$store.dispatch('getCountryRegionTerritory', '');
+        const countries = await this.$store.dispatch(
+          'getCountryRegionTerritory',
+          ''
+        );
         Object.keys(countries).forEach((value, index) => {
           if (countries[index])
             this.countryItems.push(countries[index].Country);

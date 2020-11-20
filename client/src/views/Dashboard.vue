@@ -258,6 +258,7 @@ export default {
   async created() {
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
     this.rows = await this.getRecords();
+    if (this.loading) this.setLoading(false);
     // this.selectedStatus.push(this.statuses[0]);
   },
   computed: {
@@ -340,7 +341,8 @@ export default {
       setPage: 'setPage',
       setPerPage: 'setPerPage',
       setSearchStr: 'setSearchStr',
-      setFilter: 'setFilter'
+      setFilter: 'setFilter',
+      setLoading: 'setLoading'
     }),
     editOpportunity(item) {
       this.setOppId(item.Id);

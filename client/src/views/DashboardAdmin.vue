@@ -19,7 +19,7 @@
                 v-model="selectedStatus"
                 :items="statuses"
                 @change="onSelectChange"
-                style="width: 170px"
+                style="width: 110px"
                 dark
                 class="caption"
                 dense
@@ -30,7 +30,8 @@
                     <span>{{ item }}</span>
                   </span>
                   <span v-if="index === 1" class="caption">
-                    (+{{ selectedStatus.length - 1 }} others)
+<!--                    (+{{ selectedStatus.length - 1 }} )-->
+                    ...
                   </span>
                 </template>
               </v-select>
