@@ -10,7 +10,7 @@
     >
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
-    <v-layout>
+    <v-layout v-if="rows.length">
       <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
         <v-card class="d-flex justify-center transparent mt-n10" flat>
           <v-row>
@@ -205,6 +205,35 @@
         </v-card>
       </v-container>
     </v-layout>
+    <div class="text-center" v-else>
+      <v-dialog
+          v-model="dialogNoData"
+          width="500"
+      >
+        <v-card>
+          <v-card-title class="headline grey lighten-2">
+            Your Session Ended
+          </v-card-title>
+
+          <v-card-text class="py-5">
+            Your session ended, please log back in.
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="primary"
+                text
+                @click="onNoDataDialogClicked"
+            >
+              OK
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
     <v-btn
       absolute
       dark
@@ -224,7 +253,7 @@
 
 <script>
 import moment from 'moment';
-import { mapMutations, mapState } from 'vuex';
+import {mapActions, mapMutations, mapState} from 'vuex';
 
 export default {
   name: 'Dashboard',
@@ -241,7 +270,8 @@ export default {
       totalLeads: 0,
       options: {},
       filters: { Status: [], ChannelType: [], Currency: [] },
-      activeFilters: {}
+      activeFilters: {},
+      dialogNoData: true
     };
   },
   filters: {
@@ -344,6 +374,7 @@ export default {
       setFilter: 'setFilter',
       setLoading: 'setLoading'
     }),
+    ...mapActions('auth', ['logout']),
     editOpportunity(item) {
       this.setOppId(item.Id);
       this.setOpp(item);
@@ -385,6 +416,11 @@ export default {
 
     clearAll(col) {
       this.activeFilters[col] = [];
+    },
+    onNoDataDialogClicked() {
+      this.dialogNoData = false;
+      this.logout();
+      this.$router.push({ name: 'Login' });
     }
     // async onSelectChange(status) {
     // this.selectedStatus = status;
