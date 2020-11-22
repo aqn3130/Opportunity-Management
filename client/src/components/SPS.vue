@@ -8,7 +8,7 @@
     <v-card
       color="#ffffff"
       light
-      :style="{ paddingLeft: '200px', paddingRight: '200px' }"
+      :style="{ paddingLeft: '400px', paddingRight: '400px', border: '1px solid #455A64' }"
     >
       <v-form ref="spsForm" class="py-5" v-model="spsValid" lazy-validation>
         <v-select

@@ -5,7 +5,7 @@
       New Note
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card tile color="#ffffff" light>
+    <v-card tile color="#ffffff" light :style="{ border: '1px solid #455A64' }">
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row style="padding: 15px 90px 25px 20px">
           <v-col md="12">
@@ -25,7 +25,7 @@
       Notes
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card tile>
+    <v-card tile :style="{ border: '1px solid #455A64' }">
       <v-list dense>
         <v-list-item-group v-model="selectedNote" color="primary">
           <v-list-item v-for="(item, i) in notes" :key="i">

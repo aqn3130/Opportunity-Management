@@ -1,23 +1,23 @@
 <template>
   <v-container>
-    <v-card color="#eceff1" flat class="mt-n12">
+    <v-card color="#eceff1" flat class="mt-n14">
       <v-tabs
         v-model="tab"
         background-color="transparent"
-        class="ml-5"
+        class="ml-3"
         slider-size="1"
       >
         <v-tabs-slider></v-tabs-slider>
 
-        <v-tab href="#tab-1">
+        <v-tab href="#tab-1" class="mb-n5">
           Opportunity
         </v-tab>
 
-        <v-tab href="#tab-2">
+        <v-tab href="#tab-2" class="mb-n5">
           Notes
         </v-tab>
 
-        <v-tab href="#tab-3" v-if="opportunity.Type === 'SPS'">
+        <v-tab href="#tab-3" v-if="opportunity.Type === 'SPS'" class="mb-n5">
           SPS
         </v-tab>
       </v-tabs>
