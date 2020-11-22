@@ -5,14 +5,9 @@
       New Note
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card
-      tile
-      color="#ffffff"
-      light
-      :style="{ paddingLeft: '200px', paddingRight: '200px' }"
-    >
+    <v-card tile color="#ffffff" light>
       <v-form ref="form" v-model="valid" lazy-validation>
-        <v-row style="padding: 15px 20px 25px 20px">
+        <v-row style="padding: 15px 90px 25px 20px">
           <v-col md="12">
             <v-text-field
               v-model="note"
@@ -30,27 +25,42 @@
       Notes
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card tile :style="{ paddingLeft: '200px', paddingRight: '200px' }">
-      <v-list>
-        <v-list-item v-for="(item, i) in notes" :key="i">
-          <v-list-item-content :style="{ minWidth: '600px' }">
-            <v-textarea
-              v-model="item.Message"
-              label="Note"
-              class="body-2"
-              rows="2"
-              no-resize
-              @blur="onNoteChange(item)"
-            ></v-textarea>
-          </v-list-item-content>
-          <v-list-item-content class="mb-lg-10 ml-5">
-            <span class="body-2">Create Date</span>
-            {{ item.CreateDate | formatDate }}
-          </v-list-item-content>
-          <v-btn icon small @click="deleteProduct(item)">
-            <v-icon small>delete</v-icon>
-          </v-btn>
-        </v-list-item>
+    <v-card tile>
+      <v-list dense>
+        <v-list-item-group v-model="selectedNote" color="primary">
+          <v-list-item v-for="(item, i) in notes" :key="i">
+            <v-row dense class="px-2">
+              <v-col md="10" class="pr-5">
+                <v-list-item-subtitle>
+                  Note
+                </v-list-item-subtitle>
+                <v-list-item-content>
+                  <v-textarea
+                    v-model="item.Message"
+                    class="body-2"
+                    rows="1"
+                    no-resize
+                    @blur="onNoteChange(item)"
+                    dense
+                  ></v-textarea>
+                </v-list-item-content>
+              </v-col>
+              <v-col md="2">
+                <v-list-item-subtitle>
+                  Created Date
+                </v-list-item-subtitle>
+                <v-list-item-content>
+                  <div class="caption">
+                    {{ item.CreateDate | formatDate }}
+                    <v-btn icon small @click="deleteProduct(item)" class="ml-5">
+                      <v-icon small>delete</v-icon>
+                    </v-btn>
+                  </div>
+                </v-list-item-content>
+              </v-col>
+            </v-row>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-card>
   </v-container>
@@ -64,7 +74,8 @@ export default {
   data: () => ({
     note: null,
     notes: [],
-    valid: true
+    valid: true,
+    selectedNote: 1
   }),
   computed: {
     ...mapState(['opportunityId'])
