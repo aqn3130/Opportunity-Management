@@ -16,7 +16,7 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 Route.group(function () {
-  Route.on('/').render('welcome');
+  // Route.on('/').render('welcome');
   Route.resource('opportunity','MainController').apiOnly().middleware('auth');
   Route.get('get-single-opp','MainController.getSingleOpp').middleware('auth');
   Route.get('opts-by-customer-name','MainController.getOptsByCustomerName').middleware('auth');

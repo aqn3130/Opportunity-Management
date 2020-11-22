@@ -9,15 +9,15 @@
       >
         <v-tabs-slider></v-tabs-slider>
 
-        <v-tab href="#tab-1" class="mb-n5">
+        <v-tab href="#tab-1" class="mb-n5 overline">
           Opportunity
         </v-tab>
 
-        <v-tab href="#tab-2" class="mb-n5">
+        <v-tab href="#tab-2" class="mb-n5 overline">
           Notes
         </v-tab>
 
-        <v-tab href="#tab-3" v-if="opportunity.Type === 'SPS'" class="mb-n5">
+        <v-tab href="#tab-3" v-if="opportunity.Type === 'SPS'" class="mb-n5 overline">
           SPS
         </v-tab>
       </v-tabs>

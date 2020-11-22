@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-toolbar color="#455A64" height="30" dark class="subtitle-2" flat>
+    <v-toolbar color="#455A64" height="30" dark class="overline" flat>
       <v-spacer></v-spacer>
       SPS
       <v-spacer></v-spacer>
@@ -115,12 +115,13 @@
         <v-btn
           @click="saveSPS"
           class="mb-5"
-          color="#455A64"
+          color="#607D8B"
           :disabled="!spsValid"
           v-if="!spsValid"
+          small
           >Update</v-btn
         >
-        <v-btn @click="saveSPS" class="mb-5" color="#455A64" dark v-else
+        <v-btn @click="saveSPS" class="mb-5" color="#607D8B" dark v-else small
           >Update</v-btn
         >
       </v-card-actions>
