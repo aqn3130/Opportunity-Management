@@ -1,20 +1,25 @@
 <template>
   <v-container fluid id="oppEditContainer">
-    <v-toolbar color="#455A64" height="30" dark class="overline" flat>
+    <v-toolbar color="#455A64" height="30" class="overline" dark>
       <v-spacer></v-spacer>
       {{ title }}
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-card
-      tile
-      color="#ffffff"
-      light
-      :style="{ paddingLeft: '100px', paddingRight: '100px' }"
+      color=""
       id="opp_container"
+      outlined
+      class=""
+      :style="{
+        border: '1px solid #455A64',
+        paddingLeft: '150px',
+        paddingRight: '150px'
+      }"
+      tile
     >
       <v-form ref="form" v-model="valid" lazy-validation>
-        <v-row style="padding: 15px 20px 25px 20px">
-          <v-col md="6" class="px-12">
+        <v-row style="padding: 20px 20px 25px 20px">
+          <v-col md="6">
             <v-text-field
               v-model="salesRep"
               :rules="nameRules"
@@ -127,7 +132,7 @@
               dense
             ></v-select>
           </v-col>
-          <v-col md="6" class="px-12">
+          <v-col md="6">
             <v-select
               v-model="origin"
               :items="originItems"
@@ -239,7 +244,7 @@
             <v-btn
               :disabled="!valid"
               color="#607D8B"
-              class="mr-4 mt-5"
+              class="mr-4"
               @click="validate"
               small
               :loading="newOppLoading"
@@ -262,10 +267,9 @@
               color="#607D8B"
               class="mr-4"
               @click="reset"
-              dark
               small
-              elevation="0"
               :loading="newOppLoading"
+              dark
             >
               Cancel
             </v-btn>
@@ -273,12 +277,17 @@
         </v-row>
       </v-form>
     </v-card>
-    <v-toolbar color="#455A64" height="30" dark class="overline mt-n7" flat>
+    <v-toolbar color="#455A64" height="30" class="overline mt-n7" dark>
       <v-spacer></v-spacer>
       Products
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card class="caption">
+    <v-card
+      class="caption"
+      :style="{ border: '1px solid #455A64' }"
+      v-if="productItems.length"
+      tile
+    >
       <v-flex class="d-flex overflow-auto">
         <v-form
           ref="productForm"
@@ -289,7 +298,7 @@
           <v-list dense>
             <v-list-item-group v-model="productItem" color="primary">
               <div v-for="(item, i) in productItems" :key="i">
-                <v-list-item two-line>
+                <v-list-item two-line :style="{ border: '1px dotted #455A64' }">
                   <v-list-item-content class="mr-2">
                     <v-select
                       :items="item.cryItems"
@@ -321,7 +330,10 @@
                       dense
                     ></v-select>
                   </v-list-item-content>
-                  <v-list-item-content class="mr-2" :style="{ minWidth: '120px'}">
+                  <v-list-item-content
+                    class="mr-2"
+                    :style="{ minWidth: '120px' }"
+                  >
                     <v-menu
                       v-model="menuStartDate[i]"
                       :close-on-content-click="false"
@@ -347,7 +359,10 @@
                       ></v-date-picker>
                     </v-menu>
                   </v-list-item-content>
-                  <v-list-item-content class="ml-2" :style="{ minWidth: '120px'}">
+                  <v-list-item-content
+                    class="ml-2"
+                    :style="{ minWidth: '120px' }"
+                  >
                     <v-menu
                       v-model="menuEndDate[i]"
                       :close-on-content-click="false"
@@ -419,8 +434,14 @@
         </v-form>
       </v-flex>
     </v-card>
-    <v-card>
-      <v-btn block @click="addProduct" class="mt-1">+ Add Product</v-btn>
+    <v-card flat>
+      <v-btn
+        block
+        @click="addProduct"
+        class="mt-1 overline"
+        :style="{ border: '1px solid #455A64' }"
+        >+ Add Product</v-btn
+      >
     </v-card>
     <v-dialog v-model="deleteProductDialog" persistent max-width="400">
       <v-card>
