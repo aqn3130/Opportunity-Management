@@ -10,7 +10,7 @@
     >
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
-    <v-layout v-if="rows.length">
+    <v-layout>
       <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
         <v-card class="d-flex justify-center transparent mt-n10" flat>
           <v-row>
@@ -25,7 +25,7 @@
               <!--                multiple-->
               <!--              ></v-select>-->
               <v-data-table
-                :headers="headers"
+                :headers="showHeaders"
                 :items="rows"
                 :items-per-page="perPage"
                 class="elevation-1 text-no-wrap"
@@ -40,6 +40,8 @@
                 :search="searchStr"
                 :loading="loading"
                 :style="{ cursor: 'pointer' }"
+                fixed-header
+                height="400"
               >
                 <template
                   v-for="(col, i) in filters"
@@ -62,6 +64,7 @@
                         <v-btn color="indigo" icon v-bind="attrs" v-on="on">
                           <v-icon
                             small
+                            class="ml-n10"
                             :color="
                               activeFilters[header.value] &&
                               activeFilters[header.value].length <
@@ -146,6 +149,65 @@
                       @click:clear="clearSearch"
                     ></v-text-field>
                     <v-spacer></v-spacer>
+                    <div class="text-left">
+                      <v-dialog v-model="dialogColFilter" width="500">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            light
+                            color="#455A64"
+                          >
+                            <v-icon>view_column</v-icon>
+                          </v-btn>
+                        </template>
+                        <v-card>
+                          <v-card-title class="headline grey lighten-2">
+                            Column Filter
+                          </v-card-title>
+                          <v-card-text class="py-10">
+                            <div>
+                              <v-select
+                                v-model="selectedHeaders"
+                                :items="headersFilter"
+                                label="Select Columns"
+                                multiple
+                                outlined
+                                return-object
+                              >
+                                <template v-slot:selection="{ item, index }">
+                                  <v-chip v-if="index < 2">
+                                    <span>{{ item.text }}</span>
+                                  </v-chip>
+                                  <span
+                                    v-if="index === 2"
+                                    class="grey--text caption"
+                                    >(+{{
+                                      selectedHeaders.length - 2
+                                    }}
+                                    others)</span
+                                  >
+                                </template>
+                              </v-select>
+                            </div>
+                          </v-card-text>
+
+                          <v-divider></v-divider>
+
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                              color="primary"
+                              text
+                              @click="dialogColFilter = false"
+                            >
+                              Done
+                            </v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+                    </div>
                   </v-toolbar>
                 </template>
                 <template v-slot:item.OpportunityName="{ item }">
@@ -205,35 +267,6 @@
         </v-card>
       </v-container>
     </v-layout>
-    <div class="text-center" v-else>
-      <v-dialog
-          v-model="dialogNoData"
-          width="500"
-      >
-        <v-card>
-          <v-card-title class="headline grey lighten-2">
-            Your Session Ended
-          </v-card-title>
-
-          <v-card-text class="py-5">
-            Your session ended, please log back in.
-          </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                color="primary"
-                text
-                @click="onNoDataDialogClicked"
-            >
-              OK
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
     <v-btn
       absolute
       dark
@@ -253,7 +286,7 @@
 
 <script>
 import moment from 'moment';
-import {mapActions, mapMutations, mapState} from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'Dashboard',
@@ -271,7 +304,10 @@ export default {
       options: {},
       filters: { Status: [], ChannelType: [], Currency: [] },
       activeFilters: {},
-      dialogNoData: true
+      selectedHeaders: [],
+      headersFilter: [],
+      dialogColFilter: false,
+      toggleDense:true
     };
   },
   filters: {
@@ -290,8 +326,13 @@ export default {
     this.rows = await this.getRecords();
     if (this.loading) this.setLoading(false);
     // this.selectedStatus.push(this.statuses[0]);
+    this.headersFilter = Object.values(this.headers);
+    this.selectedHeaders = this.headersFilter;
   },
   computed: {
+    showHeaders() {
+      return this.headers.filter(s => this.selectedHeaders.includes(s));
+    },
     headers() {
       return [
         {
@@ -309,7 +350,7 @@ export default {
               ? this.activeFilters.ChannelType.includes(value)
               : true;
           },
-          width: '150'
+          // width: '150'
         },
         {
           text: 'Status',
@@ -325,7 +366,7 @@ export default {
               ? this.activeFilters.Status.includes(value)
               : true;
           },
-          width: '110'
+          // width: '110'
         },
         { text: 'License ID', align: 'left', value: 'LicenseID' },
         {
@@ -342,7 +383,7 @@ export default {
               ? this.activeFilters.Currency.includes(value)
               : true;
           },
-          width: '120'
+          // width: '120'
         },
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
@@ -416,11 +457,6 @@ export default {
 
     clearAll(col) {
       this.activeFilters[col] = [];
-    },
-    onNoDataDialogClicked() {
-      this.dialogNoData = false;
-      this.logout();
-      this.$router.push({ name: 'Login' });
     }
     // async onSelectChange(status) {
     // this.selectedStatus = status;

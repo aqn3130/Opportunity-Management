@@ -1,5 +1,4 @@
 'use strict'
-
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -17,7 +16,9 @@
 const Route = use('Route')
 Route.group(function () {
   // Route.on('/').render('welcome');
-  Route.resource('opportunity','MainController').apiOnly().middleware('auth');
+  Route.resource('opportunity','MainController')
+    .apiOnly()
+    .middleware('auth');
   Route.get('get-single-opp','MainController.getSingleOpp').middleware('auth');
   Route.get('opts-by-customer-name','MainController.getOptsByCustomerName').middleware('auth');
   Route.get('opts-by-sales-rep','MainController.getOptsBySalesRep').middleware('auth');
@@ -63,7 +64,7 @@ Route.group(function () {
   Route.post("create-role", "RoleController.createRole").middleware("auth");
   Route.post("create-role-permission", "RoleController.createRolePermission").middleware("auth");
   Route.post("role-permissions", "RoleController.getRolePermissions").middleware("auth");
-  Route.get('/wscalc1', 'SoapController');
-  // Route.resource('main','MainController');
+  // Route.get('/wscalc1', 'SoapController');
+  Route.post('opportunity/create','SapController.store').middleware('auth');
 }).prefix('api');
 
