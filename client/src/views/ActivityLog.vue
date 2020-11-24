@@ -195,23 +195,21 @@
             <template>
               <v-form ref="form" v-model="valid" lazy-validation class="pa-10">
                 <v-card class="px-15" flat>
-                  <v-select
-                    v-model="customerName"
-                    :hint="`${customerName.CustomerName}, ${customerName.id}`"
-                    :rules="nameRules"
+                  <v-text-field
+                    disabled
+                    v-model="currentActivity.CustomerName"
                     label="Customer Name"
-                    :items="customers"
-                    item-text="CustomerName"
-                    item-value="id"
-                    required
-                    return-object
-                  ></v-select>
+                  ></v-text-field>
                   <v-text-field
                     v-show="false"
                     label="customer_id"
                     v-model="customerName"
                   ></v-text-field>
-                  <v-text-field v-model="BPID" label="BPID"></v-text-field>
+                  <v-text-field
+                    v-model="currentActivity.BPID"
+                    label="BPID"
+                    disabled
+                  ></v-text-field>
                   <v-select
                     v-model="type"
                     :items="typeItems"
@@ -329,7 +327,7 @@ export default {
       ],
       select: null,
       items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
-      typeItems: ['Meeting', 'Phone Call', 'Note'],
+      typeItems: ['Meeting', 'Phone Call'],
       checkbox: false,
       date: null,
       menu: false,

@@ -330,6 +330,15 @@
                       dense
                     ></v-select>
                   </v-list-item-content>
+                  <v-list-item-content class="mr-2">
+                    <v-text-field
+                      v-model="item.productDescription"
+                      label="Product Description"
+                      dense
+                      class="caption"
+                    >
+                    </v-text-field>
+                  </v-list-item-content>
                   <v-list-item-content
                     class="mr-2"
                     :style="{ minWidth: '120px' }"
