@@ -25,3 +25,16 @@ export default {
   }
 };
 </script>
+<style>
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+.v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
+  font-size: 12px !important;
+}
+.v-input input {
+  font-size: 12px;
+}
+.v-input .v-label {
+  font-size: 15px;
+}
+</style>

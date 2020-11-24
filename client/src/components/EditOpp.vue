@@ -26,7 +26,7 @@
               label="Sales Rep"
               required
               disabled
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-text-field
@@ -35,7 +35,7 @@
               label="Type"
               required
               disabled
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-menu
@@ -45,7 +45,7 @@
               transition="scale-transition"
               offset-y
               min-width="290px"
-              class="body-2"
+              class="caption"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -55,7 +55,7 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
-                  class="body-2"
+                  class="caption"
                   dense
                 ></v-text-field>
               </template>
@@ -70,7 +70,7 @@
               :rules="nameRules"
               label="Opportunity Name *"
               required
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-text-field
@@ -78,7 +78,7 @@
               :rules="nameRules"
               label="Customer Name *"
               required
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-text-field
@@ -86,14 +86,14 @@
               :rules="bpIdRules"
               label="BP ID"
               v-if="bpId"
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-text-field v-model="bpId" label="BP ID" v-else></v-text-field>
             <v-text-field
               v-model="memberOfConsortia"
               label="Member Of Consortia"
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-select
@@ -103,7 +103,7 @@
               label="Country *"
               required
               @input="onCountryChange(country)"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
             <v-select
@@ -111,7 +111,7 @@
               :items="states"
               label="State"
               :disabled="state === 'N/A'"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
             <v-select
@@ -120,7 +120,7 @@
               label="Channel Type *"
               :items="channelTypeItems"
               @input="setIndustryType(channelType)"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
             <v-select
@@ -128,7 +128,7 @@
               :rules="nameRules"
               label="Industry/Institution Type *"
               :items="industryTypeItems"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
           </v-col>
@@ -139,14 +139,14 @@
               :rules="[v => !!v || 'This field is required']"
               label="Origin *"
               required
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
             <v-text-field
               v-model="leadId"
               label="Lead ID"
               :disabled="origin !== 'Marketing'"
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-select
@@ -154,7 +154,7 @@
               :items="statusItems"
               label="Status"
               @input="onStatusChange(status)"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
             <v-select
@@ -162,7 +162,7 @@
               :items="salesStageItems"
               label="Sales Stage *"
               :rules="nameRules"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
             <v-select
@@ -170,7 +170,7 @@
               :items="lostOpportunityReasonItems"
               label="Lost Opportunity Reason"
               :disabled="status !== 'Closed Lost'"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
 
@@ -180,14 +180,14 @@
               label="License ID"
               required
               v-if="licenseId"
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-text-field
               v-model="licenseId"
               label="License ID"
               v-else
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
 
@@ -195,7 +195,7 @@
               v-model="forecastCategory"
               :items="forecastCategoryItems"
               label="Forecast Category"
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
             <v-menu
@@ -215,7 +215,7 @@
                   v-bind="attrs"
                   v-on="on"
                   :rules="nameRules"
-                  class="body-2"
+                  class="caption"
                   dense
                 ></v-text-field>
               </template>
@@ -228,7 +228,7 @@
             <v-text-field
               v-model="agentName"
               label="Agent Name"
-              class="body-2"
+              class="caption"
               dense
             ></v-text-field>
             <v-select
@@ -237,7 +237,7 @@
               label="Currency *"
               :rules="nameRules"
               required
-              class="body-2"
+              class="caption"
               dense
             ></v-select>
 
@@ -412,7 +412,7 @@
                       v-model="item.agent"
                       label="Agent"
                       dense
-                      class="text--primary"
+                      class="caption"
                     ></v-checkbox>
                   </v-list-item-content>
                   <v-list-item-content class="mr-2">

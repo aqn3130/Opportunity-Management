@@ -61,7 +61,7 @@
         {{ productTitle }}
         <v-spacer></v-spacer>
       </v-toolbar>
-      <v-data-table :items="products" :headers="productHeaders">
+      <v-data-table :items="products" :headers="productHeaders" class="text-no-wrap">
         <template v-slot:item.LicenseStartDate="{ item }">
           <span class="caption">
             {{ item.LicenseStartDate | convertDate }}

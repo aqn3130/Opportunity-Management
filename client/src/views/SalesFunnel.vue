@@ -10,7 +10,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="#4b636e" dark dense>
-          <v-toolbar-title>Sales Funnel</v-toolbar-title>
+          <v-toolbar-title class="overline">Sales Funnel</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-text-field

@@ -4,17 +4,38 @@
       :headers="headers"
       :items="salesReps"
       sort-by="Employee_FirstName"
-      class="elevation-1 text-no-wrap"
+      class="elevation-1 text-no-wrap text--primary"
       :loading="loading"
+      :search="searchStr"
     >
       <template v-slot:top>
         <v-toolbar flat color="#4b636e" dense dark>
-          <v-toolbar-title>Sales Reps</v-toolbar-title>
+          <v-toolbar-title class="overline">Sales Reps</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="searchStr"
+            clearable
+            prepend-inner-icon="search"
+            outlined
+            flat
+            dense
+            class="mt-6"
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="700px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="#bb4d00" dark v-bind="attrs" v-on="on" small fab top right absolute>
+              <v-btn
+                color="#bb4d00"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                small
+                fab
+                top
+                right
+                absolute
+              >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </template>
@@ -173,6 +194,7 @@
 export default {
   name: 'SalesRep',
   data: () => ({
+    searchStr: '',
     dialog: false,
     dialogDelete: false,
     loading: false,
