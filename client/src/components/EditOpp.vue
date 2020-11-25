@@ -683,10 +683,10 @@ export default {
     async updateOpportunity(currentOpportunity) {
       // console.log(currentOpportunity);
       this.newOppLoading = true;
-      await this.$store.dispatch('setCurrentTable', 'Opportunity');
       try {
-        await this.$store.dispatch('updateRecord', currentOpportunity);
-        await this.updateProduct();
+        const currentOpp = await this.updateProduct(currentOpportunity);
+        await this.$store.dispatch('setCurrentTable', 'Opportunity');
+        await this.$store.dispatch('updateRecord', currentOpp);
         this.$toast.open({
           message: 'Opportunity Updated',
           type: 'success',
@@ -713,13 +713,16 @@ export default {
         });
       }
     },
-    async updateProduct() {
+    async updateProduct(currentOpp) {
       await this.$store.dispatch('setCurrentTable', 'Product');
+      currentOpp.grossValue = 0;
       for (const key of Object.keys(this.productItems)) {
         delete this.productItems[key].cryItems;
         delete this.productItems[key].products;
         delete this.productItems[key].TOBItems;
-        // console.log(this.productItems[key]);
+        currentOpp.grossValue =
+          currentOpp.grossValue +
+          Number(this.formatGrossValue(this.productItems[key].grossValue));
         if (!this.productItems[key].id) {
           if (this.productItems[key].typeOfBusiness === 'Renewal') {
             this.productItems[key].renewal = 1;
@@ -746,6 +749,7 @@ export default {
           await this.$store.dispatch('updateRecord', this.productItems[key]);
         }
       }
+      return currentOpp;
     },
     async validate() {
       if (this.$refs.form.validate()) {

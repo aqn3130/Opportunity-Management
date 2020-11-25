@@ -40,8 +40,6 @@
                 :search="searchStr"
                 :loading="loading"
                 :style="{ cursor: 'pointer' }"
-                fixed-header
-                height="400"
               >
                 <template
                   v-for="(col, i) in filters"
@@ -144,7 +142,7 @@
                       outlined
                       flat
                       dense
-                      class="mt-5"
+                      class="mt-6"
                       light
                       @click:clear="clearSearch"
                     ></v-text-field>
@@ -157,7 +155,8 @@
                             v-bind="attrs"
                             v-on="on"
                             light
-                            color="#455A64"
+                            color="grey"
+                            small
                           >
                             <v-icon>view_column</v-icon>
                           </v-btn>

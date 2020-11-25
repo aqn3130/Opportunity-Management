@@ -64,7 +64,7 @@
                       outlined
                       flat
                       dense
-                      class="mt-5"
+                      class="mt-6"
                       light
                       @change="search"
                       @click:clear="clearSearch"
