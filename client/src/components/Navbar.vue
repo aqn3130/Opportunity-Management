@@ -123,6 +123,14 @@
               <v-list-item-title>Accounts</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/gbqReports">
+            <v-list-item-icon
+            ><v-icon>window</v-icon></v-list-item-icon
+            >
+            <v-list-item-content>
+              <v-list-item-title>PLM GBQ Reports</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item
             href="https://datastudio.google.com/reporting/1V3LWY3BX7uonW-cGBFDTiF3ffOE7yZNP/page/lAXy"
             target="_blank"

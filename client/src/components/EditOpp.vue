@@ -244,7 +244,7 @@
             <v-btn
               :disabled="!valid"
               color="#607D8B"
-              class="mr-4"
+              class="mr-4 mt-1"
               @click="validate"
               small
               :loading="newOppLoading"
@@ -254,7 +254,7 @@
             </v-btn>
             <v-btn
               color="#607D8B"
-              class="mr-4"
+              class="mr-4 mt-1"
               @click="validate"
               small
               :loading="newOppLoading"
@@ -265,7 +265,7 @@
             </v-btn>
             <v-btn
               color="#607D8B"
-              class="mr-4"
+              class="mt-1"
               @click="reset"
               small
               :loading="newOppLoading"

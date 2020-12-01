@@ -11,8 +11,8 @@
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
     <v-layout>
-      <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
-        <v-card class="d-flex justify-center transparent mt-n10" flat>
+      <v-container class="mb-10 mx-12" style="z-index: 2; margin-top: -140px;" fluid>
+        <v-card class="d-flex justify-center transparent mt-n10 overflow-auto" flat>
           <v-row>
             <v-col>
               <!--              <v-select-->
@@ -62,7 +62,6 @@
                         <v-btn color="indigo" icon v-bind="attrs" v-on="on">
                           <v-icon
                             small
-                            class="ml-n10"
                             :color="
                               activeFilters[header.value] &&
                               activeFilters[header.value].length <

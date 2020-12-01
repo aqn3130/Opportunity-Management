@@ -12,7 +12,11 @@
         <v-card-text class="text-center overline"> </v-card-text>
       </v-card>
       <v-layout>
-        <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -100px;">
+        <v-container
+          class="mb-10 py-5 px-16"
+          style="z-index: 2; margin-top: -100px;"
+          fluid
+        >
           <v-card class="d-flex justify-center mt-n10" flat>
             <v-row>
               <v-col cols="12">
@@ -88,84 +92,88 @@
                   <v-textarea
                     no-resize
                     v-model="activityLogNote"
-                    @keyup="saveNote"
+                    @keyup.enter.prevent="saveNote"
+                    :loading="noteSaveLoading"
+                    :disabled="noteSaveLoading"
                     placeholder="Add a note and then press enter key on your keyboard to save it"
                   ></v-textarea>
                   <v-card-subtitle>Activity Timeline</v-card-subtitle>
-                  <v-timeline dense>
-                    <v-timeline-item small right>
-                      <template v-slot:icon>
-                        <v-avatar size="36">
-                          <img src="../assets/calendar.png" />
-                        </v-avatar>
-                      </template>
-                      <v-card class="elevation-3">
-                        <v-card-text class="white text--primary">
-                          <v-layout class="align-content-space-between d-flex">
-                            <p>Logged a meeting with:</p>
-                            <v-spacer></v-spacer>
-                            <p>
-                              {{ meetingContent.created_at | convertDate }}
-                            </p>
-                          </v-layout>
-                          <span v-if="currentActivity.ContactPerson">
-                            {{ currentActivity.ContactPerson }}
-                          </span>
-                          <span v-else>
-                            {{ 'Contact person not available' }}
-                          </span>
-                        </v-card-text>
-                      </v-card>
-                    </v-timeline-item>
-                    <v-timeline-item small right>
-                      <template v-slot:icon>
-                        <v-avatar size="36">
-                          <img src="../assets/note.png" />
-                        </v-avatar>
-                      </template>
-                      <v-card class="elevation-3">
-                        <v-card-text class="white text--primary">
-                          <v-layout class="align-content-space-between d-flex">
-                            <p>Logged a note</p>
-                            <v-spacer></v-spacer>
-                            <p>
-                              {{ noteContent.created_at | convertDate }}
-                            </p>
-                          </v-layout>
-                          <div
-                            class="overflow-auto"
-                            :style="{ maxHeight: '50px' }"
+                  <v-card height="600" flat class="overflow-auto pr-5">
+                    <v-timeline dense v-for="a in allActivities" :key="a.id">
+                      <v-timeline-item small right>
+                        <template v-slot:icon>
+                          <v-avatar size="36" v-if="a.Type === 'Meeting'">
+                            <img src="../assets/calendar.png" />
+                          </v-avatar>
+                          <v-avatar size="36" v-if="a.Type === 'Note'">
+                            <img src="../assets/note.png" />
+                          </v-avatar>
+                          <v-avatar
+                            size="36"
+                            v-if="a.Type === 'Phone Call'"
+                            color="white"
                           >
-                            {{ noteContent.Note }}
-                          </div>
-                        </v-card-text>
-                      </v-card>
-                    </v-timeline-item>
-                    <v-timeline-item small right>
-                      <template v-slot:icon>
-                        <v-avatar color="white" size="36">
-                          <img src="../assets/phone.png" />
-                        </v-avatar>
-                      </template>
-                      <v-card class="elevation-3">
-                        <v-card-text class="white text--primary">
-                          <v-layout class="align-content-space-between d-flex">
-                            <p>Logged a phone call with:</p>
-                            <v-spacer></v-spacer>
-                            <p>
-                              {{ phoneCallContent.created_at | convertDate }}
-                            </p>
-                          </v-layout>
-                          <span v-if="currentActivity.ContactPerson">
-                            {{ currentActivity.ContactPerson }}
-                          </span>
-                          <span v-else>
-                            {{ 'Contact person not available' }}
-                          </span>
-                        </v-card-text>
-                      </v-card>
-                    </v-timeline-item>
-                  </v-timeline>
+                            <img src="../assets/phone.png" />
+                          </v-avatar>
+                        </template>
+                        <v-card class="elevation-3">
+                          <v-card-text class="white text--primary">
+                            <div v-if="a.Type === 'Meeting'">
+                              <v-layout
+                                class="align-content-space-between d-flex"
+                              >
+                                <p>Logged a meeting with:</p>
+                                <v-spacer></v-spacer>
+                                <p>
+                                  {{ a.created_at | convertDate }}
+                                </p>
+                              </v-layout>
+                              <span v-if="a.ContactPerson">
+                                {{ a.ContactPerson }}
+                              </span>
+                              <span v-else>
+                                {{ 'Contact person not available' }}
+                              </span>
+                            </div>
+                            <div v-if="a.Type === 'Note'">
+                              <v-layout
+                                class="align-content-space-between d-flex"
+                              >
+                                <p>Logged a note</p>
+                                <v-spacer></v-spacer>
+                                <p>
+                                  {{ a.created_at | convertDate }}
+                                </p>
+                              </v-layout>
+                              <div
+                                class="overflow-auto"
+                                :style="{ maxHeight: '50px' }"
+                              >
+                                {{ a.Note }}
+                              </div>
+                            </div>
+                            <div v-if="a.Type === 'Phone Call'">
+                              <v-layout
+                                class="align-content-space-between d-flex"
+                              >
+                                <p>Logged a phone call with:</p>
+                                <v-spacer></v-spacer>
+                                <p>
+                                  {{ a.created_at | convertDate }}
+                                </p>
+                              </v-layout>
+                              <span v-if="a.ContactPerson">
+                                {{ a.ContactPerson }}
+                              </span>
+                              <span v-else>
+                                {{ 'Contact person not available' }}
+                              </span>
+                            </div>
+                          </v-card-text>
+                        </v-card>
+                      </v-timeline-item>
+                    </v-timeline>
+                  </v-card>
                 </v-card>
               </v-col>
             </v-row>
@@ -203,7 +211,7 @@
                   <v-text-field
                     v-show="false"
                     label="customer_id"
-                    v-model="customerName"
+                    v-model="currentActivity.customer_id"
                   ></v-text-field>
                   <v-text-field
                     v-model="currentActivity.BPID"
@@ -339,7 +347,8 @@ export default {
       phoneCallContent: {},
       meetingContent: {},
       currentCustomerOpts: [],
-      activityLogNote: ''
+      activityLogNote: '',
+      noteSaveLoading: false
     };
   },
   filters: {
@@ -376,17 +385,17 @@ export default {
         this.currentActivity.customer_id
       );
       // console.log(this.allActivities);
-      this.allActivities = _.uniqBy(this.allActivities, 'Type');
+      // this.allActivities = _.uniqBy(this.allActivities, 'Type');
       // console.log(this.allActivities);
-      Object.keys(this.allActivities).forEach(key => {
-        if (this.allActivities[key].Type === 'Phone Call') {
-          this.phoneCallContent = this.allActivities[key];
-        } else if (this.allActivities[key].Type === 'Note') {
-          this.noteContent = this.allActivities[key];
-        } else if (this.allActivities[key].Type === 'Meeting') {
-          this.meetingContent = this.allActivities[key];
-        }
-      });
+      // Object.keys(this.allActivities).forEach(key => {
+      //   if (this.allActivities[key].Type === 'Phone Call') {
+      //     this.phoneCallContent = this.allActivities[key];
+      //   } else if (this.allActivities[key].Type === 'Note') {
+      //     this.noteContent = this.allActivities[key];
+      //   } else if (this.allActivities[key].Type === 'Meeting') {
+      //     this.meetingContent = this.allActivities[key];
+      //   }
+      // });
     },
     ...mapMutations({
       setSearchStr: 'setSearchStr',
@@ -410,11 +419,10 @@ export default {
             formLable = 'ContactPerson';
           if (formLable === 'Activity') formLable = 'Type';
           let formValue = this.$refs.form._data.inputs[i].value;
-          if (formLable === 'CustomerName') {
+          if (formLable === 'Customer Name') {
+            formLable = 'CustomerName';
             formValue = this.$refs.form._data.inputs[i].value.CustomerName;
           }
-          if (formLable === 'customer_id')
-            formValue = this.$refs.form._data.inputs[i].value.id;
           data_map.set(formLable, formValue);
         }
       }
@@ -470,13 +478,23 @@ export default {
     },
     async saveNote(e) {
       if (e.keyCode === 13 && this.activityLogNote) {
+        const noteObj = {
+          CustomerName: this.currentActivity.CustomerName,
+          BPID: this.currentActivity.BPID,
+          ActivityDate: this.formatDate(new Date().toISOString()),
+          Type: 'Note',
+          Note: this.activityLogNote,
+          customer_id: this.currentActivity.customer_id
+        };
         try {
-          this.currentActivity.Note = this.activityLogNote;
-          this.currentActivity.ActivityDate = this.formatDate(
-            this.currentActivity.ActivityDate
-          );
+          // this.currentActivity.Note = this.activityLogNote;
+          // this.currentActivity.ActivityDate = this.formatDate(
+          //   this.currentActivity.ActivityDate
+          // );
+          // console.log(noteObj);
+          this.noteSaveLoading = true;
           await this.$store.dispatch('setCurrentTable', 'activities');
-          await this.$store.dispatch('updateRecord', this.currentActivity);
+          await this.$store.dispatch('createRecord', noteObj);
           this.$toast.open({
             message: 'Note added',
             type: 'success',
@@ -484,8 +502,10 @@ export default {
             dismissible: true,
             position: 'bottom',
             onClose: async () => {
+              this.activityLogNote = '';
               await this.getRecords();
               await this.getCurrentCustomerOpts();
+              this.noteSaveLoading = false;
             }
           });
         } catch (e) {
@@ -496,7 +516,9 @@ export default {
             duration: 2000,
             dismissible: true,
             position: 'bottom',
-            onClose: () => {}
+            onClose: () => {
+              this.noteSaveLoading = false;
+            }
           });
         }
       }

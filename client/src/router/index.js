@@ -145,6 +145,13 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/gbqReports',
+    name: 'GBQReports',
+    component: () =>
+      import(/* webpackChunkName: "GBQReports" */ '../views/GBQReports.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/users',
     name: 'Users',
     component: Users,
