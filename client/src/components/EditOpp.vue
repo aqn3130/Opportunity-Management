@@ -694,7 +694,7 @@ export default {
           dismissible: true,
           position: 'bottom',
           onClose: () => {
-            this.$router.back();
+            this.$router.push({ name: 'Dashboard' });
             this.newOppLoading = false;
           }
         });
@@ -707,7 +707,7 @@ export default {
           dismissible: true,
           position: 'bottom',
           onClose: () => {
-            this.$router.back();
+            this.$router.push({ name: 'Dashboard' });
             this.newOppLoading = false;
           }
         });
