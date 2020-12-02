@@ -11,8 +11,14 @@
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
     <v-layout>
-      <v-container class="mb-10 mx-12" style="z-index: 2; margin-top: -140px;" fluid>
-        <v-card class="d-flex justify-center transparent mt-n10 overflow-auto" flat>
+      <v-container
+        class="mb-10 overflow-auto"
+        style="z-index: 2; margin-top: -160px;"
+      >
+        <v-card
+          class="d-flex justify-center transparent"
+          flat
+        >
           <v-row>
             <v-col>
               <!--              <v-select-->
@@ -74,7 +80,7 @@
                           </v-icon>
                         </v-btn>
                       </template>
-                      <v-list flat dense class="pa-0">
+                      <v-list flat dense class="pa-0 overflow-auto" max-height="300">
                         <v-list-item-group
                           multiple
                           v-model="activeFilters[header.value]"
@@ -300,7 +306,7 @@ export default {
       perPage: 5,
       totalLeads: 0,
       options: {},
-      filters: { Status: [], ChannelType: [], Currency: [] },
+      filters: { Status: [], ChannelType: [], Currency: [], Country: [] },
       activeFilters: {},
       selectedHeaders: [],
       headersFilter: [],
@@ -338,7 +344,16 @@ export default {
           align: 'left',
           value: 'OpportunityName'
         },
-        { text: 'Country', align: 'left', value: 'Country' },
+        {
+          text: 'Country',
+          align: 'left',
+          value: 'Country',
+          filter: value => {
+            return this.activeFilters.Country
+              ? this.activeFilters.Country.includes(value)
+              : true;
+          }
+        },
         {
           text: 'Channel Type',
           align: 'left',
@@ -347,7 +362,7 @@ export default {
             return this.activeFilters.ChannelType
               ? this.activeFilters.ChannelType.includes(value)
               : true;
-          },
+          }
           // width: '150'
         },
         {
@@ -363,7 +378,7 @@ export default {
             return this.activeFilters.Status
               ? this.activeFilters.Status.includes(value)
               : true;
-          },
+          }
           // width: '110'
         },
         { text: 'License ID', align: 'left', value: 'LicenseID' },
@@ -380,7 +395,7 @@ export default {
             return this.activeFilters.Currency
               ? this.activeFilters.Currency.includes(value)
               : true;
-          },
+          }
           // width: '120'
         },
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
@@ -455,7 +470,7 @@ export default {
 
     clearAll(col) {
       this.activeFilters[col] = [];
-    }
+    },
     // async onSelectChange(status) {
     // this.selectedStatus = status;
     // console.log(status);

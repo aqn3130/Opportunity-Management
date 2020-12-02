@@ -11,8 +11,11 @@
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
     <v-layout>
-      <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -150px;">
-        <v-card class="d-flex justify-center transparent mt-n10" flat>
+      <v-container
+        class="mb-10 overflow-auto"
+        style="z-index: 2; margin-top: -180px;"
+      >
+        <v-card class="d-flex justify-center transparent" flat>
           <v-row>
             <v-col>
               <v-select
@@ -30,7 +33,7 @@
                     <span>{{ item }}</span>
                   </span>
                   <span v-if="index === 1" class="caption">
-<!--                    (+{{ selectedStatus.length - 1 }} )-->
+                    <!--                    (+{{ selectedStatus.length - 1 }} )-->
                     ...
                   </span>
                 </template>

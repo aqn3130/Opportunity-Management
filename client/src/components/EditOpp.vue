@@ -474,7 +474,7 @@
           Are you sure?
         </v-card-title>
 
-        <v-card-text>
+        <v-card-text class="py-5">
           There are unsaved changes to this Opportunity, please confirm leaving
           this page.
         </v-card-text>
@@ -1090,6 +1090,10 @@ export default {
   updated() {
     const formData = this.getFormData();
     this.setFormData(formData);
+  },
+  beforeDestroy() {
+    this.setFormData(null);
+    this.setCurrentOpp(null);
   }
 };
 </script>

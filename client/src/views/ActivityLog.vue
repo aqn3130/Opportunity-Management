@@ -76,7 +76,7 @@
               <v-col cols="8">
                 <v-card class="mr-2 pa-3">
                   <v-toolbar flat>
-                    <v-toolbar-title>Note</v-toolbar-title>
+                    <v-toolbar-title class="body-2 text-uppercase">Note</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn
                       fab
