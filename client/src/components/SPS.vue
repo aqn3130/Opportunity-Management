@@ -5,126 +5,139 @@
       SPS
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card
-      color="#ffffff"
-      light
-      :style="{ paddingLeft: '400px', paddingRight: '400px', border: '1px solid #455A64' }"
-    >
-      <v-form ref="spsForm" class="py-5" v-model="spsValid" lazy-validation>
-        <v-select
-          :items="valuePropositionDoc"
-          v-model="vpd"
-          label="Value Proposition Document"
-        >
-        </v-select>
-        <v-select
-          :items="productDemoStatus"
-          v-model="pds"
-          label="Product Demo Status"
-        >
-        </v-select>
-        <v-menu
-          v-model="menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="290px"
-          class="body-2"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="productDemoDate"
-              label="Product Demo Date"
-              prepend-icon="event"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              class="body-2"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="productDemoDate"
-            @input="menu = false"
-          ></v-date-picker>
-        </v-menu>
-        <v-select
-          :items="trialStatusItems"
-          v-model="trialStatus"
-          label="Trial Status"
-        >
-        </v-select>
-        <v-menu
-          v-model="menu2"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="290px"
-          class="body-2"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="trialStartDate"
-              label="Trial Start Date"
-              prepend-icon="event"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              class="body-2"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="trialStartDate"
-            @input="menu2 = false"
-          ></v-date-picker>
-        </v-menu>
-        <v-menu
-          v-model="menu3"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="290px"
-          class="body-2"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="trialEndDate"
-              label="Trial End Date"
-              prepend-icon="event"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              class="body-2"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="trialEndDate"
-            @input="menu3 = false"
-          ></v-date-picker>
-        </v-menu>
-        <v-text-field
-          v-model="NoRL"
-          label="Number Of Recommendation Letters"
-          :rules="NoRLRule"
-        ></v-text-field>
-        <!--        <v-text-field v-model="NoRLComment" label="NoRL Comment"></v-text-field>-->
-      </v-form>
-      <v-card-actions>
-        <v-btn
-          @click="saveSPS"
-          class="mb-5"
-          color="#607D8B"
-          :disabled="!spsValid"
-          v-if="!spsValid"
-          small
-          >Update</v-btn
-        >
-        <v-btn @click="saveSPS" class="mb-5" color="#607D8B" dark v-else small
-          >Update</v-btn
-        >
-      </v-card-actions>
+    <v-card color="#ffffff" light :style="{ border: '1px solid #455A64' }">
+      <v-row class="">
+        <v-col sm="4" offset-sm="4">
+          <v-card-text>
+            <v-form
+              ref="spsForm"
+              class="py-5"
+              v-model="spsValid"
+              lazy-validation
+            >
+              <v-select
+                :items="valuePropositionDoc"
+                v-model="vpd"
+                label="Value Proposition Document"
+              >
+              </v-select>
+              <v-select
+                :items="productDemoStatus"
+                v-model="pds"
+                label="Product Demo Status"
+              >
+              </v-select>
+              <v-menu
+                v-model="menu"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+                class="body-2"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="productDemoDate"
+                    label="Product Demo Date"
+                    prepend-icon="event"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    class="body-2"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="productDemoDate"
+                  @input="menu = false"
+                ></v-date-picker>
+              </v-menu>
+              <v-select
+                :items="trialStatusItems"
+                v-model="trialStatus"
+                label="Trial Status"
+              >
+              </v-select>
+              <v-menu
+                v-model="menu2"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+                class="body-2"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="trialStartDate"
+                    label="Trial Start Date"
+                    prepend-icon="event"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    class="body-2"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="trialStartDate"
+                  @input="menu2 = false"
+                ></v-date-picker>
+              </v-menu>
+              <v-menu
+                v-model="menu3"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+                class="body-2"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="trialEndDate"
+                    label="Trial End Date"
+                    prepend-icon="event"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    class="body-2"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="trialEndDate"
+                  @input="menu3 = false"
+                ></v-date-picker>
+              </v-menu>
+              <v-text-field
+                v-model="NoRL"
+                label="Number Of Recommendation Letters"
+                :rules="NoRLRule"
+              ></v-text-field>
+              <!--        <v-text-field v-model="NoRLComment" label="NoRL Comment"></v-text-field>-->
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              @click="saveSPS"
+              class="mb-5"
+              color="#607D8B"
+              :disabled="!spsValid"
+              v-if="!spsValid"
+              small
+              >Update</v-btn
+            >
+            <v-btn
+              @click="saveSPS"
+              class="mb-5"
+              color="#607D8B"
+              dark
+              v-else
+              small
+              >Update</v-btn
+            >
+          </v-card-actions>
+        </v-col>
+      </v-row>
     </v-card>
   </v-container>
 </template>

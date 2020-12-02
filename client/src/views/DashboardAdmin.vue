@@ -15,7 +15,7 @@
         class="mb-10 overflow-auto"
         style="z-index: 2; margin-top: -180px;"
       >
-        <v-card class="d-flex justify-center transparent" flat>
+        <v-card class="d-flex transparent" flat>
           <v-row>
             <v-col>
               <v-select

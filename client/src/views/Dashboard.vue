@@ -16,7 +16,7 @@
         style="z-index: 2; margin-top: -160px;"
       >
         <v-card
-          class="d-flex justify-center transparent"
+          class="d-flex transparent"
           flat
         >
           <v-row>
