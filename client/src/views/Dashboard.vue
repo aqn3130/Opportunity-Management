@@ -326,6 +326,7 @@ export default {
     }
   },
   async created() {
+    if (!this.currentUser) await this.$router.push({name: 'Login'});
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
     this.rows = await this.getRecords();
     if (this.loading) this.setLoading(false);

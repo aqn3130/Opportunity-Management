@@ -14,16 +14,17 @@
       <v-layout>
         <v-container
           class="mb-10 py-5 px-16"
-          style="z-index: 2; margin-top: -100px;"
-          fluid
+          style="z-index: 2; margin-top: -200px;"
         >
-          <v-card class="d-flex justify-center mt-n10" flat>
+          <v-card class="d-flex justify-center px-5" flat color="#607d8b">
             <v-row>
-              <v-col cols="12">
-                <v-toolbar flat>
+              <v-col cols="12" class="mb-n5">
+                <v-toolbar flat dense color="#607d8b">
                   <v-spacer></v-spacer>
-                  <v-btn small color="#607D8B" dark to="/activities"
-                    >Back</v-btn
+                  <v-btn small text dark to="/activities"
+                    ><v-icon class="mr-2" small>arrow_back</v-icon>
+                    Back
+                  </v-btn
                   >
                 </v-toolbar>
               </v-col>
@@ -96,9 +97,10 @@
                     :loading="noteSaveLoading"
                     :disabled="noteSaveLoading"
                     placeholder="Add a note and then press enter key on your keyboard to save it"
+                    rows="2"
                   ></v-textarea>
                   <v-card-subtitle>Activity Timeline</v-card-subtitle>
-                  <v-card height="600" flat class="overflow-auto pr-5">
+                  <v-card height="500" flat class="overflow-auto pr-2">
                     <v-timeline dense v-for="a in allActivities" :key="a.id">
                       <v-timeline-item small right>
                         <template v-slot:icon>
@@ -255,14 +257,14 @@
                   ></v-text-field>
                   <v-select
                     v-model="followUpMeeting"
-                    :items="items"
+                    :items="itemsCallBack"
                     :rules="[v => !!v || 'Item is required']"
                     label="Did you schedule a follow up during the activity?"
                     required
                   ></v-select>
                   <v-select
                     v-model="likelihood"
-                    :items="items"
+                    :items="itemsLikelihood"
                     :rules="[v => !!v || 'Item is required']"
                     label="How did you feel after the activity?"
                     required
@@ -334,7 +336,14 @@ export default {
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
       ],
       select: null,
-      items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+      itemsCallBack: ['Yes', 'No'],
+      itemsLikelihood: [
+        '1 – Extremely Unlikely',
+        '2 – Unlikely',
+        '3 – Neutral',
+        '4 – Likely',
+        '5 – Extremely Likely'
+      ],
       typeItems: ['Meeting', 'Phone Call'],
       checkbox: false,
       date: null,

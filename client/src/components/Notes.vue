@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-toolbar color="#455A64" height="30" dark class="overline" flat>
       <v-spacer></v-spacer>
       New Note
@@ -7,8 +7,8 @@
     </v-toolbar>
     <v-card tile color="#ffffff" light :style="{ border: '1px solid #455A64' }">
       <v-form ref="form" v-model="valid" lazy-validation>
-        <v-row style="padding: 15px 90px 25px 20px">
-          <v-col md="12">
+        <v-row class="px-5">
+          <v-col md="8" offset-md="2">
             <v-text-field
               v-model="note"
               label="Add Note"
@@ -26,42 +26,51 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-card tile :style="{ border: '1px solid #455A64' }">
-      <v-list dense>
-        <v-list-item-group v-model="selectedNote" color="primary">
-          <v-list-item v-for="(item, i) in notes" :key="i">
-            <v-row dense class="px-2">
-              <v-col md="10" class="pr-5">
-                <v-list-item-subtitle>
-                  Note
-                </v-list-item-subtitle>
-                <v-list-item-content>
-                  <v-textarea
-                    v-model="item.Message"
-                    class="body-2"
-                    rows="1"
-                    no-resize
-                    @blur="onNoteChange(item)"
-                    dense
-                  ></v-textarea>
-                </v-list-item-content>
-              </v-col>
-              <v-col md="2">
-                <v-list-item-subtitle>
-                  Created Date
-                </v-list-item-subtitle>
-                <v-list-item-content>
-                  <div class="caption">
-                    {{ item.CreateDate | formatDate }}
-                    <v-btn icon small @click="deleteProduct(item)" class="ml-5">
-                      <v-icon small>delete</v-icon>
-                    </v-btn>
-                  </div>
-                </v-list-item-content>
-              </v-col>
-            </v-row>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
+      <v-row>
+        <v-col md="8" offset-md="2">
+          <v-list dense>
+            <v-list-item-group v-model="selectedNote" color="primary">
+              <v-list-item v-for="(item, i) in notes" :key="i">
+                <v-row dense class="">
+                  <v-col md="10" class="pr-5" offset-md="">
+                    <v-list-item-subtitle>
+                      Note
+                    </v-list-item-subtitle>
+                    <v-list-item-content>
+                      <v-textarea
+                        v-model="item.Message"
+                        class="body-2"
+                        rows="1"
+                        no-resize
+                        @blur="onNoteChange(item)"
+                        dense
+                      ></v-textarea>
+                    </v-list-item-content>
+                  </v-col>
+                  <v-col md="2">
+                    <v-list-item-subtitle>
+                      Created Date
+                    </v-list-item-subtitle>
+                    <v-list-item-content>
+                      <div class="caption">
+                        {{ item.CreateDate | formatDate }}
+                        <v-btn
+                          icon
+                          small
+                          @click="deleteProduct(item)"
+                          class="ml-3"
+                        >
+                          <v-icon small>delete</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-list-item-content>
+                  </v-col>
+                </v-row>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-col>
+      </v-row>
     </v-card>
   </v-container>
 </template>

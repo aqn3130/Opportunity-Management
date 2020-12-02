@@ -12,10 +12,10 @@
         <v-card-text class="text-center overline"> </v-card-text>
       </v-card>
       <v-layout>
-        <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -100px;">
-          <v-card class="d-flex justify-center transparent mt-n10" flat>
+        <v-container class="mb-10 pa-5" style="z-index: 2; margin-top: -170px;">
+          <v-card class="d-flex justify-center transparent" flat>
             <v-row>
-              <v-col>
+              <v-col md="8" offset-md="2">
                 <v-data-table
                   :headers="headers"
                   :items="rows"
@@ -141,14 +141,14 @@
                   ></v-text-field>
                   <v-select
                     v-model="followUpMeeting"
-                    :items="items"
+                    :items="itemsCallBack"
                     :rules="[v => !!v || 'Item is required']"
                     label="Did you schedule a follow up during the activity?"
                     required
                   ></v-select>
                   <v-select
                     v-model="likelihood"
-                    :items="items"
+                    :items="itemsLikelihood"
                     :rules="[v => !!v || 'Item is required']"
                     label="How did you feel after the activity?"
                     required
@@ -226,7 +226,14 @@ export default {
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
       ],
       select: null,
-      items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+      itemsCallBack: ['Yes', 'No'],
+      itemsLikelihood: [
+        '1 – Extremely Unlikely',
+        '2 – Unlikely',
+        '3 – Neutral',
+        '4 – Likely',
+        '5 – Extremely Likely'
+      ],
       typeItems: ['Meeting', 'Phone Call', 'Note'],
       checkbox: false,
       date: null,
