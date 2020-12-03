@@ -8,6 +8,7 @@
         width="auto"
         tile
         dark
+        flat
       >
         <v-card-text class="text-center overline"> </v-card-text>
       </v-card>
@@ -99,7 +100,7 @@
                     placeholder="Add a note and then press enter key on your keyboard to save it"
                     rows="2"
                   ></v-textarea>
-                  <v-card-subtitle>Activity Timeline</v-card-subtitle>
+                  <v-card-subtitle class="mt-n5">Activity Timeline</v-card-subtitle>
                   <v-card height="500" flat class="overflow-auto pr-2">
                     <v-timeline dense v-for="a in allActivities" :key="a.id">
                       <v-timeline-item small right>
@@ -204,21 +205,24 @@
             >
             <template>
               <v-form ref="form" v-model="valid" lazy-validation class="pa-10">
-                <v-card class="px-15" flat>
+                <v-card flat :style="{ paddingLeft: '100px', paddingRight: '100px'}">
                   <v-text-field
                     disabled
                     v-model="currentActivity.CustomerName"
                     label="Customer Name"
+                    dense
                   ></v-text-field>
                   <v-text-field
                     v-show="false"
                     label="customer_id"
                     v-model="currentActivity.customer_id"
+                    dense
                   ></v-text-field>
                   <v-text-field
                     v-model="currentActivity.BPID"
                     label="BPID"
                     disabled
+                    dense
                   ></v-text-field>
                   <v-select
                     v-model="type"
@@ -226,6 +230,8 @@
                     :rules="[v => !!v || 'This field is required']"
                     label="Activity"
                     required
+                    dense
+                    class="caption"
                   ></v-select>
                   <v-menu
                     v-model="menu"
@@ -244,6 +250,7 @@
                         v-on="on"
                         :rules="nameRules"
                         required
+                        dense
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -254,6 +261,7 @@
                   <v-text-field
                     v-model="contactPerson"
                     label="Who did you communicate with?"
+                    dense
                   ></v-text-field>
                   <v-select
                     v-model="followUpMeeting"
@@ -261,6 +269,8 @@
                     :rules="[v => !!v || 'Item is required']"
                     label="Did you schedule a follow up during the activity?"
                     required
+                    dense
+                    class="caption"
                   ></v-select>
                   <v-select
                     v-model="likelihood"
@@ -268,6 +278,8 @@
                     :rules="[v => !!v || 'Item is required']"
                     label="How did you feel after the activity?"
                     required
+                    dense
+                    class="caption"
                   ></v-select>
                 </v-card>
                 <!--              <v-card-subtitle>Note</v-card-subtitle>-->
@@ -278,11 +290,13 @@
                   no-resize
                   label="Note"
                   outlined
-                  class="mt-5"
+                  class="mt-5 px-16"
+                  dense
+                  rows="3"
                 ></v-textarea>
               </v-form>
             </template>
-            <v-card-actions>
+            <v-card-actions class="mt-n10">
               <v-spacer></v-spacer>
               <v-btn color="#455A64" @click="validate" :disabled="!valid" text>
                 Save

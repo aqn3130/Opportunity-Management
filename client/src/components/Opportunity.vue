@@ -5,7 +5,7 @@
       {{ title }}
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card tile color="#ffffff" light :style="{ border: '1px solid #455A64' }">
+    <v-card tile color="#ffffff" light :style="{ border: '1px solid #455A64' }" flat>
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row style="padding: 15px 20px 25px 20px" class="px-16">
           <v-col md="6">

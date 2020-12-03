@@ -97,19 +97,24 @@
                     item-value="id"
                     required
                     return-object
+                    dense
+                    class="caption"
                   ></v-select>
                   <v-text-field
                     v-show="false"
                     label="customer_id"
                     v-model="customerName"
+                    dense
                   ></v-text-field>
-                  <v-text-field v-model="BPID" label="BPID"></v-text-field>
+                  <v-text-field v-model="BPID" label="BPID" dense></v-text-field>
                   <v-select
                     v-model="type"
                     :items="typeItems"
                     :rules="[v => !!v || 'This field is required']"
                     label="Activity"
                     required
+                    dense
+                    class="caption"
                   ></v-select>
                   <v-menu
                     v-model="menu"
@@ -128,6 +133,7 @@
                         v-on="on"
                         :rules="nameRules"
                         required
+                        dense
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -138,6 +144,7 @@
                   <v-text-field
                     v-model="contactPerson"
                     label="Who did you communicate with?"
+                    dense
                   ></v-text-field>
                   <v-select
                     v-model="followUpMeeting"
@@ -145,6 +152,8 @@
                     :rules="[v => !!v || 'Item is required']"
                     label="Did you schedule a follow up during the activity?"
                     required
+                    dense
+                    class="caption"
                   ></v-select>
                   <v-select
                     v-model="likelihood"
@@ -152,6 +161,8 @@
                     :rules="[v => !!v || 'Item is required']"
                     label="How did you feel after the activity?"
                     required
+                    dense
+                    class="caption"
                   ></v-select>
                 </v-card>
                 <!--              <v-card-subtitle>Note</v-card-subtitle>-->
@@ -163,10 +174,12 @@
                   label="Note"
                   outlined
                   class="mt-5"
+                  dense
+                  rows="3"
                 ></v-textarea>
               </v-form>
             </template>
-            <v-card-actions>
+            <v-card-actions class="mt-n12">
               <v-spacer></v-spacer>
               <v-btn color="#455A64" @click="validate" :disabled="!valid" text>
                 Save
