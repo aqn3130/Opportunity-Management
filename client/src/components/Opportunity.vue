@@ -5,9 +5,9 @@
       {{ title }}
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card tile color="#ffffff" light>
+    <v-card tile color="#ffffff" light :style="{ border: '1px solid #455A64' }">
       <v-form ref="form" v-model="valid" lazy-validation>
-        <v-row style="padding: 15px 20px 25px 20px">
+        <v-row style="padding: 15px 20px 25px 20px" class="px-16">
           <v-col md="6">
             <v-text-field
               v-model="currentUser.user.username"
@@ -15,6 +15,7 @@
               label="Sales Rep"
               required
               disabled
+              dense
             ></v-text-field>
 
             <v-text-field
@@ -23,6 +24,7 @@
               label="Type"
               required
               disabled
+              dense
             ></v-text-field>
             <v-menu
               v-model="menu"
@@ -40,6 +42,7 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
+                  dense
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -53,23 +56,32 @@
               :rules="nameRules"
               label="Opportunity Name *"
               required
+              dense
             ></v-text-field>
             <v-text-field
               v-model="customerName"
               :rules="nameRules"
               label="Customer Name *"
               required
+              dense
             ></v-text-field>
             <v-text-field
               v-model="bpId"
               :rules="bpIdRules"
               label="BP ID"
               v-if="bpId"
+              dense
             ></v-text-field>
-            <v-text-field v-model="bpId" label="BP ID" v-else></v-text-field>
+            <v-text-field
+              v-model="bpId"
+              label="BP ID"
+              v-else
+              dense
+            ></v-text-field>
             <v-text-field
               v-model="memberOfConsortia"
               label="Member Of Consortia"
+              dense
             ></v-text-field>
             <v-select
               v-model="country"
@@ -78,12 +90,16 @@
               label="Country *"
               required
               @input="getStates(country)"
+              dense
+              class="caption"
             ></v-select>
             <v-select
               v-model="state"
               :items="states"
               label="State"
               :disabled="state === 'N/A'"
+              dense
+              class="caption"
             ></v-select>
             <v-select
               v-model="channelType"
@@ -91,12 +107,16 @@
               label="Channel Type *"
               :items="channelTypeItems"
               @input="setIndustryType(channelType)"
+              dense
+              class="caption"
             ></v-select>
             <v-select
               v-model="industryType"
               :rules="nameRules"
               label="Industry/Institution Type *"
               :items="industryTypeItems"
+              dense
+              class="caption"
             ></v-select>
           </v-col>
           <v-col md="6">
@@ -106,29 +126,38 @@
               :rules="[v => !!v || 'This field is required']"
               label="Origin *"
               required
+              dense
+              class="caption"
             ></v-select>
             <v-text-field
               v-model="leadId"
               label="Lead ID"
               :disabled="origin !== 'Marketing'"
+              dense
             ></v-text-field>
             <v-select
               v-model="status"
               :items="statusItems"
               label="Status"
               @input="onStatusChange(status)"
+              dense
+              class="caption"
             ></v-select>
             <v-select
               v-model="salesStage"
               :items="salesStageItems"
               label="Sales Stage *"
               :rules="nameRules"
+              dense
+              class="caption"
             ></v-select>
             <v-select
               v-model="lostOpportunityReason"
               :items="lostOpportunityReasonItems"
               label="Lost Opportunity Reason"
               :disabled="status !== 'Closed Lost'"
+              dense
+              class="caption"
             ></v-select>
 
             <v-text-field
@@ -137,17 +166,21 @@
               label="License ID"
               required
               v-if="licenseId"
+              dense
             ></v-text-field>
             <v-text-field
               v-model="licenseId"
               label="License ID"
               v-else
+              dense
             ></v-text-field>
 
             <v-select
               v-model="forecastCategory"
               :items="forecastCategoryItems"
               label="Forecast Category"
+              dense
+              class="caption"
             ></v-select>
             <v-menu
               v-model="menu2"
@@ -166,6 +199,7 @@
                   v-bind="attrs"
                   v-on="on"
                   :rules="nameRules"
+                  dense
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -174,19 +208,25 @@
               ></v-date-picker>
             </v-menu>
 
-            <v-text-field v-model="agentName" label="Agent Name"></v-text-field>
+            <v-text-field
+              v-model="agentName"
+              label="Agent Name"
+              dense
+            ></v-text-field>
             <v-select
               v-model="currency"
               :items="currencyItems"
               label="Currency *"
               :rules="nameRules"
               required
+              dense
+              class="caption"
             ></v-select>
 
             <v-btn
               :disabled="!valid"
               color="#607D8B"
-              class="mr-4 mt-5"
+              class="mr-4 mt-1"
               @click="saveNewOpportunity"
               small
               :loading="newOppLoading"
@@ -196,7 +236,7 @@
             </v-btn>
             <v-btn
               color="#607D8B"
-              class="mr-4 mt-5"
+              class="mr-4 mt-1"
               @click="saveNewOpportunity"
               small
               :loading="newOppLoading"
@@ -209,7 +249,7 @@
             <v-btn
               :disabled="!valid"
               color="#607D8B"
-              class="mr-4 mt-5"
+              class="mr-4 mt-1"
               @click="saveEdit"
               small
               v-if="!valid"
@@ -220,7 +260,7 @@
             <v-btn
               v-else
               color="#607D8B"
-              class="mr-4 mt-5"
+              class="mr-4 mt-1"
               @click="saveEdit"
               dark
               small
@@ -231,11 +271,10 @@
 
             <v-btn
               color="#607D8B"
-              class="mr-4 mt-5"
+              class="mr-4 mt-1"
               @click="reset"
               dark
               small
-              elevation="0"
               :loading="newOppLoading"
             >
               Cancel
@@ -328,7 +367,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({ setPage: 'setPage', setOpp: 'setOpp', setOppId: 'setOppId' }),
+    ...mapMutations({
+      setPage: 'setPage',
+      setOpp: 'setOpp',
+      setOppId: 'setOppId'
+    }),
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.form._data.inputs) {
@@ -343,10 +386,13 @@ export default {
       }
       return Object.fromEntries(data_map);
     },
-    save: async function (newOpportunity, goToPage) {
+    save: async function(newOpportunity, goToPage) {
       this.newOppLoading = true;
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
-      const response  = await this.$store.dispatch('createRecord', newOpportunity);
+      const response = await this.$store.dispatch(
+        'createRecord',
+        newOpportunity
+      );
       const newOppId = response.data[0];
       this.setOppId(newOppId);
       await this.$store.dispatch('getSingleOpp');
@@ -356,7 +402,7 @@ export default {
         duration: 2000,
         dismissible: true,
         onClose: () => {
-          this.$router.push({name: goToPage});
+          this.$router.push({ name: goToPage });
           this.newOppLoading = false;
         }
       });

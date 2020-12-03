@@ -19,12 +19,16 @@
                 :items="valuePropositionDoc"
                 v-model="vpd"
                 label="Value Proposition Document"
+                dense
+                class="caption"
               >
               </v-select>
               <v-select
                 :items="productDemoStatus"
                 v-model="pds"
                 label="Product Demo Status"
+                dense
+                class="caption"
               >
               </v-select>
               <v-menu
@@ -44,7 +48,8 @@
                     readonly
                     v-bind="attrs"
                     v-on="on"
-                    class="body-2"
+                    class="caption"
+                    dense
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -56,6 +61,8 @@
                 :items="trialStatusItems"
                 v-model="trialStatus"
                 label="Trial Status"
+                dense
+                class="caption"
               >
               </v-select>
               <v-menu
@@ -75,7 +82,8 @@
                     readonly
                     v-bind="attrs"
                     v-on="on"
-                    class="body-2"
+                    class="caption"
+                    dense
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -90,7 +98,7 @@
                 transition="scale-transition"
                 offset-y
                 min-width="290px"
-                class="body-2"
+                class="caption"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
@@ -100,7 +108,8 @@
                     readonly
                     v-bind="attrs"
                     v-on="on"
-                    class="body-2"
+                    class="caption"
+                    dense
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -112,11 +121,13 @@
                 v-model="NoRL"
                 label="Number Of Recommendation Letters"
                 :rules="NoRLRule"
+                dense
+                class="caption"
               ></v-text-field>
               <!--        <v-text-field v-model="NoRLComment" label="NoRL Comment"></v-text-field>-->
             </v-form>
           </v-card-text>
-          <v-card-actions>
+          <v-card-actions class="mt-n10">
             <v-btn
               @click="saveSPS"
               class="mb-5"
