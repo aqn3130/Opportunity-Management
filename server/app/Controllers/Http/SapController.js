@@ -32,15 +32,37 @@ class SapController {
       ],
       Currency: 'required|in:EUR,USD,GBP,JPY,AUD',
     }
-    const validation = await validateAll(data, rules);
-    if(validation.fails()) {
-      return validation.messages();
+    for (let i = 0; i < data.length; i += 1) {
+      const validation = await validateAll(data[i], rules);
+      if(validation.fails()) {
+        // return validation.messages();
+        response.status(400).send(validation.messages());
+        return;
+      }
     }
     try {
-      data.CreationDate = new Date().toISOString().substr(0, 18);
-      return await request.Knex('Opportunity').insert(data);
+      for (let i = 0; i < data.length; i += 1) {
+        data[i].CreationDate = new Date().toISOString().substr(0, 18);
+      }
+
+      const created_ids = [];
+      for ( let j = 0; j < data.length; j += 1) {
+        const res = await request.Knex
+          .insert(data[j]).into('Opportunity');
+        created_ids.push(res[0]);
+      }
+
+      const created_opp = [];
+      for ( let k = 0; k < created_ids.length; k += 1) {
+        const res = await request.Knex('Opportunity').where('id', created_ids[k])
+          .select('id', 'SalesRep', 'OpportunityName', 'CustomerName', 'BPID');
+        created_opp.push(res);
+      }
+      // console.log(created_opp);
+      response.status(201).send(created_opp);
     } catch (e) {
       console.log(e);
+      response.send(e);
     }
   }
 }
