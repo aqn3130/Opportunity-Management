@@ -14,6 +14,7 @@ class SapController {
     }
     const rules = {
       SalesRep: 'required',
+      Email: 'required|email',
       // Type: 'required|in:SPS,ISM',
       OpportunityName: 'required',
       CustomerName: 'required',
@@ -63,9 +64,9 @@ class SapController {
     try {
       for (let i = 0; i < data.length; i += 1) {
         data[i].CreationDate = new Date().toISOString().substr(0, 18);
-        const type = await getSalesRepType(data[i].email);
+        const type = await getSalesRepType(data[i].Email);
         if (type) data[i].Type = type;
-        delete data[i].email;
+        delete data[i].Email;
       }
 
       if (!dataValid) {
