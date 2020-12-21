@@ -1,19 +1,20 @@
 'use strict'
 
 const {rule} = require("@adonisjs/validator/src/Validator");
-const { validateAll } = use('Validator')
-const { validations } = require('indicative/validator')
+const { validateAll } = use('Validator');
+const { validations } = require('indicative/validator');
 
 class SapController {
   async store ({ request, response }) {
     const { data } = request.all();
+    let dataValid = true;
     // console.log(data);
     const dateRule = {
       validDate: [validations.dateFormat(['YYYY-MM-DD HH:mm:ss'])]
     }
     const rules = {
       SalesRep: 'required',
-      Type: 'required|in:SPS,ISM',
+      // Type: 'required|in:SPS,ISM',
       OpportunityName: 'required',
       CustomerName: 'required',
       ChannelType: 'required|in:Academic,Corporate,Government',
@@ -40,9 +41,36 @@ class SapController {
         return;
       }
     }
+
+    async function getSalesRepType(email) {
+      const user = await request.Knex('SalesRep').where('Email', email);
+      let type = null;
+      if (user.length) {
+        type = await request.Knex('SalesRep').where('Email', email).select('Type');
+        if (type.length) type = type[0].Type;
+      } else {
+        let fullName = email.substring(0, email.indexOf('@')).toLowerCase();
+        type = await request.Knex('SalesRep').where('Full_Name', fullName).select('Type');
+        if (type.length) type = type[0].Type;
+      }
+
+      if (type !== 'SPS' && type !== 'ISM') {
+        dataValid = false;
+      }
+      return type;
+    }
+
     try {
       for (let i = 0; i < data.length; i += 1) {
         data[i].CreationDate = new Date().toISOString().substr(0, 18);
+        const type = await getSalesRepType(data[i].email);
+        if (type) data[i].Type = type;
+        delete data[i].email;
+      }
+
+      if (!dataValid) {
+        response.status(400).send('Sales Rep not found');
+        return;
       }
 
       const created_ids = [];
@@ -55,7 +83,7 @@ class SapController {
       const created_opp = [];
       for ( let k = 0; k < created_ids.length; k += 1) {
         const res = await request.Knex('Opportunity').where('id', created_ids[k])
-          .select('id', 'SalesRep', 'OpportunityName', 'CustomerName', 'BPID');
+          .select('id', 'SalesRep', 'OpportunityName', 'CustomerName', 'BPID', 'Type');
         created_opp.push(res);
       }
       // console.log(created_opp);
