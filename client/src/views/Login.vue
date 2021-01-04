@@ -4,7 +4,7 @@
       <v-col cols="12" sm="8" md="4">
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-card max-width="500px">
-            <v-toolbar color="primary" dark flat>Login</v-toolbar>
+            <v-toolbar color="#455A64" dark flat>Login</v-toolbar>
             <!--                        <v-card-title>Login</v-card-title>-->
             <v-card-text>
               <v-text-field
@@ -37,13 +37,15 @@
                 <small>{{ loginError }}</small>
               </v-alert>
             </v-card-text>
-            <v-card-actions class="justify-end">
+            <v-card-actions>
               <v-btn
                 :disabled="!valid"
-                color="primary"
-                class="mr-4"
+                color="#455A64"
                 @click="validate"
                 :loading="loading"
+                dark
+                block
+                elevation="1"
                 >Login</v-btn
               >
               <!--                            <v-btn color="error" class="mr-4" @click="reset">Reset</v-btn>-->
