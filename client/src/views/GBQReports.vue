@@ -1,10 +1,13 @@
 <template>
-  <v-card height="100%" class="ml-5 mr-5 mb-5">
+  <v-card height="100%" class="ml-5 mr-5 mb-5" tile flat>
     <iframe
-      src="https://datastudio.google.com/reporting/1V3LWY3BX7uonW-cGBFDTiF3ffOE7yZNP/page/lAXy"
-      style="width: 100%; height:100%;"
-      ><p>iframe is not supported</p></iframe
-    >
+      width="100%"
+      height="100%"
+      src="https://datastudio.google.com/embed/reporting/1V3LWY3BX7uonW-cGBFDTiF3ffOE7yZNP/page/lAXy"
+      frameborder="0"
+      style="border: 1px solid gray;"
+      allowfullscreen
+    ></iframe>
   </v-card>
 </template>
 
