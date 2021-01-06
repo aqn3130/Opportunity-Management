@@ -66,5 +66,6 @@ Route.group(function () {
   Route.post("role-permissions", "RoleController.getRolePermissions").middleware("auth");
   // Route.get('/wscalc1', 'SoapController');
   Route.post('opportunity/create','SapController.store').middleware('auth');
+  Route.get('sap-sourced','SapController.getSAPSourced').middleware('auth');
 }).prefix('api');
 

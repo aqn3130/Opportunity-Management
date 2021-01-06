@@ -18,26 +18,51 @@
         <v-card class="d-flex transparent" flat>
           <v-row>
             <v-col>
-              <v-select
-                v-model="selectedStatus"
-                :items="statuses"
-                @change="onSelectChange"
-                style="width: 110px"
-                dark
-                class="caption"
-                dense
-                multiple
-              >
-                <template v-slot:selection="{ item, index }">
-                  <span v-if="index === 0">
-                    <span>{{ item }}</span>
-                  </span>
-                  <span v-if="index === 1" class="caption">
-                    <!--                    (+{{ selectedStatus.length - 1 }} )-->
-                    ...
-                  </span>
-                </template>
-              </v-select>
+              <v-toolbar class="transparent" flat>
+                <v-select
+                  v-model="selectedStatus"
+                  :items="statuses"
+                  @change="onSelectChange"
+                  style="max-width: 110px"
+                  dark
+                  class="caption"
+                  dense
+                  multiple
+                >
+                  <template v-slot:selection="{ item, index }">
+                    <span v-if="index === 0">
+                      <span>{{ item }}</span>
+                    </span>
+                    <span v-if="index === 1" class="caption">
+                      <!--                    (+{{ selectedStatus.length - 1 }} )-->
+                      ...
+                    </span>
+                  </template>
+                </v-select>
+                <v-spacer></v-spacer>
+                <v-card class="pa-2 transparent" flat tile height="50" dark>
+                  <v-btn
+                    x-small
+                    text
+                    @click="onFilterChange('all')"
+                    class="text--accent-2 font-weight-regular"
+                    v-bind:class="fontWeightAll"
+                  >
+                    PLM+SAP
+                  </v-btn>
+                  <v-divider vertical inset class="red"></v-divider>
+                  <v-divider vertical inset class="grey"></v-divider>
+                  <v-btn
+                    x-small
+                    text
+                    @click="onFilterChange('sap')"
+                    class="text--accent-2 font-weight-regular"
+                    v-bind:class="fontWeightSapCreated"
+                  >
+                    SAP
+                  </v-btn>
+                </v-card>
+              </v-toolbar>
               <v-data-table
                 :headers="headers"
                 :items="rows"
@@ -166,7 +191,12 @@ export default {
       page: 0,
       perPage: 5,
       totalLeads: 0,
-      options: {}
+      options: {},
+      fontWeightNormal: 'fontWeightNormal',
+      fontWeightLight: 'fontWeightLight',
+      fontWeightAll: null,
+      fontWeightSapCreated: null,
+      sapCreated: []
     };
   },
   filters: {
@@ -303,7 +333,30 @@ export default {
     clearSearch() {
       this.searchStr = '';
       this.search();
+    },
+    async onFilterChange(filter) {
+      if (filter === 'sap') {
+        this.setPage(1);
+        const { opts, totalOpts } = await this.$store.dispatch('getSAPSourced');
+        this.rows = opts;
+        this.totalLeads = totalOpts;
+      } else if (filter === 'all') {
+        this.searchStr = '';
+        await this.search();
+      }
     }
   }
 };
 </script>
+<style scoped>
+.fontWeightNormal {
+  font-weight: normal;
+  color: forestgreen;
+}
+.fontWeightLight {
+  font-weight: lighter;
+}
+.fontWeight {
+  font-weight: lighter;
+}
+</style>

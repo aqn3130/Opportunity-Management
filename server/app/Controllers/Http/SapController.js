@@ -5,6 +5,29 @@ const { validateAll } = use('Validator');
 const { validations } = require('indicative/validator');
 
 class SapController {
+  async getSAPSourced({ request, response }) {
+    const params = request.all();
+    let page = params.page || '1';
+    let perPage = params.perPage || '10';
+    const pageInt = parseInt(page);
+    let perPageInt = parseInt(perPage);
+    if (perPageInt === -1) perPageInt = 100000000000000000;
+    let total = 0;
+    if ( pageInt === 1 ) page = 0;
+    const offset = pageInt * perPageInt - perPageInt;
+    try {
+      const queryTotal = await request.Knex('Opportunity').where('source', 'SAP');
+      const qry = await request.Knex('Opportunity').where('source', 'SAP')
+        .limit(perPageInt).offset(offset)
+      total = queryTotal.length;
+      return {
+        totalOpts: total,
+        opts: qry
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async store ({ request, response }) {
     const { data } = request.all();
     let dataValid = true;
@@ -64,7 +87,7 @@ class SapController {
     try {
       for (let i = 0; i < data.length; i += 1) {
         data[i].CreationDate = new Date().toISOString().substr(0, 18);
-        data[i].sap_created = 'Yes';
+        data[i].source = 'SAP';
         const type = await getSalesRepType(data[i].Email);
         if (type) data[i].Type = type;
         delete data[i].Email;

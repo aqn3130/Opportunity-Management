@@ -36,7 +36,7 @@ class MainController {
           .where('Email', params.email)
       }
       if (params.searchStr && !params.filter) {
-        console.log('1');
+        // console.log('1');
         let page = params.page || 1;
         let perPage = params.perPage || 10;
         const pageInt = parseInt(page);

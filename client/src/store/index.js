@@ -295,6 +295,21 @@ export default new Vuex.Store({
           window.USER = null;
         }
       });
+    },
+    async getSAPSourced({ commit }) {
+      commit('setLoading', true);
+      const { data } = await axios
+        .get(
+          `sap-sourced?page=${this.state.page}&&perPage=${this.state.perPage}`
+        )
+        .catch(e => {
+          if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+            localStorage.removeItem('token');
+            window.USER = null;
+          }
+        });
+      commit('setLoading', false);
+      return data;
     }
   },
   modules: {

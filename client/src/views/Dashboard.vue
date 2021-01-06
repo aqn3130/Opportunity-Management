@@ -267,9 +267,9 @@
                     {{ item.Country }}
                   </span>
                 </template>
-                <template v-slot:item.sap_created="{ item }">
+                <template v-slot:item.source="{ item }">
                   <span class="caption">
-                    {{ item.sap_created | formatSAP }}
+                    {{ item.source | formatSAP }}
                   </span>
                 </template>
               </v-data-table>
@@ -318,7 +318,7 @@ export default {
         ChannelType: [],
         Currency: [],
         Country: [],
-        sap_created: []
+        source: []
       },
       activeFilters: {},
       selectedHeaders: [],
@@ -338,8 +338,8 @@ export default {
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     formatSAP(val) {
-      if (!val) return 'No';
-      return val === 'Yes' ? 'Yes' : 'No';
+      if (!val) return 'PLM';
+      return val === 'PLM' ? 'PLM' : 'SAP';
     }
   },
   async created() {
@@ -368,12 +368,12 @@ export default {
           value: 'OpportunityName'
         },
         {
-          text: 'SAP-Created',
+          text: 'Source',
           align: 'left',
-          value: 'sap_created',
+          value: 'source',
           filter: value => {
-            return this.activeFilters.sap_created
-              ? this.activeFilters.sap_created.includes(value)
+            return this.activeFilters.source
+              ? this.activeFilters.source.includes(value)
               : true;
           }
           // width: '120'
