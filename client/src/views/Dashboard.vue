@@ -15,10 +15,7 @@
         class="mb-10 overflow-auto"
         style="z-index: 2; margin-top: -160px;"
       >
-        <v-card
-          class="d-flex transparent"
-          flat
-        >
+        <v-card class="d-flex transparent" flat>
           <v-row>
             <v-col>
               <!--              <v-select-->
@@ -80,7 +77,12 @@
                           </v-icon>
                         </v-btn>
                       </template>
-                      <v-list flat dense class="pa-0 overflow-auto" max-height="300">
+                      <v-list
+                        flat
+                        dense
+                        class="pa-0 overflow-auto"
+                        max-height="300"
+                      >
                         <v-list-item-group
                           multiple
                           v-model="activeFilters[header.value]"
@@ -265,6 +267,11 @@
                     {{ item.Country }}
                   </span>
                 </template>
+                <template v-slot:item.sap_created="{ item }">
+                  <span class="caption">
+                    {{ item.sap_created | formatSAP }}
+                  </span>
+                </template>
               </v-data-table>
             </v-col>
           </v-row>
@@ -306,12 +313,18 @@ export default {
       perPage: 5,
       totalLeads: 0,
       options: {},
-      filters: { Status: [], ChannelType: [], Currency: [], Country: [] },
+      filters: {
+        Status: [],
+        ChannelType: [],
+        Currency: [],
+        Country: [],
+        sap_created: []
+      },
       activeFilters: {},
       selectedHeaders: [],
       headersFilter: [],
       dialogColFilter: false,
-      toggleDense:true
+      toggleDense: true
     };
   },
   filters: {
@@ -323,16 +336,25 @@ export default {
     formatCurrency(amount) {
       if (!amount) return '';
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    formatSAP(val) {
+      if (!val) return 'No';
+      return val === 'Yes' ? 'Yes' : 'No';
     }
   },
   async created() {
-    if (!this.currentUser) await this.$router.push({name: 'Login'});
+    let initialCols = [];
+    if (!this.currentUser) await this.$router.push({ name: 'Login' });
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
     this.rows = await this.getRecords();
     if (this.loading) this.setLoading(false);
     // this.selectedStatus.push(this.statuses[0]);
     this.headersFilter = Object.values(this.headers);
-    this.selectedHeaders = this.headersFilter;
+    initialCols = Object.values(this.headers);
+    initialCols.splice(2, 1);
+    // initialCols.splice(5, 1);
+    this.selectedHeaders = initialCols;
+    // this.selectedHeaders = this.headersFilter;
   },
   computed: {
     showHeaders() {
@@ -344,6 +366,17 @@ export default {
           text: 'Opportunity Name',
           align: 'left',
           value: 'OpportunityName'
+        },
+        {
+          text: 'SAP-Created',
+          align: 'left',
+          value: 'sap_created',
+          filter: value => {
+            return this.activeFilters.sap_created
+              ? this.activeFilters.sap_created.includes(value)
+              : true;
+          }
+          // width: '120'
         },
         {
           text: 'Country',
@@ -471,7 +504,7 @@ export default {
 
     clearAll(col) {
       this.activeFilters[col] = [];
-    },
+    }
     // async onSelectChange(status) {
     // this.selectedStatus = status;
     // console.log(status);
