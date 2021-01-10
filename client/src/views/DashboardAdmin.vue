@@ -18,7 +18,7 @@
         <v-card class="d-flex transparent" flat>
           <v-row>
             <v-col>
-              <v-toolbar class="transparent" flat>
+              <v-toolbar class="transparent" flat dense>
                 <v-select
                   v-model="selectedStatus"
                   :items="statuses"
@@ -40,22 +40,21 @@
                   </template>
                 </v-select>
                 <v-spacer></v-spacer>
-                <v-card class="pa-2 transparent" flat tile height="50" dark>
+                <v-card class="py-2 transparent" flat tile height="50" dark>
                   <v-btn
                     x-small
                     text
-                    @click="onFilterChange('all')"
+                    @click="onAllFilterSelect"
                     class="text--accent-2 font-weight-regular"
                     v-bind:class="fontWeightAll"
                   >
-                    PLM+SAP
+                    SAP & PLM
                   </v-btn>
-                  <v-divider vertical inset class="red"></v-divider>
-                  <v-divider vertical inset class="grey"></v-divider>
+                  <v-divider vertical inset class="white"></v-divider>
                   <v-btn
                     x-small
                     text
-                    @click="onFilterChange('sap')"
+                    @click="onSAPFilterSelect"
                     class="text--accent-2 font-weight-regular"
                     v-bind:class="fontWeightSapCreated"
                   >
@@ -196,7 +195,8 @@ export default {
       fontWeightLight: 'fontWeightLight',
       fontWeightAll: null,
       fontWeightSapCreated: null,
-      sapCreated: []
+      sapCreated: [],
+      sapFilter: false
     };
   },
   filters: {
@@ -212,6 +212,8 @@ export default {
   },
   async created() {
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
+    this.fontWeightAll = this.fontWeightNormal;
+    this.fontWeightSapCreated = this.fontWeightLight;
     // await this.getRecords();
     // this.selectedStatus.push(this.statuses[0]);
   },
@@ -246,13 +248,17 @@ export default {
   watch: {
     options: {
       handler() {
-        this.setSearchStr(this.searchStr);
-        // this.setFilter(this.statuses[0]);
-        this.getDataFromApi().then(data => {
-          this.rows = data.items;
-          this.totalLeads = data.total;
-          // console.log(data);
-        });
+        if (this.sapFilter) {
+          this.onFilterChange('sap');
+        } else {
+          this.setSearchStr(this.searchStr);
+          // this.setFilter(this.statuses[0]);
+          this.getDataFromApi().then(data => {
+            this.rows = data.items;
+            this.totalLeads = data.total;
+            // console.log(data);
+          });
+        }
       },
       deep: true
     }
@@ -280,16 +286,16 @@ export default {
       // console.log(item);
     },
     async onSelectChange(statuses) {
-      // let filter = '';
-      // if (status.trim().toLowerCase() !== 'all') {
-      //   filter = status;
-      // }
       this.setFilter(statuses);
       if (this.searchStr) this.setSearchStr(this.searchStr);
-      this.getDataFromApi().then(data => {
-        this.rows = data.items;
-        this.totalLeads = data.total;
-      });
+      if (this.sapFilter) {
+        this.onSAPFilterSelect();
+      } else {
+        this.getDataFromApi().then(data => {
+          this.rows = data.items;
+          this.totalLeads = data.total;
+        });
+      }
     },
     getDataFromApi() {
       return new Promise(async (resolve, reject) => {
@@ -325,10 +331,14 @@ export default {
     },
     async search() {
       this.setSearchStr(this.searchStr);
-      this.getDataFromApi().then(data => {
-        this.rows = data.items;
-        this.totalLeads = data.total;
-      });
+      if (this.sapFilter) {
+        this.onSAPFilterSelect();
+      } else {
+        this.getDataFromApi().then(data => {
+          this.rows = data.items;
+          this.totalLeads = data.total;
+        });
+      }
     },
     clearSearch() {
       this.searchStr = '';
@@ -336,14 +346,31 @@ export default {
     },
     async onFilterChange(filter) {
       if (filter === 'sap') {
-        this.setPage(1);
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightNormal;
+        const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+        this.setPage(page);
+        this.setPerPage(itemsPerPage);
+        this.sapFilter = true;
+        // this.setPage(1);
         const { opts, totalOpts } = await this.$store.dispatch('getSAPSourced');
         this.rows = opts;
         this.totalLeads = totalOpts;
       } else if (filter === 'all') {
+        this.fontWeightAll = this.fontWeightNormal;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.sapFilter = false;
         this.searchStr = '';
         await this.search();
       }
+    },
+    onAllFilterSelect() {
+      this.sapFilter = false;
+      this.onFilterChange('all');
+    },
+    onSAPFilterSelect() {
+      this.sapFilter = true;
+      this.onFilterChange('sap');
     }
   }
 };
@@ -351,7 +378,7 @@ export default {
 <style scoped>
 .fontWeightNormal {
   font-weight: normal;
-  color: forestgreen;
+  text-decoration-line: underline;
 }
 .fontWeightLight {
   font-weight: lighter;

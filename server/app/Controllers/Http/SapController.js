@@ -6,6 +6,7 @@ const { validations } = require('indicative/validator');
 
 class SapController {
   async getSAPSourced({ request, response }) {
+    let query = undefined;
     const params = request.all();
     let page = params.page || '1';
     let perPage = params.perPage || '10';
@@ -15,18 +16,118 @@ class SapController {
     let total = 0;
     if ( pageInt === 1 ) page = 0;
     const offset = pageInt * perPageInt - perPageInt;
-    try {
-      const queryTotal = await request.Knex('Opportunity').where('source', 'SAP');
-      const qry = await request.Knex('Opportunity').where('source', 'SAP')
+
+    if (params.searchStr && !params.filter) {
+      const str = `%${params.searchStr}%`;
+      const queryTotal = await request.Knex('Opportunity').where(function() {
+        this.where('Type','like', str)
+          .orWhere('SalesRep', 'like', str)
+          .orWhere('OpportunityName','like', str)
+          .orWhere('CustomerName','like', str)
+          .orWhere('Country','like', str)
+          .orWhere('ChannelType','like', str)
+          .orWhere('IndustryType','like', str)
+          .orWhere('Origin','like', str)
+          .orWhere('SalesStage','like', str)
+          .orWhere('GrossValue','like', str)
+          .orWhere('BPID','like', str)
+          .orWhere('MemberOfConsortia','like', str)
+      }).andWhere('source', 'SAP')
+      const qry = await request.Knex('Opportunity').where(function() {
+        this.where('Type','like', str)
+          .orWhere('SalesRep', 'like', str)
+          .orWhere('OpportunityName','like', str)
+          .orWhere('CustomerName','like', str)
+          .orWhere('Country','like', str)
+          .orWhere('ChannelType','like', str)
+          .orWhere('IndustryType','like', str)
+          .orWhere('Origin','like', str)
+          .orWhere('SalesStage','like', str)
+          .orWhere('GrossValue','like', str)
+          .orWhere('BPID','like', str)
+          .orWhere('MemberOfConsortia','like', str)
+      }).andWhere('source', 'SAP')
         .limit(perPageInt).offset(offset)
       total = queryTotal.length;
-      return {
+      query = {
         totalOpts: total,
         opts: qry
       }
-    } catch (e) {
-      console.log(e);
     }
+    if (params.filter && !params.searchStr) {
+      const values = params.filter.split(',');
+      try {
+        const queryTotal = await request.Knex('Opportunity')
+          .where('source', 'SAP')
+          .whereIn('Status', values)
+        const qry = await request.Knex('Opportunity')
+          .where('source', 'SAP')
+          .whereIn('Status', values)
+          .limit(perPageInt).offset(offset)
+        total = queryTotal.length;
+        query = {
+          totalOpts: total,
+          opts: qry
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    if (params.filter && params.searchStr) {
+      const str = `%${params.searchStr}%`;
+      const statuses = params.filter.split(',');
+      const queryTotal = await request.Knex('Opportunity').where(function() {
+        this.where('Type','like', str)
+          .orWhere('SalesRep', 'like', str)
+          .orWhere('OpportunityName','like', str)
+          .orWhere('CustomerName','like', str)
+          .orWhere('Country','like', str)
+          .orWhere('ChannelType','like', str)
+          .orWhere('IndustryType','like', str)
+          .orWhere('Origin','like', str)
+          .orWhere('SalesStage','like', str)
+          .orWhere('GrossValue','like', str)
+          .orWhere('BPID','like', str)
+          .orWhere('MemberOfConsortia','like', str)
+      }).whereIn('Status', statuses)
+        .andWhere('source', 'SAP')
+      const qry = await request.Knex('Opportunity').where(function() {
+        this.where('Type','like', str)
+          .orWhere('SalesRep', 'like', str)
+          .orWhere('OpportunityName','like', str)
+          .orWhere('CustomerName','like', str)
+          .orWhere('Country','like', str)
+          .orWhere('ChannelType','like', str)
+          .orWhere('IndustryType','like', str)
+          .orWhere('Origin','like', str)
+          .orWhere('SalesStage','like', str)
+          .orWhere('GrossValue','like', str)
+          .orWhere('BPID','like', str)
+          .orWhere('MemberOfConsortia','like', str)
+      }).whereIn('Status', statuses)
+        .andWhere('source', 'SAP')
+        .limit(perPageInt).offset(offset)
+      total = queryTotal.length;
+      query = {
+        totalOpts: total,
+        opts: qry
+      }
+    }
+    if (!params.filter && !params.searchStr) {
+      try {
+        const queryTotal = await request.Knex('Opportunity').where('source', 'SAP');
+        const qry = await request.Knex('Opportunity').where('source', 'SAP')
+          .limit(perPageInt).offset(offset)
+        total = queryTotal.length;
+        query = {
+          totalOpts: total,
+          opts: qry
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    return query;
   }
   async store ({ request, response }) {
     const { data } = request.all();
@@ -79,7 +180,8 @@ class SapController {
       response.status(201).send(created_opp);
     } catch (e) {
       console.log(e);
-      response.status(400).send(e.sqlMessage);
+      if (e.sqlMessage) response.status(400).send(e.sqlMessage);
+      else response.status(400).send(e);
     }
   }
 }

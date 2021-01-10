@@ -298,9 +298,10 @@ export default new Vuex.Store({
     },
     async getSAPSourced({ commit }) {
       commit('setLoading', true);
+      if (this.state.searchStr === null) this.state.searchStr = '';
       const { data } = await axios
         .get(
-          `sap-sourced?page=${this.state.page}&&perPage=${this.state.perPage}`
+          `sap-sourced?page=${this.state.page}&&perPage=${this.state.perPage}&&searchStr=${this.state.searchStr}&&filter=${this.state.filter}`
         )
         .catch(e => {
           if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
