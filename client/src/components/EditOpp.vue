@@ -493,7 +493,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="loadingDialog" width="200">
-      <v-card>
+      <v-card :loading="loadingDialog">
         <v-card-text class="pa-8 body-2">
           Loading...
         </v-card-text>

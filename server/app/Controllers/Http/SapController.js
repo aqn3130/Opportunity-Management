@@ -146,7 +146,10 @@ class SapController {
     for (let i = 0; i < data.length; i += 1) {
       const validation = await validateAll(data[i], rules);
       if(validation.fails()) {
-        response.status(400).send(validation.messages());
+        const validationError = {
+          Error: validation.messages()
+        }
+        response.status(400).send(validationError);
         return;
       }
     }
@@ -177,11 +180,17 @@ class SapController {
         created_opp.push(res);
       }
       // console.log(created_opp);
-      response.status(201).send(created_opp);
+      const resData = {
+        Successful: created_opp
+      }
+      response.status(201).send(resData);
     } catch (e) {
       console.log(e);
-      if (e.sqlMessage) response.status(400).send(e.sqlMessage);
-      else response.status(400).send(e);
+      const errMessage = {};
+      if (e.sqlMessage) errMessage.Error = e.sqlMessage; // response.status(400).send(e.sqlMessage);
+      else errMessage.Error = e; //response.status(400).send(e);
+
+      response.status(400).send(errMessage);
     }
   }
 }
