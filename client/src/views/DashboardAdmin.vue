@@ -40,27 +40,27 @@
                   </template>
                 </v-select>
                 <v-spacer></v-spacer>
-                <v-card class="py-2 transparent" flat tile height="50" dark>
-                  <v-btn
-                    x-small
-                    text
-                    @click="onAllFilterSelect"
-                    class="text--accent-2 font-weight-regular"
-                    v-bind:class="fontWeightAll"
-                  >
-                    SAP & PLM
-                  </v-btn>
-                  <v-divider vertical inset class="white"></v-divider>
-                  <v-btn
-                    x-small
-                    text
-                    @click="onSAPFilterSelect"
-                    class="text--accent-2 font-weight-regular"
-                    v-bind:class="fontWeightSapCreated"
-                  >
-                    SAP
-                  </v-btn>
-                </v-card>
+<!--                <v-card class="py-2 transparent" flat tile height="50" dark>-->
+<!--                  <v-btn-->
+<!--                    x-small-->
+<!--                    text-->
+<!--                    @click="onAllFilterSelect"-->
+<!--                    class="text&#45;&#45;accent-2 font-weight-regular"-->
+<!--                    v-bind:class="fontWeightAll"-->
+<!--                  >-->
+<!--                    SAP & PLM-->
+<!--                  </v-btn>-->
+<!--                  <v-divider vertical inset class="white"></v-divider>-->
+<!--                  <v-btn-->
+<!--                    x-small-->
+<!--                    text-->
+<!--                    @click="onSAPFilterSelect"-->
+<!--                    class="text&#45;&#45;accent-2 font-weight-regular"-->
+<!--                    v-bind:class="fontWeightSapCreated"-->
+<!--                  >-->
+<!--                    SAP-->
+<!--                  </v-btn>-->
+<!--                </v-card>-->
               </v-toolbar>
               <v-data-table
                 :headers="headers"

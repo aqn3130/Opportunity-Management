@@ -267,11 +267,11 @@
                     {{ item.Country }}
                   </span>
                 </template>
-                <template v-slot:item.source="{ item }">
-                  <span class="caption">
-                    {{ item.source | formatSAP }}
-                  </span>
-                </template>
+<!--                <template v-slot:item.source="{ item }">-->
+<!--                  <span class="caption">-->
+<!--                    {{ item.source | formatSAP }}-->
+<!--                  </span>-->
+<!--                </template>-->
               </v-data-table>
             </v-col>
           </v-row>
@@ -316,9 +316,9 @@ export default {
       filters: {
         Status: [],
         ChannelType: [],
-        Currency: [],
+        // Currency: [],
         Country: [],
-        source: []
+        // source: []
       },
       activeFilters: {},
       selectedHeaders: [],
@@ -350,11 +350,11 @@ export default {
     if (this.loading) this.setLoading(false);
     // this.selectedStatus.push(this.statuses[0]);
     this.headersFilter = Object.values(this.headers);
-    initialCols = Object.values(this.headers);
-    initialCols.splice(2, 1);
+    // initialCols = Object.values(this.headers);
+    // initialCols.splice(2, 1);
     // initialCols.splice(5, 1);
-    this.selectedHeaders = initialCols;
-    // this.selectedHeaders = this.headersFilter;
+    // this.selectedHeaders = initialCols;
+    this.selectedHeaders = this.headersFilter;
   },
   computed: {
     showHeaders() {
@@ -367,17 +367,17 @@ export default {
           align: 'left',
           value: 'OpportunityName'
         },
-        {
-          text: 'Source',
-          align: 'left',
-          value: 'source',
-          filter: value => {
-            return this.activeFilters.source
-              ? this.activeFilters.source.includes(value)
-              : true;
-          }
-          // width: '120'
-        },
+        // {
+        //   text: 'Source',
+        //   align: 'left',
+        //   value: 'source',
+        //   filter: value => {
+        //     return this.activeFilters.source
+        //       ? this.activeFilters.source.includes(value)
+        //       : true;
+        //   }
+        //   // width: '120'
+        // },
         {
           text: 'Country',
           align: 'left',
@@ -424,12 +424,12 @@ export default {
         {
           text: 'Currency',
           align: 'left',
-          value: 'Currency',
-          filter: value => {
-            return this.activeFilters.Currency
-              ? this.activeFilters.Currency.includes(value)
-              : true;
-          }
+          value: 'Currency'
+          // filter: value => {
+          //   return this.activeFilters.Currency
+          //     ? this.activeFilters.Currency.includes(value)
+          //     : true;
+          // }
           // width: '120'
         },
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
