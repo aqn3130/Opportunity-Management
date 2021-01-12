@@ -137,6 +137,7 @@ class SapController {
     }
     const rules = {
       SalesRep: 'required',
+      Email: 'required|email',
       Type: 'required|in:SPS,ISM',
       OpportunityName: 'required',
       CustomerName: 'required',
@@ -154,8 +155,31 @@ class SapController {
       }
     }
 
+    async function getSalesRep(email) {
+      const user = await request.Knex('SalesRep').where('Email', email);
+      let salesRep = undefined;
+      if (user.length) {
+        const res = await request.Knex('SalesRep').where('Email', email).select('Full_Name');
+        if (res.length) salesRep = res[0].Full_Name;
+      } else {
+        let fullName = email.substring(0, email.indexOf('@')).toLowerCase();
+        const res = await request.Knex('SalesRep').where('Full_Name', fullName).select('Full_Name');
+        if (res.length) salesRep = res[0].Full_Name;
+      }
+      return salesRep;
+    }
+
     try {
       for (let i = 0; i < data.length; i += 1) {
+        const salesRep = await getSalesRep(data[i].Email);
+        if (!salesRep) {
+          const validationError = {
+            Error: 'Sales-Rep not found, please check Email field'
+          }
+          response.status(400).send(validationError);
+          return;
+        }
+        if (!currency.includes(data[i].Currency)) delete data[i].Currency;
         data[i].CreationDate = new Date().toISOString().substr(0, 18);
         data[i].OpportunityStartDate = new Date().toISOString().substr(0, 18);
         data[i].ExpectedCloseDate = new Date(new Date().getFullYear(), 11, 31).toISOString().substr(0, 18);
@@ -163,7 +187,8 @@ class SapController {
         data[i].SalesStage = '1 - Prospect / Lead';
         data[i].Status = 'In Process';
         data[i].source = 'SAP';
-        if (!currency.includes(data[i].Currency)) delete data[i].Currency;
+        data[i].SalesRep = salesRep;
+        delete data[i].Email;
       }
 
       const created_ids = [];
