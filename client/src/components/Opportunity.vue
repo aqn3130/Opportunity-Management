@@ -10,7 +10,7 @@
         <v-row style="padding: 15px 20px 25px 20px" class="px-16">
           <v-col md="6">
             <v-text-field
-              v-model="currentUser.user.username"
+              v-model="salesRep"
               :rules="nameRules"
               label="Sales Rep"
               required
@@ -311,6 +311,7 @@ export default {
     select: null,
     countryItems: [],
     checkbox: false,
+    salesRep: null,
     salesRepType: null,
     date: new Date().toISOString().substr(0, 10),
     expectedCloseDate: null,
@@ -498,12 +499,8 @@ export default {
   async created() {
     this.setPage('');
     this.onStatusChange(this.status);
-    await this.$store.dispatch('setCurrentTable', 'SalesRep');
-    const response = await this.$store.dispatch(
-      'getSalesRep',
-      this.currentUser.user.email
-    );
-    this.salesRepType = response[0].Type;
+    this.salesRepType = this.currentUser.salesRep.Type;
+    this.salesRep = this.currentUser.salesRep.Full_Name;
     await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
     const countries = await this.$store.dispatch('getRecords', '');
     Object.keys(countries).forEach((value, index) => {

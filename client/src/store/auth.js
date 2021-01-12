@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from '../plugins/axios';
 import Auth from '@/helpers/auth';
-import store from 'element-ui/packages/cascader-panel/src/store';
+import store from '@/store';
 Vue.use(Vuex);
 
 export default {
@@ -55,18 +55,30 @@ export default {
       commit('setCurrentUser', null);
       window.USER = null;
     },
-    async getCurrentUser({ commit }) {
+    async getCurrentUser({ commit, dispatch }) {
       const data = await axios({
         method: 'get',
         url: `get-current-user`
       })
-        .then(function({ data }) {
+        .then(async function({ data }) {
           commit('setCurrentUser', data);
+          await dispatch('getSalesRep');
           Vue.prototype.$auth = new Auth(data.permissions, data.roles);
         })
         .catch(function(e) {
           console.log(e);
         });
+    },
+    async getSalesRep({ commit, state, dispatch }) {
+      await store.dispatch('setCurrentTable', 'SalesRep');
+      const res = await store.dispatch(
+        'getSalesRep',
+        state.currentUser.user.email
+      );
+      if (res) {
+        state.currentUser.salesRep = res[0];
+        commit('setCurrentUser', state.currentUser);
+      }
     }
   }
 };

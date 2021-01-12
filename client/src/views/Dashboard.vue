@@ -450,7 +450,7 @@ export default {
     getRecords: async function() {
       return await this.$store.dispatch(
         'getCurrentSalesRepOpts',
-        this.currentUser.user.username
+        this.currentUser.salesRep.Full_Name
       );
     },
     ...mapMutations({

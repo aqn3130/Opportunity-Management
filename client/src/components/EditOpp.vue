@@ -602,10 +602,12 @@ export default {
       '2019',
       '<2020',
       '2020',
-      '2021'
+      '<2021',
+      '2021',
+      '2022'
     ],
     productItems: [],
-    typeOfBusinessOptions: ['New', 'Recruiting', 'Renewal'],
+    typeOfBusinessOptions: ['New', 'Recurring', 'Renewal'],
     products: [],
     licenseStartDate: null,
     licenseEndDate: null,

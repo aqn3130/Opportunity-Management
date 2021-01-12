@@ -97,12 +97,12 @@
               <v-list-item-title>Products</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/campaign" v-if="$auth.isAdmin()">
-            <v-list-item-icon><v-icon>campaign</v-icon></v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Campaign</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+<!--          <v-list-item to="/campaign" v-if="$auth.isAdmin()">-->
+<!--            <v-list-item-icon><v-icon>campaign</v-icon></v-list-item-icon>-->
+<!--            <v-list-item-content>-->
+<!--              <v-list-item-title>Campaign</v-list-item-title>-->
+<!--            </v-list-item-content>-->
+<!--          </v-list-item>-->
           <v-list-item to="/salesFunnel" v-if="$auth.isAdmin()">
             <v-list-item-icon><v-icon>local_atm</v-icon></v-list-item-icon>
             <v-list-item-content>
