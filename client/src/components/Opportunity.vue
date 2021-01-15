@@ -349,7 +349,7 @@ export default {
       'Other'
     ],
     licenseId: null,
-    forecastCategory: null,
+    forecastCategory: 'Pipeline',
     forecastCategoryItems: ['Pipeline', 'Committed', 'Best Case'],
     agentName: null,
     currency: null,

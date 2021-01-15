@@ -61,12 +61,12 @@
               <v-list-item-title>New Opportunity</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/activities">
-            <v-list-item-icon><v-icon>local_activity</v-icon></v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Activity Tracker</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+<!--          <v-list-item to="/activities">-->
+<!--            <v-list-item-icon><v-icon>local_activity</v-icon></v-list-item-icon>-->
+<!--            <v-list-item-content>-->
+<!--              <v-list-item-title>Activity Tracker</v-list-item-title>-->
+<!--            </v-list-item-content>-->
+<!--          </v-list-item>-->
           <v-list-item to="/opportunities" v-if="$auth.isAdmin()">
             <v-list-item-icon><v-icon>select_all</v-icon></v-list-item-icon>
             <v-list-item-content>

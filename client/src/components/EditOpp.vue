@@ -49,7 +49,8 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="opportunityStartDate"
+                  :value="opportunityStartDate | formatDate"
+                  @input="onOppStartDateChange"
                   label="Opportunity Start Date"
                   prepend-icon="event"
                   readonly
@@ -208,7 +209,8 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="expectedCloseDate"
+                  :value="expectedCloseDate | formatDate"
+                  @input="onExpectedCloseDateChange"
                   label="Expected Close Date *"
                   prepend-icon="event"
                   readonly
@@ -654,6 +656,16 @@ export default {
     unsavedChangesDialog: false,
     goHome: false
   }),
+  filters: {
+    formatDate(date) {
+      if (!date) return null;
+      date = date.toString();
+      const format = 'YYYY-MM-DD';
+      return moment(date)
+        .utc()
+        .format(format);
+    }
+  },
   methods: {
     ...mapMutations({
       setPage: 'setPage',
@@ -866,11 +878,9 @@ export default {
       if (!date) return null;
       date = date.toString();
       const format = 'YYYY-MM-DD';
-      return (
-        moment(date)
-          // .utc()
-          .format(format)
-      );
+      return moment(date)
+        .utc()
+        .format(format);
     },
     addProduct() {
       const product = {
@@ -1051,6 +1061,12 @@ export default {
     formatGrossValue(value) {
       value = value.replace(/,/g, '');
       return value;
+    },
+    onExpectedCloseDateChange(value) {
+      this.expectedCloseDate = value;
+    },
+    onOppStartDateChange(value) {
+      this.opportunityStartDate = value;
     }
   },
   computed: {

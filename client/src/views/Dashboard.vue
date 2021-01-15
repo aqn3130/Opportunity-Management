@@ -154,66 +154,66 @@
                       @click:clear="clearSearch"
                     ></v-text-field>
                     <v-spacer></v-spacer>
-                    <div class="text-left">
-                      <v-dialog v-model="dialogColFilter" width="500">
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn
-                            text
-                            v-bind="attrs"
-                            v-on="on"
-                            light
-                            color="grey"
-                            small
-                          >
-                            <v-icon>view_column</v-icon>
-                          </v-btn>
-                        </template>
-                        <v-card>
-                          <v-card-title class="headline grey lighten-2">
-                            Column Filter
-                          </v-card-title>
-                          <v-card-text class="py-10">
-                            <div>
-                              <v-select
-                                v-model="selectedHeaders"
-                                :items="headersFilter"
-                                label="Select Columns"
-                                multiple
-                                outlined
-                                return-object
-                              >
-                                <template v-slot:selection="{ item, index }">
-                                  <v-chip v-if="index < 2">
-                                    <span>{{ item.text }}</span>
-                                  </v-chip>
-                                  <span
-                                    v-if="index === 2"
-                                    class="grey--text caption"
-                                    >(+{{
-                                      selectedHeaders.length - 2
-                                    }}
-                                    others)</span
-                                  >
-                                </template>
-                              </v-select>
-                            </div>
-                          </v-card-text>
+<!--                    <div class="text-left">-->
+<!--                      <v-dialog v-model="dialogColFilter" width="500">-->
+<!--                        <template v-slot:activator="{ on, attrs }">-->
+<!--                          <v-btn-->
+<!--                            text-->
+<!--                            v-bind="attrs"-->
+<!--                            v-on="on"-->
+<!--                            light-->
+<!--                            color="grey"-->
+<!--                            small-->
+<!--                          >-->
+<!--                            <v-icon>view_column</v-icon>-->
+<!--                          </v-btn>-->
+<!--                        </template>-->
+<!--                        <v-card>-->
+<!--                          <v-card-title class="headline grey lighten-2">-->
+<!--                            Column Filter-->
+<!--                          </v-card-title>-->
+<!--                          <v-card-text class="py-10">-->
+<!--                            <div>-->
+<!--                              <v-select-->
+<!--                                v-model="selectedHeaders"-->
+<!--                                :items="headersFilter"-->
+<!--                                label="Select Columns"-->
+<!--                                multiple-->
+<!--                                outlined-->
+<!--                                return-object-->
+<!--                              >-->
+<!--                                <template v-slot:selection="{ item, index }">-->
+<!--                                  <v-chip v-if="index < 2">-->
+<!--                                    <span>{{ item.text }}</span>-->
+<!--                                  </v-chip>-->
+<!--                                  <span-->
+<!--                                    v-if="index === 2"-->
+<!--                                    class="grey&#45;&#45;text caption"-->
+<!--                                    >(+{{-->
+<!--                                      selectedHeaders.length - 2-->
+<!--                                    }}-->
+<!--                                    others)</span-->
+<!--                                  >-->
+<!--                                </template>-->
+<!--                              </v-select>-->
+<!--                            </div>-->
+<!--                          </v-card-text>-->
 
-                          <v-divider></v-divider>
+<!--                          <v-divider></v-divider>-->
 
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                              color="primary"
-                              text
-                              @click="dialogColFilter = false"
-                            >
-                              Done
-                            </v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                    </div>
+<!--                          <v-card-actions>-->
+<!--                            <v-spacer></v-spacer>-->
+<!--                            <v-btn-->
+<!--                              color="primary"-->
+<!--                              text-->
+<!--                              @click="dialogColFilter = false"-->
+<!--                            >-->
+<!--                              Done-->
+<!--                            </v-btn>-->
+<!--                          </v-card-actions>-->
+<!--                        </v-card>-->
+<!--                      </v-dialog>-->
+<!--                    </div>-->
                   </v-toolbar>
                 </template>
                 <template v-slot:item.OpportunityName="{ item }">
