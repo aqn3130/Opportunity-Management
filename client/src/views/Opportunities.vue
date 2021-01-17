@@ -43,9 +43,29 @@
             <v-spacer></v-spacer>
           </v-toolbar>
         </template>
+        <template v-slot:item.OpportunityStartDate="{ item }">
+          <span class="caption">
+            {{ item.OpportunityStartDate | convertDate }}
+          </span>
+        </template>
         <template v-slot:item.ExpectedCloseDate="{ item }">
           <span class="caption">
             {{ item.ExpectedCloseDate | convertDate }}
+          </span>
+        </template>
+        <template v-slot:item.TrialStartDate="{ item }">
+          <span class="caption">
+            {{ item.TrialStartDate | convertDate }}
+          </span>
+        </template>
+        <template v-slot:item.TrialEndDate="{ item }">
+          <span class="caption">
+            {{ item.TrialEndDate | convertDate }}
+          </span>
+        </template>
+        <template v-slot:item.ProductDemoDate="{ item }">
+          <span class="caption">
+            {{ item.ProductDemoDate | convertDate }}
           </span>
         </template>
         <template v-slot:item.GrossValue="{ item }">
@@ -138,9 +158,18 @@ export default {
   computed: {
     headers() {
       return [
+        { text: 'ID', align: 'left', value: 'Id' },
+        { text: 'Sales Rep', align: 'left', value: 'SalesRep' },
+        { text: 'Type', align: 'left', value: 'Type' },
         { text: 'Opportunity Name', align: 'left', value: 'OpportunityName' },
+        { text: 'Customer Name', align: 'left', value: 'CustomerName' },
+        { text: 'BPID', align: 'left', value: 'BPID' },
         { text: 'Country', align: 'left', value: 'Country' },
         { text: 'Channel Type', align: 'left', value: 'ChannelType' },
+        { text: 'Industry Type', align: 'left', value: 'IndustryType' },
+        { text: 'Origin', align: 'left', value: 'Origin' },
+        { text: 'Lead ID', align: 'left', value: 'LeadID' },
+        { text: 'Opportunity Start Date', align: 'left', value: 'OpportunityStartDate' },
         {
           text: 'Status',
           align: 'left',
@@ -151,14 +180,28 @@ export default {
             return value === this.selectedStatus;
           }
         },
+        { text: 'State', align: 'left', value: 'State' },
+        { text: 'Sales Stage', align: 'left', value: 'SalesStage' },
+        { text: 'Stage Weighting', align: 'left', value: 'StageWeighting' },
         { text: 'License ID', align: 'left', value: 'LicenseID' },
+        { text: 'Forecast Category', align: 'left', value: 'ForecastCategory' },
         {
           text: 'Expected Close Date',
           align: 'left',
           value: 'ExpectedCloseDate'
         },
+        { text: 'Agent Name', align: 'left', value: 'AgentName' },
         { text: 'Currency', align: 'left', value: 'Currency' },
-        { text: 'Gross Value', align: 'left', value: 'GrossValue' }
+        { text: 'Allocation Year Rule', align: 'left', value: 'AllocationYearRule' },
+        { text: 'Gross Value', align: 'left', value: 'GrossValue' },
+        { text: 'Value Proposition Document', align: 'left', value: 'ValuePropositionDocument' },
+        { text: 'Product Demo Status', align: 'left', value: 'ProductDemoStatus' },
+        { text: 'Trial Status', align: 'left', value: 'TrialStatus' },
+        { text: 'Trial Start Date', align: 'left', value: 'TrialStartDate' },
+        { text: 'Number Of Recommendation Letters', align: 'left', value: 'NumberOfRecommendationLetters' },
+        // { text: 'Customer Expansion Program', align: 'left', value: 'CustomerExpansionProgram' },
+        { text: 'Product Demo Date', align: 'left', value: 'ProductDemoDate' },
+        { text: 'Trial End Date', align: 'left', value: 'TrialEndDate' },
       ];
     },
     ...mapState(['loading', 'opportunityId']),
