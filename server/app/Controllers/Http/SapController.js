@@ -174,7 +174,13 @@ class SapController {
         const salesRep = await getSalesRep(data[i].Email);
         if (!salesRep) {
           const validationError = {
-            Error: 'Sales-Rep not found, please check Email field'
+            "Error": [
+              {
+                "message": "Email does not match a Sales-Rep account",
+                "field": "Email",
+                "validation": "required"
+              }
+            ]
           }
           response.status(400).send(validationError);
           return;
