@@ -199,8 +199,17 @@ class SapController {
 
       const created_ids = [];
       for ( let j = 0; j < data.length; j += 1) {
+        const notes = data[j].Notes;
+        delete data[j].Notes;
         const res = await request.Knex
           .insert(data[j]).into('Opportunity');
+        for (let n = 0; n < notes.length; n += 1) {
+          const data = {};
+          data.Message = notes[n].note;
+          data.Opportunity_fk = res;
+          data.CreateDate = new Date().toISOString().substring(0, 18);
+          await request.Knex('Note').insert(data);
+        }
         created_ids.push(res[0]);
       }
 
