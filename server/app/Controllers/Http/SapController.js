@@ -3,6 +3,19 @@
 const {rule} = require("@adonisjs/validator/src/Validator");
 const { validateAll } = use('Validator');
 const { validations } = require('indicative/validator');
+const currency = ['EUR', 'USD', 'GBP', 'JPY', 'AUD'];
+const dateRule = {
+  validDate: [validations.dateFormat(['YYYY-MM-DD HH:mm:ss'])]
+}
+const rules = {
+  SalesRep: 'required',
+  Email: 'required|email',
+  Type: 'required|in:SPS,ISM',
+  OpportunityName: 'required',
+  CustomerName: 'required',
+  ChannelType: 'required|in:Academic,Corporate,Government',
+  Currency: 'required'
+}
 
 class SapController {
   async getSAPSourced({ request, response }) {
@@ -131,19 +144,7 @@ class SapController {
   }
   async store ({ request, response }) {
     const { data } = request.all();
-    const currency = ['EUR', 'USD', 'GBP', 'JPY', 'AUD'];
-    const dateRule = {
-      validDate: [validations.dateFormat(['YYYY-MM-DD HH:mm:ss'])]
-    }
-    const rules = {
-      SalesRep: 'required',
-      Email: 'required|email',
-      Type: 'required|in:SPS,ISM',
-      OpportunityName: 'required',
-      CustomerName: 'required',
-      ChannelType: 'required|in:Academic,Corporate,Government',
-      Currency: 'required'
-    }
+
     for (let i = 0; i < data.length; i += 1) {
       const validation = await validateAll(data[i], rules);
       if(validation.fails()) {
@@ -155,23 +156,9 @@ class SapController {
       }
     }
 
-    async function getSalesRep(email) {
-      const user = await request.Knex('SalesRep').where('Email', email);
-      let salesRep = undefined;
-      if (user.length) {
-        const res = await request.Knex('SalesRep').where('Email', email).select('Full_Name');
-        if (res.length) salesRep = res[0].Full_Name;
-      } else {
-        let fullName = email.substring(0, email.indexOf('@')).toLowerCase();
-        const res = await request.Knex('SalesRep').where('Full_Name', fullName).select('Full_Name');
-        if (res.length) salesRep = res[0].Full_Name;
-      }
-      return salesRep;
-    }
-
     try {
       for (let i = 0; i < data.length; i += 1) {
-        const salesRep = await getSalesRep(data[i].Email);
+        const salesRep = await this.getSalesRep(data[i].Email, request);
         if (!salesRep) {
           const validationError = {
             "Error": [
@@ -197,51 +184,81 @@ class SapController {
         delete data[i].Email;
       }
 
-      const created_ids = [];
+      const created_ids = await this.addNotes(data, request);
 
-      for ( let j = 0; j < data.length; j += 1) {
-        let notes = undefined;
-
-        if (data[j].Notes && data[j].Notes.length > 0) {
-          notes = data[j].Notes;
-        }
-
-        if (data[j].Notes) delete data[j].Notes;
-
-        const res = await request.Knex.insert(data[j]).into('Opportunity');
-
-        if (notes && notes.length > 0) {
-          for (let n = 0; n < notes.length; n += 1) {
-            const data = {};
-            data.Message = notes[n].note;
-            data.Opportunity_fk = res;
-            data.CreateDate = new Date().toISOString().substring(0, 18);
-            await request.Knex('Note').insert(data);
-          }
-        }
-
-        created_ids.push(res[0]);
-      }
-
-      const created_opp = [];
-      for ( let k = 0; k < created_ids.length; k += 1) {
-        const res = await request.Knex('Opportunity').where('id', created_ids[k])
-          .select('id', 'SalesRep', 'OpportunityName', 'CustomerName', 'BPID', 'Type');
-        created_opp.push(res);
-      }
-      // console.log(created_opp);
-      const resData = {
-        Successful: created_opp
-      }
+      const resData = await this.getResponse(created_ids, request);
       response.status(201).send(resData);
     } catch (e) {
       console.log(e);
-      const errMessage = {};
-      if (e.sqlMessage) errMessage.Error = e.sqlMessage; // response.status(400).send(e.sqlMessage);
-      else errMessage.Error = e; //response.status(400).send(e);
-
-      response.status(400).send(errMessage);
+      const error = {
+        "Error": [
+          {
+            "message": "Something went wrong, please contact system administrator"
+          }
+        ]
+      }
+      if (e.sqlMessage) {
+        error.Error[0].message = e.sqlMessage
+      }
+      response.status(400).send(error);
     }
+  }
+
+  async getSalesRep(email, request) {
+    const user = await request.Knex('SalesRep').where('Email', email);
+    let salesRep = undefined;
+    if (user.length) {
+      const res = await request.Knex('SalesRep').where('Email', email).select('Full_Name');
+      if (res.length) salesRep = res[0].Full_Name;
+    } else {
+      let fullName = email.substring(0, email.indexOf('@')).toLowerCase();
+      const res = await request.Knex('SalesRep').where('Full_Name', fullName).select('Full_Name');
+      if (res.length) salesRep = res[0].Full_Name;
+    }
+    return salesRep;
+  }
+
+  async getResponse(created_ids, request) {
+    const created_opp = [];
+    for (let k = 0; k < created_ids.length; k += 1) {
+      const res = await request.Knex('Opportunity').where('id', created_ids[k])
+        .select('id', 'SalesRep', 'OpportunityName', 'CustomerName', 'BPID', 'Type');
+      created_opp.push(res);
+    }
+    // console.log(created_opp);
+    const resData = {
+      Successful: created_opp
+    }
+    return resData;
+  }
+
+  async addNotes(data, request) {
+    const created_ids = [];
+
+    for (let j = 0; j < data.length; j += 1) {
+      let notes = undefined;
+
+      if (data[j].Notes && data[j].Notes.length > 0) {
+        notes = data[j].Notes;
+      }
+
+      if (data[j].Notes) delete data[j].Notes;
+
+      const res = await request.Knex.insert(data[j]).into('Opportunity');
+
+      if (notes && notes.length > 0) {
+        for (let n = 0; n < notes.length; n += 1) {
+          const data = {};
+          data.Message = notes[n].note;
+          data.Opportunity_fk = res;
+          data.CreateDate = new Date().toISOString().substring(0, 18);
+          await request.Knex('Note').insert(data);
+        }
+      }
+
+      created_ids.push(res[0]);
+    }
+    return created_ids;
   }
 }
 
