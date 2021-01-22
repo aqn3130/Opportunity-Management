@@ -11,7 +11,6 @@
               dark
               small
               absolute
-              bottom
               right
               @click="userPickerDialog = true"
             >

@@ -4,7 +4,23 @@
     :items="rows"
     sort-by="calories"
     class="elevation-1"
+    :search="searchStr"
   >
+    <template v-slot:top>
+      <v-toolbar>
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="searchStr"
+          clearable
+          prepend-inner-icon="search"
+          outlined
+          flat
+          dense
+          class="mt-6"
+        ></v-text-field>
+        <v-spacer></v-spacer>
+      </v-toolbar>
+    </template>
     <template v-slot:item.actions="{ item }">
       <!--            <v-icon-->
       <!--                    small-->
@@ -37,7 +53,8 @@ export default {
     rows: [],
     editedIndex: -1,
     editedItem: {},
-    defaultItem: {}
+    defaultItem: {},
+    searchStr: ''
   }),
 
   computed: {

@@ -11,272 +11,318 @@
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
     <v-layout>
-      <v-container
-        class="mb-10 overflow-auto"
+<!--            <v-container-->
+<!--              class="mb-10 overflow-auto"-->
+<!--              style="z-index: 2; margin-top: -160px;"-->
+<!--            >-->
+      <v-card
+        class="d-flex transparent mb-10 overflow-auto ml-auto mr-auto container"
+        flat
         style="z-index: 2; margin-top: -160px;"
       >
-        <v-card class="d-flex transparent" flat>
-          <v-row>
-            <v-col>
-              <!--              <v-select-->
-              <!--                v-model="selectedStatus"-->
-              <!--                :items="statuses"-->
-              <!--                style="width: 300px"-->
-              <!--                dark-->
-              <!--                class="caption"-->
-              <!--                dense-->
-              <!--                multiple-->
-              <!--              ></v-select>-->
-              <v-data-table
-                :headers="showHeaders"
-                :items="rows"
-                :items-per-page="perPage"
-                class="elevation-1 text-no-wrap"
-                :footer-props="{
-                  showFirstLastPage: true,
-                  firstIcon: 'mdi-arrow-collapse-left',
-                  lastIcon: 'mdi-arrow-collapse-right',
-                  prevIcon: 'mdi-minus',
-                  nextIcon: 'mdi-plus'
-                }"
-                @click:row="editOpportunity"
-                :search="searchStr"
-                :loading="loading"
-                :style="{ cursor: 'pointer' }"
+        <v-row>
+          <v-col>
+            <!--              <v-select-->
+            <!--                v-model="selectedStatus"-->
+            <!--                :items="statuses"-->
+            <!--                style="width: 300px"-->
+            <!--                dark-->
+            <!--                class="caption"-->
+            <!--                dense-->
+            <!--                multiple-->
+            <!--              ></v-select>-->
+            <v-data-table
+              :headers="showHeaders"
+              :items="rows"
+              :items-per-page="perPage"
+              class="elevation-1 text-no-wrap"
+              :footer-props="{
+                showFirstLastPage: true,
+                firstIcon: 'mdi-arrow-collapse-left',
+                lastIcon: 'mdi-arrow-collapse-right',
+                prevIcon: 'mdi-minus',
+                nextIcon: 'mdi-plus'
+              }"
+              @click:row="editOpportunity"
+              :search="searchStr"
+              :loading="loading"
+              :style="{ cursor: 'pointer' }"
+            >
+              <template
+                v-for="(col, i) in filters"
+                v-slot:[`header.${i}`]="{ header }"
               >
-                <template
-                  v-for="(col, i) in filters"
-                  v-slot:[`header.${i}`]="{ header }"
-                >
-                  <div style="display: inline-block; padding: 16px 0;" :key="i">
-                    {{ header.text }}
-                  </div>
-                  <div style="float: right; margin-top: 8px" :key="i + 'key'">
-                    <v-menu
-                      :close-on-content-click="false"
-                      :nudge-width="200"
-                      offset-y
-                      transition="slide-y-transition"
-                      left
-                      fixed
-                      style="position: absolute; right: 0"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn color="indigo" icon v-bind="attrs" v-on="on">
-                          <v-icon
-                            small
-                            :color="
-                              activeFilters[header.value] &&
-                              activeFilters[header.value].length <
-                                filters[header.value].length
-                                ? 'red'
-                                : 'default'
-                            "
-                          >
-                            mdi-filter-variant
-                          </v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list
-                        flat
-                        dense
-                        class="pa-0 overflow-auto"
-                        max-height="300"
-                      >
-                        <v-list-item-group
-                          multiple
-                          v-model="activeFilters[header.value]"
-                          class="py-2"
+                <div style="display: inline-block; padding: 16px 0;" :key="i">
+                  {{ header.text }}
+                </div>
+                <div style="float: right; margin-top: 8px" :key="i + 'key'">
+                  <v-menu
+                    :close-on-content-click="false"
+                    :nudge-width="200"
+                    offset-y
+                    transition="slide-y-transition"
+                    left
+                    fixed
+                    style="position: absolute; right: 0"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn color="indigo" icon v-bind="attrs" v-on="on">
+                        <v-icon
+                          small
+                          :color="
+                            activeFilters[header.value] &&
+                            activeFilters[header.value].length <
+                              filters[header.value].length
+                              ? 'red'
+                              : 'default'
+                          "
                         >
-                          <template v-for="item in filters[header.value]">
-                            <v-list-item
-                              :key="`${item}`"
-                              :value="item"
-                              :ripple="false"
-                            >
-                              <template v-slot:default="{ active, toggle }">
-                                <v-list-item-action>
-                                  <v-checkbox
-                                    :input-value="active"
-                                    :true-value="item"
-                                    @click="toggle"
-                                    color="primary"
-                                    :ripple="false"
-                                    dense
-                                  ></v-checkbox>
-                                </v-list-item-action>
-                                <v-list-item-content>
-                                  <v-list-item-title
-                                    v-text="item"
-                                  ></v-list-item-title>
-                                </v-list-item-content>
-                              </template>
-                            </v-list-item>
-                          </template>
-                        </v-list-item-group>
-                        <v-divider></v-divider>
-                        <v-row no-gutters>
-                          <v-col cols="6">
-                            <v-btn
-                              text
-                              block
-                              @click="toggleAll(header.value)"
-                              color="success"
-                              >Toggle all</v-btn
-                            >
-                          </v-col>
-                          <v-col cols="6">
-                            <v-btn
-                              text
-                              block
-                              @click="clearAll(header.value)"
-                              color="warning"
-                              >Clear all</v-btn
-                            >
-                          </v-col>
-                        </v-row>
-                      </v-list>
-                    </v-menu>
-                  </div>
-                </template>
-                <template v-slot:top>
-                  <v-toolbar flat color="grey lighten-2">
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                      v-model="searchStr"
-                      clearable
-                      prepend-inner-icon="search"
-                      outlined
+                          mdi-filter-variant
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list
                       flat
                       dense
-                      class="mt-6"
-                      light
-                      @click:clear="clearSearch"
-                    ></v-text-field>
-                    <v-spacer></v-spacer>
-<!--                    <div class="text-left">-->
-<!--                      <v-dialog v-model="dialogColFilter" width="500">-->
-<!--                        <template v-slot:activator="{ on, attrs }">-->
-<!--                          <v-btn-->
-<!--                            text-->
-<!--                            v-bind="attrs"-->
-<!--                            v-on="on"-->
-<!--                            light-->
-<!--                            color="grey"-->
-<!--                            small-->
-<!--                          >-->
-<!--                            <v-icon>view_column</v-icon>-->
-<!--                          </v-btn>-->
-<!--                        </template>-->
-<!--                        <v-card>-->
-<!--                          <v-card-title class="headline grey lighten-2">-->
-<!--                            Column Filter-->
-<!--                          </v-card-title>-->
-<!--                          <v-card-text class="py-10">-->
-<!--                            <div>-->
-<!--                              <v-select-->
-<!--                                v-model="selectedHeaders"-->
-<!--                                :items="headersFilter"-->
-<!--                                label="Select Columns"-->
-<!--                                multiple-->
-<!--                                outlined-->
-<!--                                return-object-->
-<!--                              >-->
-<!--                                <template v-slot:selection="{ item, index }">-->
-<!--                                  <v-chip v-if="index < 2">-->
-<!--                                    <span>{{ item.text }}</span>-->
-<!--                                  </v-chip>-->
-<!--                                  <span-->
-<!--                                    v-if="index === 2"-->
-<!--                                    class="grey&#45;&#45;text caption"-->
-<!--                                    >(+{{-->
-<!--                                      selectedHeaders.length - 2-->
-<!--                                    }}-->
-<!--                                    others)</span-->
-<!--                                  >-->
-<!--                                </template>-->
-<!--                              </v-select>-->
-<!--                            </div>-->
-<!--                          </v-card-text>-->
+                      class="pa-0 overflow-auto"
+                      max-height="300"
+                    >
+                      <v-list-item-group
+                        multiple
+                        v-model="activeFilters[header.value]"
+                        class="py-2"
+                      >
+                        <template v-for="item in filters[header.value]">
+                          <v-list-item
+                            :key="`${item}`"
+                            :value="item"
+                            :ripple="false"
+                          >
+                            <template v-slot:default="{ active, toggle }">
+                              <v-list-item-action>
+                                <v-checkbox
+                                  :input-value="active"
+                                  :true-value="item"
+                                  @click="toggle"
+                                  color="primary"
+                                  :ripple="false"
+                                  dense
+                                ></v-checkbox>
+                              </v-list-item-action>
+                              <v-list-item-content>
+                                <v-list-item-title
+                                  v-text="item"
+                                ></v-list-item-title>
+                              </v-list-item-content>
+                            </template>
+                          </v-list-item>
+                        </template>
+                      </v-list-item-group>
+                      <v-divider></v-divider>
+                      <v-row no-gutters>
+                        <v-col cols="6">
+                          <v-btn
+                            text
+                            block
+                            @click="toggleAll(header.value)"
+                            color="success"
+                            >Toggle all</v-btn
+                          >
+                        </v-col>
+                        <v-col cols="6">
+                          <v-btn
+                            text
+                            block
+                            @click="clearAll(header.value)"
+                            color="warning"
+                            >Clear all</v-btn
+                          >
+                        </v-col>
+                      </v-row>
+                    </v-list>
+                  </v-menu>
+                </div>
+              </template>
+              <template v-slot:top>
+                <v-toolbar flat color="grey lighten-2">
+                  <v-spacer></v-spacer>
+                  <v-text-field
+                    v-model="searchStr"
+                    clearable
+                    prepend-inner-icon="search"
+                    outlined
+                    flat
+                    dense
+                    class="mt-6"
+                    light
+                    @click:clear="clearSearch"
+                  ></v-text-field>
+                  <v-spacer></v-spacer>
+                  <!--                    <div class="text-left">-->
+                  <!--                      <v-dialog v-model="dialogColFilter" width="500">-->
+                  <!--                        <template v-slot:activator="{ on, attrs }">-->
+                  <!--                          <v-btn-->
+                  <!--                            text-->
+                  <!--                            v-bind="attrs"-->
+                  <!--                            v-on="on"-->
+                  <!--                            light-->
+                  <!--                            color="grey"-->
+                  <!--                            small-->
+                  <!--                          >-->
+                  <!--                            <v-icon>view_column</v-icon>-->
+                  <!--                          </v-btn>-->
+                  <!--                        </template>-->
+                  <!--                        <v-card>-->
+                  <!--                          <v-card-title class="headline grey lighten-2">-->
+                  <!--                            Column Filter-->
+                  <!--                          </v-card-title>-->
+                  <!--                          <v-card-text class="py-10">-->
+                  <!--                            <div>-->
+                  <!--                              <v-select-->
+                  <!--                                v-model="selectedHeaders"-->
+                  <!--                                :items="headersFilter"-->
+                  <!--                                label="Select Columns"-->
+                  <!--                                multiple-->
+                  <!--                                outlined-->
+                  <!--                                return-object-->
+                  <!--                              >-->
+                  <!--                                <template v-slot:selection="{ item, index }">-->
+                  <!--                                  <v-chip v-if="index < 2">-->
+                  <!--                                    <span>{{ item.text }}</span>-->
+                  <!--                                  </v-chip>-->
+                  <!--                                  <span-->
+                  <!--                                    v-if="index === 2"-->
+                  <!--                                    class="grey&#45;&#45;text caption"-->
+                  <!--                                    >(+{{-->
+                  <!--                                      selectedHeaders.length - 2-->
+                  <!--                                    }}-->
+                  <!--                                    others)</span-->
+                  <!--                                  >-->
+                  <!--                                </template>-->
+                  <!--                              </v-select>-->
+                  <!--                            </div>-->
+                  <!--                          </v-card-text>-->
 
-<!--                          <v-divider></v-divider>-->
+                  <!--                          <v-divider></v-divider>-->
 
-<!--                          <v-card-actions>-->
-<!--                            <v-spacer></v-spacer>-->
-<!--                            <v-btn-->
-<!--                              color="primary"-->
-<!--                              text-->
-<!--                              @click="dialogColFilter = false"-->
-<!--                            >-->
-<!--                              Done-->
-<!--                            </v-btn>-->
-<!--                          </v-card-actions>-->
-<!--                        </v-card>-->
-<!--                      </v-dialog>-->
-<!--                    </div>-->
-                  </v-toolbar>
-                </template>
-                <template v-slot:item.OpportunityName="{ item }">
-                  <span style="font-size: small; font-weight: bold;">
-                    {{ item.OpportunityName }} </span
-                  ><br />
-                  <span style="font-size: small">
-                    {{ item.SalesStage }}<br />
-                  </span>
-<!--                  <v-tooltip bottom>-->
-<!--                    <template v-slot:activator="{ on, attrs }">-->
-<!--                      <v-list-item-subtitle v-bind="attrs" v-on="on">-->
-<!--                        <span-->
-<!--                          style="font-size: small; max-width: 200px"-->
-<!--                          class="text-truncate d-inline-block"-->
-<!--                        >-->
-<!--                          {{ item.CustomerName }}-{{ item.BPID }}-->
-<!--                        </span>-->
-<!--                      </v-list-item-subtitle>-->
-<!--                    </template>-->
-<!--                    <span>{{ item.CustomerName }}-{{ item.BPID }}</span>-->
-<!--                  </v-tooltip>-->
-                </template>
-                <template v-slot:item.ExpectedCloseDate="{ item }">
-                  <span class="caption">
-                    {{ item.ExpectedCloseDate | convertDate }}
-                  </span>
-                </template>
-                <template v-slot:item.GrossValue="{ item }">
-                  <span class="caption">
-                    {{ item.GrossValue | formatCurrency }}
-                  </span>
-                </template>
-                <template v-slot:item.Currency="{ item }">
-                  <span class="caption">
-                    {{ item.Currency }}
-                  </span>
-                </template>
-                <template v-slot:item.Status="{ item }">
-                  <span class="caption">
-                    {{ item.Status }}
-                  </span>
-                </template>
-                <template v-slot:item.ChannelType="{ item }">
-                  <span class="caption">
-                    {{ item.ChannelType }}
-                  </span>
-                </template>
-                <template v-slot:item.Country="{ item }">
-                  <span class="caption">
-                    {{ item.Country }}
-                  </span>
-                </template>
-<!--                <template v-slot:item.source="{ item }">-->
-<!--                  <span class="caption">-->
-<!--                    {{ item.source | formatSAP }}-->
-<!--                  </span>-->
-<!--                </template>-->
-              </v-data-table>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-container>
+                  <!--                          <v-card-actions>-->
+                  <!--                            <v-spacer></v-spacer>-->
+                  <!--                            <v-btn-->
+                  <!--                              color="primary"-->
+                  <!--                              text-->
+                  <!--                              @click="dialogColFilter = false"-->
+                  <!--                            >-->
+                  <!--                              Done-->
+                  <!--                            </v-btn>-->
+                  <!--                          </v-card-actions>-->
+                  <!--                        </v-card>-->
+                  <!--                      </v-dialog>-->
+                  <!--                    </div>-->
+                </v-toolbar>
+              </template>
+              <template v-slot:item.OpportunityName="{ item }">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-list-item-subtitle v-bind="attrs" v-on="on">
+                      <span
+                        style="font-size: small; max-width: 120px; font-weight: bold"
+                        class="text-truncate d-inline-block"
+                      >
+                        {{ item.OpportunityName }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </template>
+                  <span>{{ item.OpportunityName }}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-list-item-subtitle v-bind="attrs" v-on="on">
+                      <span
+                        style="font-size: small; max-width: 120px;"
+                        class="text-truncate d-inline-block"
+                      >
+                        {{ item.SalesStage }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </template>
+                  <span>{{ item.SalesStage }}</span>
+                </v-tooltip>
+              </template>
+              <template v-slot:item.ExpectedCloseDate="{ item }">
+                <span class="caption">
+                  {{ item.ExpectedCloseDate | convertDate }}
+                </span>
+              </template>
+              <template v-slot:item.GrossValue="{ item }">
+                <span class="caption">
+                  {{ item.GrossValue | formatCurrency }}
+                </span>
+              </template>
+              <template v-slot:item.Currency="{ item }">
+                <span class="caption">
+                  {{ item.Currency }}
+                </span>
+              </template>
+              <template v-slot:item.Status="{ item }">
+                <span class="caption">
+                  {{ item.Status }}
+                </span>
+              </template>
+              <template v-slot:item.ChannelType="{ item }">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-list-item-subtitle v-bind="attrs" v-on="on">
+                      <span
+                        style="font-size: small; max-width: 100px"
+                        class="text-truncate d-inline-block"
+                      >
+                        {{ item.ChannelType }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </template>
+                  <span>{{ item.ChannelType }}</span>
+                </v-tooltip>
+              </template>
+              <template v-slot:item.Country="{ item }">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-list-item-subtitle v-bind="attrs" v-on="on">
+                      <span
+                        style="font-size: small; max-width: 100px"
+                        class="text-truncate d-inline-block"
+                      >
+                        {{ item.Country }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </template>
+                  <span>{{ item.Country }}</span>
+                </v-tooltip>
+              </template>
+              <template v-slot:item.CustomerName="{ item }">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-list-item-subtitle v-bind="attrs" v-on="on">
+                      <span
+                        style="font-size: small; max-width: 100px"
+                        class="text-truncate d-inline-block"
+                      >
+                        {{ item.CustomerName }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </template>
+                  <span>{{ item.CustomerName }}</span>
+                </v-tooltip>
+              </template>
+              <!--                <template v-slot:item.source="{ item }">-->
+              <!--                  <span class="caption">-->
+              <!--                    {{ item.source | formatSAP }}-->
+              <!--                  </span>-->
+              <!--                </template>-->
+            </v-data-table>
+          </v-col>
+        </v-row>
+      </v-card>
+<!--            </v-container>-->
     </v-layout>
     <v-btn
       absolute
@@ -317,7 +363,7 @@ export default {
         Status: [],
         ChannelType: [],
         // Currency: [],
-        Country: [],
+        Country: []
         // source: []
       },
       activeFilters: {},
@@ -384,6 +430,11 @@ export default {
         //   // width: '120'
         // },
         {
+          text: 'BPID',
+          align: 'left',
+          value: 'BPID'
+        },
+        {
           text: 'Country',
           align: 'left',
           value: 'Country',
@@ -420,7 +471,7 @@ export default {
           }
           // width: '110'
         },
-        { text: 'License ID', align: 'left', value: 'LicenseID' },
+        // { text: 'License ID', align: 'left', value: 'LicenseID' },
         {
           text: 'Expected Close Date',
           align: 'left',

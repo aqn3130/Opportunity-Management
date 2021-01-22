@@ -128,6 +128,7 @@
                           required
                           @input="onCountryChange(editedItem.Country)"
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -136,6 +137,7 @@
                           :items="states"
                           label="State"
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -147,6 +149,7 @@
                           required
                           @input="setIndustryType(editedItem.ChannelType)"
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -157,6 +160,7 @@
                           :rules="nameRules"
                           required
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -167,6 +171,7 @@
                           :rules="nameRules"
                           required
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -218,6 +223,7 @@
                           label="Status"
                           @input="onStatusChange(editedItem.Status)"
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -228,6 +234,7 @@
                           :rules="nameRules"
                           required
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -243,6 +250,7 @@
                           :items="forecastCategoryItems"
                           label="Forecast Category"
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -291,6 +299,7 @@
                           :items="currencyItems"
                           label="Currency"
                           dense
+                          class="caption"
                         ></v-select>
                       </v-col>
                     </v-row>
