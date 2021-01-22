@@ -42,6 +42,278 @@
             ></v-text-field>
             <v-spacer></v-spacer>
           </v-toolbar>
+          <v-dialog v-model="dialog" max-width="700px">
+            <!--        <template v-slot:activator="{ on, attrs }">-->
+            <!--          <v-btn-->
+            <!--            color="#bb4d00"-->
+            <!--            dark-->
+            <!--            v-bind="attrs"-->
+            <!--            v-on="on"-->
+            <!--            small-->
+            <!--            fab-->
+            <!--            top-->
+            <!--            right-->
+            <!--            absolute-->
+            <!--          >-->
+            <!--            <v-icon>mdi-plus</v-icon>-->
+            <!--          </v-btn>-->
+            <!--        </template>-->
+            <v-card>
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container>
+                  <v-form ref="opportunityForm" lazy-validation v-model="valid">
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.Id"
+                          label="Id"
+                          readonly
+                          disabled
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.SalesRep"
+                          label="Sales Rep *"
+                          :rules="nameRules"
+                          required
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.Type"
+                          label="Type *"
+                          :rules="nameRules"
+                          required
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.OpportunityName"
+                          label="Opportunity Name *"
+                          :rules="nameRules"
+                          required
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.CustomerName"
+                          label="CustomerName Name *"
+                          :rules="nameRules"
+                          required
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.BPID"
+                          label="BPID"
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.Country"
+                          :items="countryOptions"
+                          label="Country *"
+                          :rules="nameRules"
+                          required
+                          @input="onCountryChange(editedItem.Country)"
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.State"
+                          :items="states"
+                          label="State"
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.ChannelType"
+                          :items="channelTypeItems"
+                          label="Channel Type *"
+                          :rules="nameRules"
+                          required
+                          @input="setIndustryType(editedItem.ChannelType)"
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.IndustryType"
+                          :items="industryTypeItems"
+                          label="Industry Type *"
+                          :rules="nameRules"
+                          required
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.Origin"
+                          :items="originItems"
+                          label="Origin *"
+                          :rules="nameRules"
+                          required
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.LeadID"
+                          label="LeadID"
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-menu
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="290px"
+                          class="caption"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              :value="
+                                editedItem.OpportunityStartDate | convertDate
+                              "
+                              @input="onOppStartDateChange"
+                              label="Opportunity Start Date *"
+                              prepend-icon="event"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              class="caption"
+                              dense
+                              :rules="nameRules"
+                              required
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            :value="
+                              editedItem.OpportunityStartDate | convertDate
+                            "
+                            @input="onOppStartDateChange"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.Status"
+                          :items="statusItems"
+                          label="Status"
+                          @input="onStatusChange(editedItem.Status)"
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.SalesStage"
+                          :items="salesStageItems"
+                          label="Sales Stage *"
+                          :rules="nameRules"
+                          required
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.LicenseID"
+                          label="License ID"
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.ForecastCategory"
+                          :items="forecastCategoryItems"
+                          label="Forecast Category"
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-menu
+                          v-model="menu2"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="290px"
+                          class="caption"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              :value="
+                                editedItem.ExpectedCloseDate | convertDate
+                              "
+                              @input="onExpectedCloseDateChange"
+                              label="Expected Close Date *"
+                              prepend-icon="event"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              class="caption"
+                              dense
+                              :rules="nameRules"
+                              required
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            :value="editedItem.ExpectedCloseDate | convertDate"
+                            @input="onExpectedCloseDateChange"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.AgentName"
+                          label="Agent Name"
+                          dense
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select
+                          v-model="editedItem.Currency"
+                          :items="currencyItems"
+                          label="Currency"
+                          dense
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="validate"
+                  :disabled="!valid"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
         <template v-slot:item.OpportunityStartDate="{ item }">
           <span class="caption">
@@ -73,6 +345,14 @@
             {{ item.GrossValue | formatCurrency }}
           </span>
         </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="editItem(item)">
+            mdi-pencil
+          </v-icon>
+          <!--          <v-icon small @click="deleteItem(item)">-->
+          <!--            mdi-delete-->
+          <!--          </v-icon>-->
+        </template>
       </v-data-table>
     </v-container>
     <v-container>
@@ -81,7 +361,11 @@
         {{ productTitle }}
         <v-spacer></v-spacer>
       </v-toolbar>
-      <v-data-table :items="products" :headers="productHeaders" class="text-no-wrap">
+      <v-data-table
+        :items="products"
+        :headers="productHeaders"
+        class="text-no-wrap"
+      >
         <template v-slot:item.LicenseStartDate="{ item }">
           <span class="caption">
             {{ item.LicenseStartDate | convertDate }}
@@ -152,7 +436,37 @@ export default {
       notes: [],
       productTitle: 'Products',
       noteTitle: 'Notes',
-      oppTitle: 'Opportunities'
+      oppTitle: 'Opportunities',
+      dialog: false,
+      valid: true,
+      editedItem: {
+        Id: undefined,
+        SalesRep: undefined,
+        Type: undefined,
+        OpportunityName: undefined,
+        OpportunityStartDate: undefined
+      },
+      defaultItem: {
+        Id: undefined,
+        SalesRep: undefined,
+        Type: undefined,
+        OpportunityName: undefined
+      },
+      nameRules: [v => !!v || 'This field is required'],
+      editedIndex: -1,
+      menu: false,
+      menu2: false,
+      menu3: false,
+      menu4: false,
+      countryOptions: [],
+      channelTypeItems: ['Academic', 'Corporate', 'Government'],
+      industryTypeItems: [],
+      originItems: ['Marketing', 'Sales Originated', 'Renewal'],
+      statusItems: ['In Process', 'Won', 'Closed Won', 'Closed Lost'],
+      salesStageItems: [],
+      states: [],
+      forecastCategoryItems: ['Pipeline', 'Committed', 'Best Case'],
+      currencyItems: ['EUR', 'USD', 'GBP', 'JPY', 'AUD']
     };
   },
   computed: {
@@ -169,7 +483,11 @@ export default {
         { text: 'Industry Type', align: 'left', value: 'IndustryType' },
         { text: 'Origin', align: 'left', value: 'Origin' },
         { text: 'Lead ID', align: 'left', value: 'LeadID' },
-        { text: 'Opportunity Start Date', align: 'left', value: 'OpportunityStartDate' },
+        {
+          text: 'Opportunity Start Date',
+          align: 'left',
+          value: 'OpportunityStartDate'
+        },
         {
           text: 'Status',
           align: 'left',
@@ -182,7 +500,7 @@ export default {
         },
         { text: 'State', align: 'left', value: 'State' },
         { text: 'Sales Stage', align: 'left', value: 'SalesStage' },
-        { text: 'Stage Weighting', align: 'left', value: 'StageWeighting' },
+        // { text: 'Stage Weighting', align: 'left', value: 'StageWeighting' },
         { text: 'License ID', align: 'left', value: 'LicenseID' },
         { text: 'Forecast Category', align: 'left', value: 'ForecastCategory' },
         {
@@ -192,19 +510,36 @@ export default {
         },
         { text: 'Agent Name', align: 'left', value: 'AgentName' },
         { text: 'Currency', align: 'left', value: 'Currency' },
-        { text: 'Allocation Year Rule', align: 'left', value: 'AllocationYearRule' },
+        {
+          text: 'Allocation Year Rule',
+          align: 'left',
+          value: 'AllocationYearRule'
+        },
         { text: 'Gross Value', align: 'left', value: 'GrossValue' },
-        { text: 'Value Proposition Document', align: 'left', value: 'ValuePropositionDocument' },
-        { text: 'Product Demo Status', align: 'left', value: 'ProductDemoStatus' },
+        {
+          text: 'Value Proposition Document',
+          align: 'left',
+          value: 'ValuePropositionDocument'
+        },
+        {
+          text: 'Product Demo Status',
+          align: 'left',
+          value: 'ProductDemoStatus'
+        },
         { text: 'Trial Status', align: 'left', value: 'TrialStatus' },
         { text: 'Trial Start Date', align: 'left', value: 'TrialStartDate' },
-        { text: 'Number Of Recommendation Letters', align: 'left', value: 'NumberOfRecommendationLetters' },
+        {
+          text: 'Number Of Recommendation Letters',
+          align: 'left',
+          value: 'NumberOfRecommendationLetters'
+        },
         // { text: 'Customer Expansion Program', align: 'left', value: 'CustomerExpansionProgram' },
         { text: 'Product Demo Date', align: 'left', value: 'ProductDemoDate' },
         { text: 'Trial End Date', align: 'left', value: 'TrialEndDate' },
+        { text: 'Actions', align: 'left', value: 'actions' }
       ];
     },
-    ...mapState(['loading', 'opportunityId']),
+    ...mapState(['loading', 'opportunityId', 'countries', 'stateOptions']),
     productHeaders() {
       return [
         { text: 'Id', align: 'left', value: 'id' },
@@ -237,6 +572,13 @@ export default {
         { text: 'Create Date', align: 'left', value: 'CreateDate' },
         { text: 'Op_Id', align: 'left', value: 'Opportunity_fk' }
       ];
+    },
+    formTitle() {
+      return this.editedIndex === -1 ? 'New Opportunity' : 'Edit Opportunity';
+    },
+    oppStartDate() {
+      return this.formatDate(this.editedItem.OpportunityStartDate);
+      // editedItem.OpportunityStartDate | convertDate
     }
   },
   watch: {
@@ -251,17 +593,23 @@ export default {
         });
       },
       deep: true
+    },
+    dialog(val) {
+      val || this.close();
     }
   },
   async created() {
     await this.$store.dispatch('setCurrentTable', 'Opportunity');
-    // this.opts = await this.$store.dispatch('getRecords', '');
+    await this.getCountries();
+    await this.getStates();
   },
   filters: {
     convertDate: value => {
       if (!value) return null;
       value = value.toString();
-      return moment(value).format('YYYY-MM-DD');
+      return moment(value)
+        .utc()
+        .format('YYYY-MM-DD');
     },
     formatCurrency(amount) {
       if (!amount) return '';
@@ -278,13 +626,19 @@ export default {
       setPage: 'setPage',
       setPerPage: 'setPerPage',
       setSearchStr: 'setSearchStr',
-      setFilter: 'setFilter'
+      setFilter: 'setFilter',
+      setStateOptions: 'setStateOptions',
+      setCountries: 'setCountries'
     }),
     async onOpportunitySelect(item) {
       this.searchStr = '';
       this.setSearchStr(this.searchStr);
       this.products = await this.getProducts(item.Id);
       this.notes = await this.getNotes(item.Id);
+      // console.log(item);
+      await this.setIndustryType(item.ChannelType);
+      await this.onStatusChange(item.Status);
+      await this.getStatesForCurrentCountry(item.Country, this.states);
       // console.log(item.Id, this.notes);
     },
     async onSelectChange(status) {
@@ -300,6 +654,7 @@ export default {
       });
     },
     getDataFromApi() {
+      this.$store.dispatch('setCurrentTable', 'Opportunity');
       return new Promise(async (resolve, reject) => {
         const { sortBy, sortDesc, page, itemsPerPage } = this.options;
         this.setPage(page);
@@ -374,15 +729,172 @@ export default {
       if (!date) return null;
       date = date.toString();
       const format = 'YYYY-MM-DD';
-      return (
-        moment(date)
-          // .utc()
-          .format(format)
-      );
+      return moment(date)
+        .utc()
+        .format(format);
     },
     formatCurrency(amount) {
       if (!amount) return '';
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    validate() {
+      if (this.$refs.opportunityForm.validate()) {
+        this.save();
+      }
+    },
+    editItem(item) {
+      this.editedIndex = this.rows.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+    formatDateBeforeSave(date) {
+      if (!date) return null;
+      date = date.toString();
+      const format = 'YYYY-MM-DD HH:mm:ss';
+      return moment(date)
+        .utc()
+        .format(format);
+    },
+    async save() {
+      if (this.editedIndex > -1) {
+        const id = this.editedItem.Id;
+        delete this.editedItem.Id;
+        this.editedItem.id = id;
+        await this.$store.dispatch('setCurrentTable', 'Opportunity');
+        this.editedItem.OpportunityStartDate = this.formatDateBeforeSave(
+          this.editedItem.OpportunityStartDate
+        );
+        this.editedItem.ExpectedCloseDate = this.formatDateBeforeSave(
+          this.editedItem.ExpectedCloseDate
+        );
+        this.editedItem.ProductDemoDate = this.formatDateBeforeSave(
+          this.editedItem.ProductDemoDate
+        );
+        this.editedItem.TrialEndDate = this.formatDateBeforeSave(
+          this.editedItem.TrialEndDate
+        );
+        this.editedItem.TrialStartDate = this.formatDateBeforeSave(
+          this.editedItem.TrialStartDate
+        );
+        this.editedItem.CreationDate = this.formatDateBeforeSave(
+          this.editedItem.CreationDate
+        );
+        await this.$store.dispatch('updateRecord', this.editedItem);
+        this.clearSearch();
+      } else {
+        await this.$store.dispatch('setCurrentTable', 'Opportunity');
+        delete this.editedItem.Id;
+        await this.$store.dispatch('createRecord', this.editedItem);
+      }
+      this.close();
+    },
+    onOppStartDateChange(value) {
+      this.editedItem.OpportunityStartDate = value;
+      this.menu = false;
+    },
+    onExpectedCloseDateChange(value) {
+      this.editedItem.ExpectedCloseDate = value;
+      this.menu2 = false;
+    },
+    async setIndustryType(channelType) {
+      this.industryTypeItems = [];
+      await this.$store.dispatch('setCurrentTable', 'Industry');
+      const industries = await this.$store.dispatch('getIndustry', '');
+      Object.keys(industries).forEach((value, index) => {
+        if (
+          industries[index] &&
+          channelType.toLowerCase().trim() ===
+            industries[index].Channel.toLowerCase().trim()
+        ) {
+          this.industryTypeItems.push(industries[index].Industry);
+        }
+      });
+    },
+    onStatusChange(status) {
+      const tempArray = [
+        '1 - Prospect / Lead',
+        '2 - Pre-Qualification',
+        '3 - Qualified',
+        '4 - Needs Assessment',
+        '5 - Product Evaluation',
+        '6 - Proposal Sent',
+        '7 - Negotiating Commercial',
+        '8 - Negotiating LC/Legal',
+        '9 - Final Terms Accepted',
+        '10 - License Delivered to Customer'
+      ];
+      const won = ['11 - License Agreement Signed'];
+      const closedWon = ['14 - Customer Invoiced'];
+      this.lostOpportunityReason = null;
+      if (status === 'Won') {
+        this.salesStageItems = won;
+        this.salesStage = this.salesStageItems[0];
+      } else if (status === 'Closed Won') {
+        this.salesStageItems = closedWon;
+        this.salesStage = this.salesStageItems[0];
+      } else if (status === 'Closed Lost') {
+        this.salesStageItems = tempArray;
+        // this.salesStage = null;
+      } else {
+        this.salesStageItems = tempArray;
+      }
+    },
+    async getStatesForCurrentCountry(country, states) {
+      this.states = [];
+      Object.keys(states).forEach((value, index) => {
+        if (
+          states[index] &&
+          states[index].Country &&
+          country &&
+          country.toLowerCase().trim() ===
+            states[index].Country.toLowerCase().trim()
+        ) {
+          this.states.push(states[index].Name);
+        }
+      });
+      if (this.states.length === 0) {
+        this.states.push('N/A');
+        this.state = this.states[0];
+      }
+    },
+    async onCountryChange(country) {
+      this.state = null;
+      await this.getStatesForCurrentCountry(country, this.stateOptions);
+    },
+    async getStates() {
+      if (this.stateOptions.length) {
+        this.states = this.stateOptions;
+      } else {
+        await this.$store.dispatch('setCurrentTable', 'States');
+        const states = await this.$store.dispatch('getStates', '');
+        this.setStateOptions(states);
+      }
+    },
+    getCountries: async function() {
+      if (this.countries.length) {
+        this.countryOptions = this.countries;
+      } else {
+        await this.$store.dispatch(
+          'setCurrentTable',
+          'Country_Region_Territory'
+        );
+        const countries = await this.$store.dispatch(
+          'getCountryRegionTerritory',
+          ''
+        );
+        Object.keys(countries).forEach((value, index) => {
+          if (countries[index])
+            this.countryOptions.push(countries[index].Country);
+        });
+        this.setCountries(this.countryOptions);
+      }
     }
   }
 };

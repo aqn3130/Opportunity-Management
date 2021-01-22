@@ -401,7 +401,7 @@
                   </v-list-item-content>
                   <v-list-item-content class="mr-2 ml-3">
                     <v-select
-                      :items="likelihood"
+                      :items="likelihoodOptions"
                       v-model="item.likelihood"
                       label="Likelihood"
                       :rules="nameRules"
@@ -613,14 +613,14 @@ export default {
     products: [],
     licenseStartDate: null,
     licenseEndDate: null,
-    likelihood: [
+    likelihoodOptions: [
       '0% - Lost',
       '10% - Low Chance of Winning',
       '20% - Possible but unlikely',
       '40% - Interest, but no commitment',
       '60% - Likely',
       '80% - Very Likely',
-      '100% - Confident it will close]'
+      '100% - Confident it will close'
     ],
     agent: false,
     agentDiscountOptions: [

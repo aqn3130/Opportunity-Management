@@ -223,19 +223,19 @@
                   <span style="font-size: small">
                     {{ item.SalesStage }}<br />
                   </span>
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-list-item-subtitle v-bind="attrs" v-on="on">
-                        <span
-                          style="font-size: small; max-width: 200px"
-                          class="text-truncate d-inline-block"
-                        >
-                          {{ item.CustomerName }}-{{ item.BPID }}
-                        </span>
-                      </v-list-item-subtitle>
-                    </template>
-                    <span>{{ item.CustomerName }}-{{ item.BPID }}</span>
-                  </v-tooltip>
+<!--                  <v-tooltip bottom>-->
+<!--                    <template v-slot:activator="{ on, attrs }">-->
+<!--                      <v-list-item-subtitle v-bind="attrs" v-on="on">-->
+<!--                        <span-->
+<!--                          style="font-size: small; max-width: 200px"-->
+<!--                          class="text-truncate d-inline-block"-->
+<!--                        >-->
+<!--                          {{ item.CustomerName }}-{{ item.BPID }}-->
+<!--                        </span>-->
+<!--                      </v-list-item-subtitle>-->
+<!--                    </template>-->
+<!--                    <span>{{ item.CustomerName }}-{{ item.BPID }}</span>-->
+<!--                  </v-tooltip>-->
                 </template>
                 <template v-slot:item.ExpectedCloseDate="{ item }">
                   <span class="caption">
@@ -366,6 +366,11 @@ export default {
           text: 'Opportunity Name',
           align: 'left',
           value: 'OpportunityName'
+        },
+        {
+          text: 'Customer Name',
+          align: 'left',
+          value: 'CustomerName'
         },
         // {
         //   text: 'Source',
