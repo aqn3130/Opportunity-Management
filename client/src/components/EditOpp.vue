@@ -715,13 +715,13 @@ export default {
       } catch (e) {
         console.log(e);
         this.$toast.open({
-          message: 'Update failed please contact system Admin',
+          message: 'Error saving product basket items, please review opportunity',
           type: 'error',
           duration: 3000,
           dismissible: true,
           position: 'bottom',
           onClose: () => {
-            this.$router.push({ name: 'Dashboard' });
+            // this.$router.push({ name: 'Dashboard' });
             this.newOppLoading = false;
           }
         });
@@ -766,7 +766,7 @@ export default {
       return currentOpp;
     },
     async validate() {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate() && this.$refs.productForm.validate()) {
         await this.updateOpportunity(this.getFormData());
       }
     },
