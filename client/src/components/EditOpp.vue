@@ -1027,10 +1027,10 @@ export default {
         this.forecastCategory = this.opportunity.ForecastCategory;
         this.agentName = this.opportunity.AgentName;
         this.currency = this.opportunity.Currency;
-        this.expectedCloseDate = this.formatDateNoUTC(
+        this.expectedCloseDate = this.formatDate(
           this.opportunity.ExpectedCloseDate
         );
-        this.opportunityStartDate = this.formatDateNoUTC(
+        this.opportunityStartDate = this.formatDate(
           this.opportunity.OpportunityStartDate
         );
       } else {
