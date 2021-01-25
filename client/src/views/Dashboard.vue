@@ -11,10 +11,6 @@
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
     <v-layout>
-<!--            <v-container-->
-<!--              class="mb-10 overflow-auto"-->
-<!--              style="z-index: 2; margin-top: -160px;"-->
-<!--            >-->
       <v-card
         class="d-flex transparent mb-10 overflow-auto ml-auto mr-auto container"
         flat
@@ -322,7 +318,6 @@
           </v-col>
         </v-row>
       </v-card>
-<!--            </v-container>-->
     </v-layout>
     <v-btn
       absolute
@@ -377,7 +372,11 @@ export default {
     convertDate: value => {
       if (!value) return null;
       value = value.toString();
-      return moment(value).format('YYYY-MM-DD');
+      return (
+        moment(value)
+          // .utc()
+          .format('YYYY-MM-DD')
+      );
     },
     formatCurrency(amount) {
       if (!amount) return '';
@@ -560,11 +559,20 @@ export default {
 
     clearAll(col) {
       this.activeFilters[col] = [];
-    }
+    },
     // async onSelectChange(status) {
     // this.selectedStatus = status;
     // console.log(status);
     // },
+
+    formatDate(date) {
+      if (!date) return null;
+      date = date.toString();
+      const format = 'YYYY-MM-DD';
+      return moment(date)
+        .utc()
+        .format(format);
+    }
   }
 };
 </script>

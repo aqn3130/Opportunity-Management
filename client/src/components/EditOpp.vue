@@ -49,8 +49,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  :value="opportunityStartDate | formatDate"
-                  @input="onOppStartDateChange"
+                  v-model="opportunityStartDate"
                   label="Opportunity Start Date"
                   prepend-icon="event"
                   readonly
@@ -209,8 +208,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  :value="expectedCloseDate | formatDate"
-                  @input="onExpectedCloseDateChange"
+                  v-model="expectedCloseDate"
                   label="Expected Close Date *"
                   prepend-icon="event"
                   readonly
@@ -223,7 +221,7 @@
               </template>
               <v-date-picker
                 v-model="expectedCloseDate"
-                @input="menu2 = false"
+                @input="onExpectedCloseDateChange"
               ></v-date-picker>
             </v-menu>
 
@@ -697,6 +695,8 @@ export default {
     async updateOpportunity(currentOpportunity) {
       // console.log(currentOpportunity);
       this.newOppLoading = true;
+      // currentOpportunity.OpportunityStartDate = this.formatDate(currentOpportunity.OpportunityStartDate);
+      // currentOpportunity.ExpectedCloseDate = this.formatDate(currentOpportunity.ExpectedCloseDate);
       try {
         const currentOpp = await this.updateProduct(currentOpportunity);
         await this.$store.dispatch('setCurrentTable', 'Opportunity');
@@ -882,6 +882,14 @@ export default {
         .utc()
         .format(format);
     },
+    formatDateNoUTC(date) {
+      if (!date) return null;
+      date = date.toString();
+      const format = 'YYYY-MM-DD';
+      return moment(date)
+          // .utc()
+          .format(format);
+    },
     addProduct() {
       const product = {
         cryItems: this.cryOptions,
@@ -1019,10 +1027,10 @@ export default {
         this.forecastCategory = this.opportunity.ForecastCategory;
         this.agentName = this.opportunity.AgentName;
         this.currency = this.opportunity.Currency;
-        this.expectedCloseDate = this.formatDate(
+        this.expectedCloseDate = this.formatDateNoUTC(
           this.opportunity.ExpectedCloseDate
         );
-        this.opportunityStartDate = this.formatDate(
+        this.opportunityStartDate = this.formatDateNoUTC(
           this.opportunity.OpportunityStartDate
         );
       } else {
@@ -1063,7 +1071,9 @@ export default {
       return value;
     },
     onExpectedCloseDateChange(value) {
-      this.expectedCloseDate = value;
+      // this.expectedCloseDate = value;
+      this.menu2 = false;
+
     },
     onOppStartDateChange(value) {
       this.opportunityStartDate = value;
