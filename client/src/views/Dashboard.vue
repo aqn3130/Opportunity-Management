@@ -356,7 +356,7 @@ export default {
       searchStr: '',
       selectedStatus: [],
       page: 0,
-      perPage: 5,
+      perPage: 15,
       totalLeads: 0,
       options: {},
       filters: {

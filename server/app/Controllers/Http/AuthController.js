@@ -6,8 +6,11 @@ const User = use('App/Models/User');
 
 class AuthController {
   constructor(){
-    this.ude_url = `https://hub.springer-sbm.com/${Stage}/ude/users/`;
-    this.search_url = `https://hub.springer-sbm.com/${Stage}/ude/users/names?q=`;
+    // this.ude_url = `https://hub.springer-sbm.com/${Stage}/ude/api/v2.0/users/`;
+    this.ude_url = `https://legacysidm.springernature.com/api/v2.0/users/`;
+    // this.search_url = `https://hub.springer-sbm.com/${Stage}/ude/api/v2.0/users/names?q=`;
+    this.search_url = `https://legacysidm.springernature.com/api/v2.0/users/names?q=`;
+    // this.auth_url = `https://hub.springer-sbm.com/${Stage}/api/v2.0/internal/auth`;
     this.auth_url = `https://hub.springer-sbm.com/${Stage}/internal/auth`;
   }
 
@@ -20,17 +23,8 @@ class AuthController {
 
     try {
       const { data } = await axios.post(this.auth_url, credentials);
-      // console.log(data);
-      // const res = await request.Knex
-      //   .table('User')
-      //   .where('Email', data.email);
       const currentUser = await User.findBy('email',data.email);
       if (currentUser) {
-        // const newUser = new User();
-        // newUser.username = data.username;
-        // newUser.email = data.email;
-        // await newUser.save();
-
         return await this.authenticate(auth, currentUser, response);
       }
       else if (this.isSalesRep(salesReps, data.email)){
