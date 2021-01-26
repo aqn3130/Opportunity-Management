@@ -660,7 +660,7 @@ export default {
       date = date.toString();
       const format = 'YYYY-MM-DD';
       return moment(date)
-        .utc()
+        // .utc()
         .format(format);
     }
   },
@@ -766,7 +766,9 @@ export default {
       return currentOpp;
     },
     async validate() {
-      if (this.$refs.form.validate() && this.$refs.productForm.validate()) {
+      if (this.productItems.length && this.$refs.productForm.validate() && this.$refs.form.validate()) {
+        await this.updateOpportunity(this.getFormData());
+      } else if (this.$refs.form.validate()) {
         await this.updateOpportunity(this.getFormData());
       }
     },
@@ -879,7 +881,7 @@ export default {
       date = date.toString();
       const format = 'YYYY-MM-DD';
       return moment(date)
-        .utc()
+        // .utc()
         .format(format);
     },
     formatDateNoUTC(date) {

@@ -174,8 +174,8 @@ class SapController {
         }
         if (!currency.includes(data[i].Currency)) delete data[i].Currency;
         data[i].CreationDate = new Date().toISOString().substr(0, 18);
-        data[i].OpportunityStartDate = new Date().toISOString().substr(0, 18);
-        data[i].ExpectedCloseDate = new Date(new Date().getFullYear(), 11, 31).toISOString().substr(0, 18);
+        data[i].OpportunityStartDate = new Date().toISOString().substr(0, 10);
+        data[i].ExpectedCloseDate = new Date(new Date().getFullYear(), 11, 31).toISOString().substr(0, 10);
         data[i].Origin = 'Marketing';
         data[i].SalesStage = '1 - Prospect / Lead';
         data[i].Status = 'In Process';

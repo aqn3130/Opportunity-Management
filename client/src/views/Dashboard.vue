@@ -372,9 +372,11 @@ export default {
     convertDate: value => {
       if (!value) return null;
       value = value.toString();
-      return moment(value)
-        .utc()
-        .format('YYYY-MM-DD');
+      return (
+        moment(value)
+          // .utc()
+          .format('YYYY-MM-DD')
+      );
     },
     formatCurrency(amount) {
       if (!amount) return '';
@@ -567,9 +569,11 @@ export default {
       if (!date) return null;
       date = date.toString();
       const format = 'YYYY-MM-DD';
-      return moment(date)
-        .utc()
-        .format(format);
+      return (
+        moment(date)
+          // .utc()
+          .format(format)
+      );
     }
   }
 };
