@@ -659,9 +659,11 @@ export default {
       if (!date) return null;
       date = date.toString();
       const format = 'YYYY-MM-DD';
-      return moment(date)
-        // .utc()
-        .format(format);
+      return (
+        moment(date)
+          // .utc()
+          .format(format)
+      );
     }
   },
   methods: {
@@ -715,7 +717,8 @@ export default {
       } catch (e) {
         console.log(e);
         this.$toast.open({
-          message: 'Error saving product basket items, please review opportunity',
+          message:
+            'Error saving product basket items, please review opportunity',
           type: 'error',
           duration: 3000,
           dismissible: true,
@@ -766,8 +769,17 @@ export default {
       return currentOpp;
     },
     async validate() {
-      if (this.productItems.length && this.$refs.productForm.validate() && this.$refs.form.validate()) {
+      if (
+        this.productItems.length &&
+        this.$refs.productForm.validate() &&
+        this.$refs.form.validate()
+      ) {
         await this.updateOpportunity(this.getFormData());
+      } else if (
+        this.productItems.length &&
+        !this.$refs.productForm.validate() ||
+        !this.$refs.form.validate()
+      ) {
       } else if (this.$refs.form.validate()) {
         await this.updateOpportunity(this.getFormData());
       }
@@ -794,6 +806,7 @@ export default {
         this.states.push('N/A');
         this.state = this.states[0];
       }
+      return this.states;
     },
     async getStates() {
       if (this.stateOptions.length) {
@@ -806,7 +819,10 @@ export default {
     },
     async onCountryChange() {
       this.state = null;
-      await this.getStatesForCurrentCountry(this.country, this.stateOptions);
+      this.states = await this.getStatesForCurrentCountry(
+        this.country,
+        this.stateOptions
+      );
     },
     async setIndustryType(channelType) {
       this.industryTypeItems = [];
@@ -880,17 +896,11 @@ export default {
       if (!date) return null;
       date = date.toString();
       const format = 'YYYY-MM-DD';
-      return moment(date)
-        // .utc()
-        .format(format);
-    },
-    formatDateNoUTC(date) {
-      if (!date) return null;
-      date = date.toString();
-      const format = 'YYYY-MM-DD';
-      return moment(date)
+      return (
+        moment(date)
           // .utc()
-          .format(format);
+          .format(format)
+      );
     },
     addProduct() {
       const product = {
@@ -1015,7 +1025,10 @@ export default {
         this.memberOfConsortia = this.opportunity.MemberOfConsortia;
         this.country = this.opportunity.Country;
         this.state = this.opportunity.State;
-        await this.getStatesForCurrentCountry(this.country, this.states);
+        this.states = await this.getStatesForCurrentCountry(
+          this.country,
+          this.states
+        );
         this.channelType = this.opportunity.ChannelType;
         await this.setIndustryType(this.channelType);
         this.industryType = this.opportunity.IndustryType;
@@ -1075,7 +1088,6 @@ export default {
     onExpectedCloseDateChange(value) {
       // this.expectedCloseDate = value;
       this.menu2 = false;
-
     },
     onOppStartDateChange(value) {
       this.opportunityStartDate = value;
