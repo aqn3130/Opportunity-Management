@@ -159,6 +159,10 @@ class SapController {
     try {
       for (let i = 0; i < data.length; i += 1) {
         const salesRep = await this.getSalesRep(data[i].Email, request);
+        let country = null;
+        let countryRes = undefined;
+        if (data[i].Country) countryRes = await this.getCountry(data[i].Country, request);
+        if (countryRes) country = countryRes;
         if (!salesRep) {
           const validationError = {
             "Error": [
@@ -181,6 +185,7 @@ class SapController {
         data[i].Status = 'In Process';
         data[i].source = 'SAP';
         data[i].SalesRep = salesRep;
+        data[i].Country = country;
         delete data[i].Email;
       }
 
@@ -259,6 +264,16 @@ class SapController {
       created_ids.push(res[0]);
     }
     return created_ids;
+  }
+
+  async getCountry(countryCode, request) {
+    let country = undefined;
+    const crt = await request.Knex('Country_Region_Territory').where('CRMCountryCode', countryCode);
+    if (crt.length) {
+      country = crt[0].Country;
+    }
+    // console.log(country);
+    return country;
   }
 }
 
