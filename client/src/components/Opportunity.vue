@@ -85,7 +85,7 @@
             ></v-text-field>
             <v-select
               v-model="country"
-              :items="countryItems"
+              :items="getCountryOptions"
               :rules="[v => !!v || 'This field is required']"
               label="Country *"
               required
@@ -105,7 +105,7 @@
               v-model="channelType"
               :rules="nameRules"
               label="Channel Type *"
-              :items="channelTypeItems"
+              :items="getChannelTypeOptions"
               @input="setIndustryType(channelType)"
               dense
               class="caption"
@@ -494,7 +494,13 @@ export default {
   },
   computed: {
     ...mapState('auth', ['currentUser']),
-    ...mapState(['loading'])
+    ...mapState(['loading']),
+    getCountryOptions() {
+      return this.countryItems;
+    },
+    getChannelTypeOptions() {
+      return this.channelTypeItems;
+    }
   },
   async created() {
     this.setPage('');
@@ -503,9 +509,11 @@ export default {
     this.salesRep = this.currentUser.salesRep.Full_Name;
     await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
     const countries = await this.$store.dispatch('getRecords', '');
-    Object.keys(countries).forEach((value, index) => {
-      this.countryItems.push(countries[index].Country);
-    });
+    if (countries.length) {
+      for (let i = 0; i < countries.length; i += 1) {
+        this.countryItems.push(countries[i].Country);
+      }
+    }
   }
 };
 </script>
