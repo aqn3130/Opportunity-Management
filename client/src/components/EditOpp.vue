@@ -1143,7 +1143,6 @@ export default {
             self.isOnline = true;
             await self.init();
             self.endSessionDialog = false;
-            console.log('online');
           } else {
             self.isOnline = false;
             self.endSessionDialog = true;

@@ -544,6 +544,9 @@ export default {
       setLoading: 'setLoading'
     }),
     ...mapActions('auth', ['logout']),
+    ...mapMutations('auth', {
+      setCurrentUser: 'setCurrentUser'
+    }),
     editOpportunity(item) {
       this.setOppId(item.Id);
       this.setOpp(item);
@@ -640,7 +643,7 @@ export default {
       this.endSessionDialog = false;
       this.setCurrentUser(null);
       this.$router.push('/login');
-    },
+    }
   }
 };
 </script>
