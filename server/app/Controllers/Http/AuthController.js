@@ -11,13 +11,14 @@ class AuthController {
     // this.search_url = `https://hub.springer-sbm.com/${Stage}/ude/api/v2.0/users/names?q=`;
     this.search_url = `https://legacysidm.springernature.com/api/v2.0/users/names?q=`;
     // this.auth_url = `https://hub.springer-sbm.com/${Stage}/api/v2.0/internal/auth`;
-    this.auth_url = `https://hub.springer-sbm.com/${Stage}/internal/auth`;
+    // this.auth_url = `https://hub.springer-sbm.com/${Stage}/internal/auth`;
+    this.auth_url = `https://muaddib.springernature.com/api/v2.1/sessions`;
   }
 
   /*
   * login implementation
    */
-  async login({ request, response, auth}) {
+  async login({ request, response, auth }) {
     const credentials = request.only(['username','password']);
     const salesReps = await request.Knex.table('SalesRep').select('Email', 'Full_Name');
 

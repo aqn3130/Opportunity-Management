@@ -247,6 +247,11 @@ class MainController {
       request.Table === 'States' ||
       request.Table === 'Sales_Funnel'
     ) delete data.CreationDate;
+    if (request.Table === 'Product') {
+      delete data.cryItems;
+      delete data.products;
+      delete data.TOBItems;
+    }
     try {
       return await request.Knex.table(request.Table).insert(data);
     } catch (e) {
@@ -297,6 +302,11 @@ class MainController {
         request.Table === 'Industry' ||
         request.Table === 'States' ||
         request.Table === 'Sales_Funnel') delete data.updated_at;
+    if (request.Table === 'Product') {
+      delete data.cryItems;
+      delete data.products;
+      delete data.TOBItems;
+    }
     await request.Knex.select('*').from(request.Table).where({ id: id }).update(data)
     // console.log(rec);
   }

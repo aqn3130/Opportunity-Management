@@ -17,7 +17,7 @@
       }"
       tile
     >
-      <v-form ref="form" v-model="valid" lazy-validation>
+      <v-form ref="form" v-model="valid" lazy-validation id="editOppForm">
         <v-row style="padding: 20px 20px 25px 20px">
           <v-col md="6">
             <v-text-field
@@ -110,7 +110,6 @@
               v-model="state"
               :items="states"
               label="State"
-              :disabled="state === 'N/A'"
               class="caption"
               dense
             ></v-select>
@@ -499,6 +498,22 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="endSessionDialog" persistent max-width="400">
+      <v-card>
+        <v-card-title class="headline">
+          Network connection lost
+        </v-card-title>
+        <v-card-text>
+          You can wait for connection to restore or Logout.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="onSessionEndDialogClicked">
+            Logout
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -652,7 +667,11 @@ export default {
     deleteProductDialog: false,
     toBeDeletedProductId: null,
     unsavedChangesDialog: false,
-    goHome: false
+    goHome: false,
+    endSessionDialog: false,
+    isOffline: false,
+    isOnline: false,
+    noConnection: false
   }),
   filters: {
     formatDate(date) {
@@ -679,6 +698,9 @@ export default {
       setCountries: 'setCountries',
       setStateOptions: 'setStateOptions'
     }),
+    ...mapMutations('auth', {
+      setCurrentUser: 'setCurrentUser'
+    }),
     getFormData() {
       const data_map = new Map();
       for (let i in this.$refs.form._data.inputs) {
@@ -697,8 +719,6 @@ export default {
     async updateOpportunity(currentOpportunity) {
       // console.log(currentOpportunity);
       this.newOppLoading = true;
-      // currentOpportunity.OpportunityStartDate = this.formatDate(currentOpportunity.OpportunityStartDate);
-      // currentOpportunity.ExpectedCloseDate = this.formatDate(currentOpportunity.ExpectedCloseDate);
       try {
         const currentOpp = await this.updateProduct(currentOpportunity);
         await this.$store.dispatch('setCurrentTable', 'Opportunity');
@@ -734,9 +754,9 @@ export default {
       await this.$store.dispatch('setCurrentTable', 'Product');
       currentOpp.grossValue = 0;
       for (const key of Object.keys(this.productItems)) {
-        delete this.productItems[key].cryItems;
-        delete this.productItems[key].products;
-        delete this.productItems[key].TOBItems;
+        // delete this.productItems[key].cryItems;
+        // delete this.productItems[key].products;
+        // delete this.productItems[key].TOBItems;
         currentOpp.grossValue =
           currentOpp.grossValue +
           Number(this.formatGrossValue(this.productItems[key].grossValue));
@@ -776,8 +796,7 @@ export default {
       ) {
         await this.updateOpportunity(this.getFormData());
       } else if (
-        this.productItems.length &&
-        !this.$refs.productForm.validate() ||
+        (this.productItems.length && !this.$refs.productForm.validate()) ||
         !this.$refs.form.validate()
       ) {
       } else if (this.$refs.form.validate()) {
@@ -792,17 +811,28 @@ export default {
     },
     async getStatesForCurrentCountry(country, states) {
       this.states = [];
-      Object.keys(states).forEach((value, index) => {
+      // Object.keys(states).forEach((value, index) => {
+      //   if (
+      //     states[index] &&
+      //     country &&
+      //     country.toLowerCase().trim() ===
+      //       states[index].Country.toLowerCase().trim()
+      //   ) {
+      //     this.states.push(states[index].Name);
+      //   }
+      // });
+
+      for (let i = 0; i < states.length; i += 1) {
         if (
-          states[index] &&
+          states[i] &&
           country &&
           country.toLowerCase().trim() ===
-            states[index].Country.toLowerCase().trim()
+            states[i].Country.toLowerCase().trim()
         ) {
-          this.states.push(states[index].Name);
+          this.states.push(states[i].Name);
         }
-      });
-      if (this.states.length === 0) {
+      }
+      if (!this.states.length) {
         this.states.push('N/A');
         this.state = this.states[0];
       }
@@ -868,29 +898,32 @@ export default {
       }
     },
     getProducts: async function() {
-      this.productItems = [];
+      // this.productItems = [];
+      const prodItems = [];
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
       const data = await this.$store.dispatch('getRecords', this.opportunityId);
-      Object.keys(data).forEach(key => {
+      for (let i = 0; i < data.length; i += 1) {
         const product = {
-          opportunity_fk: data[key].Opportunity_fk,
-          id: data[key].Id,
+          opportunity_fk: data[i].Opportunity_fk,
+          id: data[i].Id,
           cryItems: this.cryOptions,
           TOBItems: this.typeOfBusinessOptions,
-          cry: data[key].CRY,
-          typeOfBusiness: data[key].TypeOfBusiness,
+          cry: data[i].CRY,
+          typeOfBusiness: data[i].TypeOfBusiness,
           products: this.products,
-          productName: data[key].ProductName,
-          productDescription: data[key].ProductDescription,
-          licenseStartDate: this.formatDate(data[key].LicenseStartDate),
-          licenseEndDate: this.formatDate(data[key].LicenseEndDate),
-          likelihood: data[key].Likelihood,
-          agent: data[key].Agent,
-          agentDiscount: data[key].AgentDiscount,
-          grossValue: this.formatCurrency(data[key].GrossValue)
+          productName: data[i].ProductName,
+          productDescription: data[i].ProductDescription,
+          licenseStartDate: this.formatDate(data[i].LicenseStartDate),
+          licenseEndDate: this.formatDate(data[i].LicenseEndDate),
+          likelihood: data[i].Likelihood,
+          agent: data[i].Agent,
+          agentDiscount: data[i].AgentDiscount,
+          grossValue: this.formatCurrency(data[i].GrossValue)
         };
-        this.productItems.push(product);
-      });
+        // this.productItems.push(product);
+        prodItems.push(product);
+      }
+      return prodItems;
     },
     formatDate(date) {
       if (!date) return null;
@@ -951,7 +984,8 @@ export default {
       try {
         await this.$store.dispatch('deleteRecord', this.toBeDeletedProductId);
         this.deleteProductDialog = false;
-        await this.getProducts();
+        this.productItems = [];
+        this.productItems = await this.getProducts();
         this.$toast.open({
           message: 'Product Deleted',
           type: 'success',
@@ -983,9 +1017,12 @@ export default {
       } else {
         await this.$store.dispatch('setCurrentTable', 'Products');
         const data = await this.$store.dispatch('getProducts', '');
-        Object.keys(data).forEach(key => {
-          this.products.push(data[key].Category_Description);
-        });
+        // Object.keys(data).forEach(key => {
+        //   this.products.push(data[key].Category_Description);
+        // });
+        for (let i = 0; i < data.length; i += 1) {
+          this.products.push(data[i].Category_Description);
+        }
         await this.setProductsOption(this.products);
       }
     },
@@ -1001,10 +1038,9 @@ export default {
           'getCountryRegionTerritory',
           ''
         );
-        Object.keys(countries).forEach((value, index) => {
-          if (countries[index])
-            this.countryItems.push(countries[index].Country);
-        });
+        for (let i = 0; i < countries.length; i += 1) {
+          if (countries[i]) this.countryItems.push(countries[i].Country);
+        }
         this.setCountries(this.countryItems);
       }
     },
@@ -1014,7 +1050,8 @@ export default {
         this.setTab('opp');
         await this.$store.dispatch('setCurrentTable', 'Opportunity');
         await this.getProductOptions();
-        await this.getProducts();
+        this.productItems = [];
+        this.productItems = await this.getProducts();
         await this.getCountries();
         await this.getStates();
         this.salesRepType = this.opportunity.Type;
@@ -1091,7 +1128,52 @@ export default {
     },
     onOppStartDateChange(value) {
       this.opportunityStartDate = value;
+    },
+    onSessionEndDialogClicked() {
+      this.endSessionDialog = false;
+      this.setCurrentUser(null);
+      this.$router.push('/login');
+    },
+    handleConnection() {
+      if (navigator.onLine) {
+        const self = this;
+        this.isReachable(this.getServerUrl()).then(async function(online) {
+          if (online) {
+            // handle online status
+            self.isOnline = true;
+            await self.init();
+            self.endSessionDialog = false;
+            console.log('online');
+          } else {
+            self.isOnline = false;
+            self.endSessionDialog = true;
+          }
+        });
+      } else {
+        // handle offline status
+        this.isOffline = true;
+        this.isOnline = false;
+        this.endSessionDialog = true;
+      }
+    },
+    getServerUrl() {
+      return (
+        document.getElementById('editOppForm').value || window.location.origin
+      );
+    },
+    isReachable(url) {
+      return fetch(url, { method: 'HEAD', mode: 'no-cors' })
+        .then(function(resp) {
+          return resp && (resp.ok || resp.type === 'opaque');
+        })
+        .catch(function(err) {
+          console.warn('[conn test failure]:', err);
+        });
     }
+  },
+  mounted() {
+    window.addEventListener('online', this.handleConnection);
+    window.addEventListener('offline', this.handleConnection);
   },
   computed: {
     ...mapState('auth', ['currentUser']),

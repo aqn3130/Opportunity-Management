@@ -45,8 +45,8 @@ export default {
       localStorage.setItem('token', data.token);
       window.USER = data.user;
       await dispatch('getCurrentUser');
-      commit('setPassword', null);
-      commit('setUsername', null);
+      // commit('setPassword', null);
+      // commit('setUsername', null);
       commit('setError', null);
     },
     logout({ commit }) {

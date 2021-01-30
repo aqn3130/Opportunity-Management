@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="dashboard">
     <v-card
       style="z-index: 1;margin-top: -50px"
       color="#607D8B"
@@ -333,6 +333,22 @@
     >
       <v-icon>mdi-plus</v-icon>
     </v-btn>
+    <v-dialog v-model="endSessionDialog" persistent max-width="400">
+      <v-card>
+        <v-card-title class="headline">
+          Network connection lost
+        </v-card-title>
+        <v-card-text>
+          You can wait for connection to restore or Logout.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="onSessionEndDialogClicked">
+            Logout
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -365,7 +381,11 @@ export default {
       selectedHeaders: [],
       headersFilter: [],
       dialogColFilter: false,
-      toggleDense: true
+      toggleDense: true,
+      endSessionDialog: false,
+      isOffline: false,
+      isOnline: false,
+      noConnection: false
     };
   },
   filters: {
@@ -388,18 +408,7 @@ export default {
     }
   },
   async created() {
-    let initialCols = [];
-    if (!this.currentUser) await this.$router.push({ name: 'Login' });
-    await this.$store.dispatch('setCurrentTable', 'Opportunity');
-    this.rows = await this.getRecords();
-    if (this.loading) this.setLoading(false);
-    // this.selectedStatus.push(this.statuses[0]);
-    this.headersFilter = Object.values(this.headers);
-    // initialCols = Object.values(this.headers);
-    // initialCols.splice(2, 1);
-    // initialCols.splice(5, 1);
-    // this.selectedHeaders = initialCols;
-    this.selectedHeaders = this.headersFilter;
+    await this.init();
   },
   computed: {
     showHeaders() {
@@ -500,8 +509,25 @@ export default {
       //this.activeFilters = Object.assign({}, this.filters)
     }
   },
-  mounted() {},
+  mounted() {
+    window.addEventListener('online', this.handleConnection);
+    window.addEventListener('offline', this.handleConnection);
+  },
   methods: {
+    async init() {
+      let initialCols = [];
+      if (!this.currentUser) await this.$router.push({ name: 'Login' });
+      await this.$store.dispatch('setCurrentTable', 'Opportunity');
+      this.rows = await this.getRecords();
+      if (this.loading) this.setLoading(false);
+      // this.selectedStatus.push(this.statuses[0]);
+      this.headersFilter = Object.values(this.headers);
+      // initialCols = Object.values(this.headers);
+      // initialCols.splice(2, 1);
+      // initialCols.splice(5, 1);
+      // this.selectedHeaders = initialCols;
+      this.selectedHeaders = this.headersFilter;
+    },
     getRecords: async function() {
       return await this.$store.dispatch(
         'getCurrentSalesRepOpts',
@@ -574,7 +600,47 @@ export default {
           // .utc()
           .format(format)
       );
-    }
+    },
+    handleConnection() {
+      if (navigator.onLine) {
+        const self = this;
+        this.isReachable(this.getServerUrl()).then(async function(online) {
+          if (online) {
+            // handle online status
+            self.isOnline = true;
+            await self.init();
+            self.endSessionDialog = false;
+          } else {
+            self.isOnline = false;
+            self.endSessionDialog = true;
+          }
+        });
+      } else {
+        // handle offline status
+        this.isOffline = true;
+        this.isOnline = false;
+        this.endSessionDialog = true;
+      }
+    },
+    getServerUrl() {
+      return (
+        document.getElementById('dashboard').value || window.location.origin
+      );
+    },
+    isReachable(url) {
+      return fetch(url, { method: 'HEAD', mode: 'no-cors' })
+        .then(function(resp) {
+          return resp && (resp.ok || resp.type === 'opaque');
+        })
+        .catch(function(err) {
+          console.warn('[conn test failure]:', err);
+        });
+    },
+    onSessionEndDialogClicked() {
+      this.endSessionDialog = false;
+      this.setCurrentUser(null);
+      this.$router.push('/login');
+    },
   }
 };
 </script>

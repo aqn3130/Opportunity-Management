@@ -5,8 +5,14 @@
       {{ title }}
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-card tile color="#ffffff" light :style="{ border: '1px solid #455A64' }" flat>
-      <v-form ref="form" v-model="valid" lazy-validation>
+    <v-card
+      tile
+      color="#ffffff"
+      light
+      :style="{ border: '1px solid #455A64' }"
+      flat
+    >
+      <v-form ref="form" v-model="valid" lazy-validation id="newOppForm">
         <v-row style="padding: 15px 20px 25px 20px" class="px-16">
           <v-col md="6">
             <v-text-field
@@ -85,7 +91,7 @@
             ></v-text-field>
             <v-select
               v-model="country"
-              :items="getCountryOptions"
+              :items="countryItems"
               :rules="[v => !!v || 'This field is required']"
               label="Country *"
               required
@@ -105,7 +111,7 @@
               v-model="channelType"
               :rules="nameRules"
               label="Channel Type *"
-              :items="getChannelTypeOptions"
+              :items="channelTypeItems"
               @input="setIndustryType(channelType)"
               dense
               class="caption"
@@ -283,6 +289,29 @@
         </v-row>
       </v-form>
     </v-card>
+    <v-dialog v-model="loadingDialog" width="200">
+      <v-card :loading="loadingDialog">
+        <v-card-text class="pa-8 body-2">
+          Loading...
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="endSessionDialog" persistent max-width="400">
+      <v-card>
+        <v-card-title class="headline">
+          Network connection lost
+        </v-card-title>
+        <v-card-text>
+          You can wait for connection to restore or Logout.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="onSessionEndDialogClicked">
+            Logout
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -355,7 +384,12 @@ export default {
     currency: null,
     currencyItems: ['EUR', 'USD', 'GBP', 'JPY', 'AUD'],
     newOppLoading: false,
-    containerWidth: '900px'
+    containerWidth: '900px',
+    loadingDialog: false,
+    endSessionDialog: false,
+    isOffline: false,
+    isOnline: false,
+    noConnection: false
   }),
   props: {
     title: {
@@ -372,6 +406,9 @@ export default {
       setPage: 'setPage',
       setOpp: 'setOpp',
       setOppId: 'setOppId'
+    }),
+    ...mapMutations('auth', {
+      setCurrentUser: 'setCurrentUser'
     }),
     getFormData() {
       const data_map = new Map();
@@ -418,11 +455,6 @@ export default {
         await this.save(this.getFormData(), 'Edit Opportunity');
       }
     },
-    // async validate() {
-    //   if (this.$refs.form.validate()) {
-    //     await this.saveNewOpportunity(this.getFormData());
-    //   }
-    // },
     reset() {
       // this.$refs.form.reset()
       // this.$refs.form.resetValidation()
@@ -490,30 +522,75 @@ export default {
       } else {
         this.salesStageItems = tempArray;
       }
+    },
+    setCountryOptions: async function() {
+      await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
+      const countries = await this.$store.dispatch('getRecords', '');
+      this.countryItems = [];
+      if (countries.length) {
+        for (let i = 0; i < countries.length; i += 1) {
+          this.countryItems.push(countries[i].Country);
+        }
+      }
+    },
+    onSessionEndDialogClicked() {
+      this.endSessionDialog = false;
+      this.setCurrentUser(null);
+      this.$router.push('/login');
+    },
+    handleConnection() {
+      if (navigator.onLine) {
+        const self = this;
+        this.isReachable(this.getServerUrl()).then(async function(online) {
+          if (online) {
+            // handle online status
+            self.isOnline = true;
+            await self.init();
+            self.endSessionDialog = false;
+          } else {
+            self.isOnline = false;
+            self.endSessionDialog = true;
+          }
+        });
+      } else {
+        // handle offline status
+        this.isOffline = true;
+        this.isOnline = false;
+        this.endSessionDialog = true;
+      }
+    },
+    getServerUrl() {
+      return (
+        document.getElementById('newOppForm').value || window.location.origin
+      );
+    },
+    isReachable(url) {
+      return fetch(url, { method: 'HEAD', mode: 'no-cors' })
+        .then(function(resp) {
+          return resp && (resp.ok || resp.type === 'opaque');
+        })
+        .catch(function(err) {
+          console.warn('[conn test failure]:', err);
+        });
+    },
+    async init() {
+      this.setPage('');
+      this.onStatusChange(this.status);
+      this.salesRepType = this.currentUser.salesRep.Type;
+      this.salesRep = this.currentUser.salesRep.Full_Name;
+      await this.setCountryOptions();
     }
   },
   computed: {
     ...mapState('auth', ['currentUser']),
-    ...mapState(['loading']),
-    getCountryOptions() {
-      return this.countryItems;
-    },
-    getChannelTypeOptions() {
-      return this.channelTypeItems;
-    }
+    ...mapState(['loading', 'countries'])
+  },
+  mounted() {
+    window.addEventListener('online', this.handleConnection);
+    window.addEventListener('offline', this.handleConnection);
   },
   async created() {
-    this.setPage('');
-    this.onStatusChange(this.status);
-    this.salesRepType = this.currentUser.salesRep.Type;
-    this.salesRep = this.currentUser.salesRep.Full_Name;
-    await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
-    const countries = await this.$store.dispatch('getRecords', '');
-    if (countries.length) {
-      for (let i = 0; i < countries.length; i += 1) {
-        this.countryItems.push(countries[i].Country);
-      }
-    }
+    await this.init();
   }
 };
 </script>

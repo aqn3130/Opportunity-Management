@@ -49,7 +49,7 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/dashboardAdmin" v-if="$auth.isAdmin()">
+          <v-list-item to="/dashboardAdmin" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>list_alt</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Dashboard Admin</v-list-item-title>
@@ -67,55 +67,55 @@
 <!--              <v-list-item-title>Activity Tracker</v-list-item-title>-->
 <!--            </v-list-item-content>-->
 <!--          </v-list-item>-->
-          <v-list-item to="/opportunities" v-if="$auth.isAdmin()">
+          <v-list-item to="/opportunities" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>select_all</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>All Opportunities</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/sales-rep" v-if="$auth.isAdmin()">
+          <v-list-item to="/sales-rep" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>groups</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Sales Rep</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/country-region-territory" v-if="$auth.isAdmin()">
+          <v-list-item to="/country-region-territory" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>flag</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Country Region Territory</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/industry" v-if="$auth.isAdmin()">
+          <v-list-item to="/industry" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>category</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Industries</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/product" v-if="$auth.isAdmin()">
+          <v-list-item to="/product" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>storefront</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Products</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-<!--          <v-list-item to="/campaign" v-if="$auth.isAdmin()">-->
+<!--          <v-list-item to="/campaign" v-if="currentUser.roles.includes('admin')">-->
 <!--            <v-list-item-icon><v-icon>campaign</v-icon></v-list-item-icon>-->
 <!--            <v-list-item-content>-->
 <!--              <v-list-item-title>Campaign</v-list-item-title>-->
 <!--            </v-list-item-content>-->
 <!--          </v-list-item>-->
-          <v-list-item to="/salesFunnel" v-if="$auth.isAdmin()">
+          <v-list-item to="/salesFunnel" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>local_atm</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Sales Funnel</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/states" v-if="$auth.isAdmin()">
+          <v-list-item to="/states" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>map</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>States</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/users" v-if="$auth.isAdmin()">
+          <v-list-item to="/users" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon
               ><v-icon>supervisor_account</v-icon></v-list-item-icon
             >
