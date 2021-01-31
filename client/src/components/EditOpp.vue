@@ -112,6 +112,7 @@
               label="State"
               class="caption"
               dense
+              :disabled="isState"
             ></v-select>
             <v-select
               v-model="channelType"
@@ -811,17 +812,6 @@ export default {
     },
     async getStatesForCurrentCountry(country, states) {
       this.states = [];
-      // Object.keys(states).forEach((value, index) => {
-      //   if (
-      //     states[index] &&
-      //     country &&
-      //     country.toLowerCase().trim() ===
-      //       states[index].Country.toLowerCase().trim()
-      //   ) {
-      //     this.states.push(states[index].Name);
-      //   }
-      // });
-
       for (let i = 0; i < states.length; i += 1) {
         if (
           states[i] &&
@@ -1064,7 +1054,7 @@ export default {
         this.state = this.opportunity.State;
         this.states = await this.getStatesForCurrentCountry(
           this.country,
-          this.states
+          this.stateOptions
         );
         this.channelType = this.opportunity.ChannelType;
         await this.setIndustryType(this.channelType);
@@ -1184,7 +1174,10 @@ export default {
       'productsOption',
       'countries',
       'stateOptions'
-    ])
+    ]),
+    isState() {
+      return this.states.length === 1 && this.state === 'N/A';
+    }
   },
   async created() {
     this.loadingDialog = true;
