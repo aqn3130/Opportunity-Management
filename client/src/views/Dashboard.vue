@@ -31,6 +31,7 @@
               :headers="showHeaders"
               :items="rows"
               :items-per-page="perPage"
+              @page-count="pageCount = $event"
               class="elevation-1 text-no-wrap"
               :footer-props="{
                 showFirstLastPage: true,
@@ -43,6 +44,10 @@
               :search="searchStr"
               :loading="loading"
               :style="{ cursor: 'pointer' }"
+              :sort-by="['ExpectedCloseDate']"
+              :sort-desc="[false]"
+              :page.sync="page"
+              hide-default-footer
             >
               <template
                 v-for="(col, i) in filters"
@@ -254,6 +259,28 @@
               <!--                    {{ item.source | formatSAP }}-->
               <!--                  </span>-->
               <!--                </template>-->
+              <template slot="footer">
+                <hr class="mt-3 mb-3" />
+                <v-row justify="center">
+                  <v-select
+                    :value="15"
+                    :items="[15, 25, rows.length]"
+                    label="Items per page"
+                    type="number"
+                    min="-1"
+                    max="25"
+                    @input="perPage = parseInt($event, 10)"
+                    :style="{ maxWidth: '100px' }"
+                    dense
+                  ></v-select>
+                  <v-pagination
+                    v-model="page"
+                    :length="pageCount"
+                    class="ml-5"
+                  ></v-pagination>
+                </v-row>
+                <div class="text-center"></div>
+              </template>
             </v-data-table>
           </v-col>
         </v-row>
@@ -325,7 +352,8 @@ export default {
       endSessionDialog: false,
       isOffline: false,
       isOnline: false,
-      noConnection: false
+      noConnection: false,
+      pageCount: 0,
     };
   },
   filters: {
@@ -390,7 +418,6 @@ export default {
               ? this.activeFilters.ChannelType.includes(value)
               : true;
           }
-          // width: '150'
         },
         {
           text: 'Status',
@@ -428,6 +455,9 @@ export default {
   mounted() {
     window.addEventListener('online', this.handleConnection);
     window.addEventListener('offline', this.handleConnection);
+  },
+  updated() {
+    this.toggleWonInProcess('Status');
   },
   methods: {
     async init() {
@@ -493,6 +523,17 @@ export default {
         })
         .filter((value, index, self) => {
           return self.indexOf(value) === index;
+        });
+    },
+    toggleWonInProcess(col) {
+      // console.log(col);
+      this.activeFilters[col] = this.rows
+        .map(d => {
+          return d[col];
+        })
+        .filter((value, index, self) => {
+          if (value === 'In Process' || value === 'Won')
+            return self.indexOf(value) === index;
         });
     },
 
