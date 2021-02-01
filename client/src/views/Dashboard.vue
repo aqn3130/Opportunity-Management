@@ -154,66 +154,6 @@
                     @click:clear="clearSearch"
                   ></v-text-field>
                   <v-spacer></v-spacer>
-                  <!--                    <div class="text-left">-->
-                  <!--                      <v-dialog v-model="dialogColFilter" width="500">-->
-                  <!--                        <template v-slot:activator="{ on, attrs }">-->
-                  <!--                          <v-btn-->
-                  <!--                            text-->
-                  <!--                            v-bind="attrs"-->
-                  <!--                            v-on="on"-->
-                  <!--                            light-->
-                  <!--                            color="grey"-->
-                  <!--                            small-->
-                  <!--                          >-->
-                  <!--                            <v-icon>view_column</v-icon>-->
-                  <!--                          </v-btn>-->
-                  <!--                        </template>-->
-                  <!--                        <v-card>-->
-                  <!--                          <v-card-title class="headline grey lighten-2">-->
-                  <!--                            Column Filter-->
-                  <!--                          </v-card-title>-->
-                  <!--                          <v-card-text class="py-10">-->
-                  <!--                            <div>-->
-                  <!--                              <v-select-->
-                  <!--                                v-model="selectedHeaders"-->
-                  <!--                                :items="headersFilter"-->
-                  <!--                                label="Select Columns"-->
-                  <!--                                multiple-->
-                  <!--                                outlined-->
-                  <!--                                return-object-->
-                  <!--                              >-->
-                  <!--                                <template v-slot:selection="{ item, index }">-->
-                  <!--                                  <v-chip v-if="index < 2">-->
-                  <!--                                    <span>{{ item.text }}</span>-->
-                  <!--                                  </v-chip>-->
-                  <!--                                  <span-->
-                  <!--                                    v-if="index === 2"-->
-                  <!--                                    class="grey&#45;&#45;text caption"-->
-                  <!--                                    >(+{{-->
-                  <!--                                      selectedHeaders.length - 2-->
-                  <!--                                    }}-->
-                  <!--                                    others)</span-->
-                  <!--                                  >-->
-                  <!--                                </template>-->
-                  <!--                              </v-select>-->
-                  <!--                            </div>-->
-                  <!--                          </v-card-text>-->
-
-                  <!--                          <v-divider></v-divider>-->
-
-                  <!--                          <v-card-actions>-->
-                  <!--                            <v-spacer></v-spacer>-->
-                  <!--                            <v-btn-->
-                  <!--                              color="primary"-->
-                  <!--                              text-->
-                  <!--                              @click="dialogColFilter = false"-->
-                  <!--                            >-->
-                  <!--                              Done-->
-                  <!--                            </v-btn>-->
-                  <!--                          </v-card-actions>-->
-                  <!--                        </v-card>-->
-                  <!--                      </v-dialog>-->
-                  <!--                    </div>-->
                 </v-toolbar>
               </template>
               <template v-slot:item.OpportunityName="{ item }">
@@ -426,17 +366,6 @@ export default {
           align: 'left',
           value: 'CustomerName'
         },
-        // {
-        //   text: 'Source',
-        //   align: 'left',
-        //   value: 'source',
-        //   filter: value => {
-        //     return this.activeFilters.source
-        //       ? this.activeFilters.source.includes(value)
-        //       : true;
-        //   }
-        //   // width: '120'
-        // },
         {
           text: 'BPID',
           align: 'left',
@@ -467,19 +396,12 @@ export default {
           text: 'Status',
           align: 'left',
           value: 'Status',
-          // filter: value => {
-          //   if (!this.selectedStatus) return true;
-          //   if (this.selectedStatus[0] && this.selectedStatus[0].length === 1 && this.selectedStatus[0] === this.statuses[0]) return true;
-          //   return value === this.selectedStatus;
-          // }
           filter: value => {
             return this.activeFilters.Status
               ? this.activeFilters.Status.includes(value)
               : true;
           }
-          // width: '110'
         },
-        // { text: 'License ID', align: 'left', value: 'LicenseID' },
         {
           text: 'Expected Close Date',
           align: 'left',
@@ -489,12 +411,6 @@ export default {
           text: 'Currency',
           align: 'left',
           value: 'Currency'
-          // filter: value => {
-          //   return this.activeFilters.Currency
-          //     ? this.activeFilters.Currency.includes(value)
-          //     : true;
-          // }
-          // width: '120'
         },
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
@@ -515,17 +431,11 @@ export default {
   },
   methods: {
     async init() {
-      let initialCols = [];
       if (!this.currentUser) await this.$router.push({ name: 'Login' });
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
       this.rows = await this.getRecords();
       if (this.loading) this.setLoading(false);
-      // this.selectedStatus.push(this.statuses[0]);
       this.headersFilter = Object.values(this.headers);
-      // initialCols = Object.values(this.headers);
-      // initialCols.splice(2, 1);
-      // initialCols.splice(5, 1);
-      // this.selectedHeaders = initialCols;
       this.selectedHeaders = this.headersFilter;
     },
     getRecords: async function() {
