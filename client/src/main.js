@@ -9,6 +9,12 @@ import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-default.css';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import VueGoodTablePlugin from 'vue-good-table';
+// import the styles
+import 'vue-good-table/dist/vue-good-table.css';
+// import 'vue-multiselect/dist/vue-multiselect.min.css';
+
+Vue.use(VueGoodTablePlugin);
 Vue.use(VueToast);
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
@@ -19,7 +25,9 @@ window.BUS = new Vue();
 
 if (token) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  axios.get(`api/get-current-user`).then(function({ data }) {
+  axios
+    .get(`api/get-current-user`)
+    .then(function({ data }) {
       window.USER = data.user;
       store.commit('auth/setCurrentUser', data);
       // console.log(data);

@@ -49,6 +49,12 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/myOpportunities">
+            <v-list-item-icon><v-icon>dashboard</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>My Opportunities</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item to="/dashboardAdmin" v-if="currentUser.roles.includes('admin')">
             <v-list-item-icon><v-icon>list_alt</v-icon></v-list-item-icon>
             <v-list-item-content>
