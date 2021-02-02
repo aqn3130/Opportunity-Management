@@ -672,7 +672,8 @@ export default {
     endSessionDialog: false,
     isOffline: false,
     isOnline: false,
-    noConnection: false
+    noConnection: false,
+    toBeDeletedProduct: undefined
   }),
   filters: {
     formatDate(date) {
@@ -697,7 +698,9 @@ export default {
       setFormData: 'setFormData',
       setLoading: 'setLoading',
       setCountries: 'setCountries',
-      setStateOptions: 'setStateOptions'
+      setStateOptions: 'setStateOptions',
+      setProductBasket: 'setProductBasket',
+      setUpdatedProductBasket: 'setUpdatedProductBasket'
     }),
     ...mapMutations('auth', {
       setCurrentUser: 'setCurrentUser'
@@ -717,7 +720,7 @@ export default {
       data_map.set('id', this.opportunityId);
       return Object.fromEntries(data_map);
     },
-    async updateOpportunity(currentOpportunity) {
+    async updateOpportunity(currentOpportunity, productBasketUpdate) {
       // console.log(currentOpportunity);
       this.newOppLoading = true;
       try {
@@ -731,6 +734,7 @@ export default {
           dismissible: true,
           position: 'bottom',
           onClose: () => {
+            if (!productBasketUpdate)
             this.$router.push({ name: 'Dashboard' });
             this.newOppLoading = false;
           }
@@ -795,13 +799,13 @@ export default {
         this.$refs.productForm.validate() &&
         this.$refs.form.validate()
       ) {
-        await this.updateOpportunity(this.getFormData());
+        await this.updateOpportunity(this.getFormData(), false);
       } else if (
         (this.productItems.length && !this.$refs.productForm.validate()) ||
         !this.$refs.form.validate()
       ) {
       } else if (this.$refs.form.validate()) {
-        await this.updateOpportunity(this.getFormData());
+        await this.updateOpportunity(this.getFormData(), false);
       }
     },
     reset() {
@@ -959,6 +963,7 @@ export default {
     },
     deleteProduct(item) {
       // console.log(item);
+      this.toBeDeletedProduct = item;
       if (this.productItems[this.productItems.length - 1].cry === null) {
         this.productItems.splice(this.productItems.length - 1);
       } else {
@@ -970,12 +975,13 @@ export default {
       // console.log(tob);
     },
     async deleteExistingProduct() {
-      await this.$store.dispatch('setCurrentTable', 'Product');
       try {
+        await this.$store.dispatch('setCurrentTable', 'Product');
         await this.$store.dispatch('deleteRecord', this.toBeDeletedProductId);
-        this.deleteProductDialog = false;
         this.productItems = [];
         this.productItems = await this.getProducts();
+        await this.updateOpportunity(this.getFormData(), true);
+        this.deleteProductDialog = false;
         this.$toast.open({
           message: 'Product Deleted',
           type: 'success',
@@ -1180,6 +1186,7 @@ export default {
     }
   },
   async created() {
+    // console.log(this.opportunity);
     this.loadingDialog = true;
     window.BUS.$on('opp-changed', () => {
       this.unsavedChangesDialog = true;
@@ -1192,6 +1199,7 @@ export default {
       await this.init();
       const formData = this.getFormData();
       this.setCurrentOpp(formData);
+      this.setProductBasket(this.productItems);
       for (let i = 0; i < this.productItems.length; i += 1) {
         this.menuEndDate.push(false);
         this.menuStartDate.push(false);
@@ -1206,6 +1214,7 @@ export default {
   updated() {
     const formData = this.getFormData();
     this.setFormData(formData);
+    this.setUpdatedProductBasket(this.productItems);
   },
   beforeDestroy() {
     this.setFormData(null);

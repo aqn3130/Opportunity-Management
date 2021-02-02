@@ -27,7 +27,9 @@ export default new Vuex.Store({
     stateOptions: [],
     relation: '',
     currentActivity: {},
-    customers: []
+    customers: [],
+    productBasket: undefined,
+    updatedProductBasket: undefined
   },
   mutations: {
     setTable(state, value) {
@@ -83,6 +85,12 @@ export default new Vuex.Store({
     },
     setCustomers(state, customers) {
       state.customers = customers;
+    },
+    setProductBasket(state, products) {
+      state.productBasket = products;
+    },
+    setUpdatedProductBasket(state, updatedProducts) {
+      state.updatedProductBasket = updatedProducts;
     }
   },
   actions: {

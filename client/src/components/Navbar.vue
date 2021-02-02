@@ -55,7 +55,10 @@
               <v-list-item-title>My Opportunities</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/dashboardAdmin" v-if="currentUser.roles.includes('admin')">
+          <v-list-item
+            to="/dashboardAdmin"
+            v-if="currentUser.roles.includes('admin')"
+          >
             <v-list-item-icon><v-icon>list_alt</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Dashboard Admin</v-list-item-title>
@@ -67,31 +70,43 @@
               <v-list-item-title>New Opportunity</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-<!--          <v-list-item to="/activities">-->
-<!--            <v-list-item-icon><v-icon>local_activity</v-icon></v-list-item-icon>-->
-<!--            <v-list-item-content>-->
-<!--              <v-list-item-title>Activity Tracker</v-list-item-title>-->
-<!--            </v-list-item-content>-->
-<!--          </v-list-item>-->
-          <v-list-item to="/opportunities" v-if="currentUser.roles.includes('admin')">
+          <!--          <v-list-item to="/activities">-->
+          <!--            <v-list-item-icon><v-icon>local_activity</v-icon></v-list-item-icon>-->
+          <!--            <v-list-item-content>-->
+          <!--              <v-list-item-title>Activity Tracker</v-list-item-title>-->
+          <!--            </v-list-item-content>-->
+          <!--          </v-list-item>-->
+          <v-list-item
+            to="/opportunities"
+            v-if="currentUser.roles.includes('admin')"
+          >
             <v-list-item-icon><v-icon>select_all</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>All Opportunities</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/sales-rep" v-if="currentUser.roles.includes('admin')">
+          <v-list-item
+            to="/sales-rep"
+            v-if="currentUser.roles.includes('admin')"
+          >
             <v-list-item-icon><v-icon>groups</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Sales Rep</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/country-region-territory" v-if="currentUser.roles.includes('admin')">
+          <v-list-item
+            to="/country-region-territory"
+            v-if="currentUser.roles.includes('admin')"
+          >
             <v-list-item-icon><v-icon>flag</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Country Region Territory</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/industry" v-if="currentUser.roles.includes('admin')">
+          <v-list-item
+            to="/industry"
+            v-if="currentUser.roles.includes('admin')"
+          >
             <v-list-item-icon><v-icon>category</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Industries</v-list-item-title>
@@ -103,13 +118,16 @@
               <v-list-item-title>Products</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-<!--          <v-list-item to="/campaign" v-if="currentUser.roles.includes('admin')">-->
-<!--            <v-list-item-icon><v-icon>campaign</v-icon></v-list-item-icon>-->
-<!--            <v-list-item-content>-->
-<!--              <v-list-item-title>Campaign</v-list-item-title>-->
-<!--            </v-list-item-content>-->
-<!--          </v-list-item>-->
-          <v-list-item to="/salesFunnel" v-if="currentUser.roles.includes('admin')">
+          <!--          <v-list-item to="/campaign" v-if="currentUser.roles.includes('admin')">-->
+          <!--            <v-list-item-icon><v-icon>campaign</v-icon></v-list-item-icon>-->
+          <!--            <v-list-item-content>-->
+          <!--              <v-list-item-title>Campaign</v-list-item-title>-->
+          <!--            </v-list-item-content>-->
+          <!--          </v-list-item>-->
+          <v-list-item
+            to="/salesFunnel"
+            v-if="currentUser.roles.includes('admin')"
+          >
             <v-list-item-icon><v-icon>local_atm</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Sales Funnel</v-list-item-title>
@@ -130,22 +148,20 @@
             </v-list-item-content>
           </v-list-item>
           <v-list-item to="/gbqReports">
-            <v-list-item-icon
-            ><v-icon>window</v-icon></v-list-item-icon
-            >
+            <v-list-item-icon><v-icon>window</v-icon></v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>PLM Reports</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-<!--          <v-list-item-->
-<!--            href="https://datastudio.google.com/reporting/1V3LWY3BX7uonW-cGBFDTiF3ffOE7yZNP/page/lAXy"-->
-<!--            target="_blank"-->
-<!--          >-->
-<!--            <v-list-item-icon><v-icon>window</v-icon></v-list-item-icon>-->
-<!--            <v-list-item-content>-->
-<!--              <v-list-item-title>PLM Reports</v-list-item-title>-->
-<!--            </v-list-item-content>-->
-<!--          </v-list-item>-->
+          <!--          <v-list-item-->
+          <!--            href="https://datastudio.google.com/reporting/1V3LWY3BX7uonW-cGBFDTiF3ffOE7yZNP/page/lAXy"-->
+          <!--            target="_blank"-->
+          <!--          >-->
+          <!--            <v-list-item-icon><v-icon>window</v-icon></v-list-item-icon>-->
+          <!--            <v-list-item-content>-->
+          <!--              <v-list-item-title>PLM Reports</v-list-item-title>-->
+          <!--            </v-list-item-content>-->
+          <!--          </v-list-item>-->
         </v-list>
       </v-card>
       <template v-slot:append>
@@ -179,12 +195,20 @@ export default {
   },
   methods: {
     onSandwichMenuClick() {
-      if (JSON.stringify(this.formData) === JSON.stringify(this.currentOpp))
+      if (
+        JSON.stringify(this.formData) === JSON.stringify(this.currentOpp) &&
+        JSON.stringify(this.productBasket) ===
+          JSON.stringify(this.updatedProductBasket)
+      )
         this.drawer = !this.drawer;
       else window.BUS.$emit('opp-changed');
     },
     toHome() {
-      if (JSON.stringify(this.formData) === JSON.stringify(this.currentOpp))
+      if (
+        JSON.stringify(this.formData) === JSON.stringify(this.currentOpp) &&
+        JSON.stringify(this.productBasket) ===
+          JSON.stringify(this.updatedProductBasket)
+      )
         this.$router.push({ path: '/' });
       else window.BUS.$emit('go-home');
     },
@@ -200,7 +224,12 @@ export default {
   },
   computed: {
     ...mapState('auth', ['token', 'currentUser']),
-    ...mapState(['formData', 'currentOpp'])
+    ...mapState([
+      'formData',
+      'currentOpp',
+      'productBasket',
+      'updatedProductBasket'
+    ])
   },
   created() {
     window.addEventListener('resize', () => {
