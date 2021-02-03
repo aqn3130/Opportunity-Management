@@ -302,6 +302,14 @@
                           class="caption"
                         ></v-select>
                       </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.GrossValue"
+                          label="Gross Value"
+                          dense
+                          :rules="grossValueRule"
+                        ></v-text-field>
+                      </v-col>
                     </v-row>
                   </v-form>
                 </v-container>
@@ -475,7 +483,8 @@ export default {
       salesStageItems: [],
       states: [],
       forecastCategoryItems: ['Pipeline', 'Committed', 'Best Case'],
-      currencyItems: ['EUR', 'USD', 'GBP', 'JPY', 'AUD']
+      currencyItems: ['EUR', 'USD', 'GBP', 'JPY', 'AUD'],
+      grossValueRule: [v => /^[0-9]+$/.test(v) || 'Numeric values only']
     };
   },
   computed: {

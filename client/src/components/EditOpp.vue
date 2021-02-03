@@ -638,6 +638,7 @@ export default {
     ],
     agent: false,
     agentDiscountOptions: [
+      0,
       1,
       1.5,
       2,
@@ -727,6 +728,7 @@ export default {
         const currentOpp = await this.updateProduct(currentOpportunity);
         await this.$store.dispatch('setCurrentTable', 'Opportunity');
         await this.$store.dispatch('updateRecord', currentOpp);
+        this.setProductBasket(this.productItems);
         this.$toast.open({
           message: 'Opportunity Updated',
           type: 'success',
@@ -734,8 +736,7 @@ export default {
           dismissible: true,
           position: 'bottom',
           onClose: () => {
-            if (!productBasketUpdate)
-            this.$router.push({ name: 'Dashboard' });
+            if (!productBasketUpdate) this.$router.push({ name: 'Dashboard' });
             this.newOppLoading = false;
           }
         });
