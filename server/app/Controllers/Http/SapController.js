@@ -186,6 +186,8 @@ class SapController {
         data[i].source = 'SAP';
         data[i].SalesRep = salesRep;
         data[i].Country = country;
+        data[i].ForecastCategory = 'Pipeline';
+        data[i].OpportunityName = `Lead Gen: ${data[i].OpportunityName}`;
         delete data[i].Email;
       }
 
