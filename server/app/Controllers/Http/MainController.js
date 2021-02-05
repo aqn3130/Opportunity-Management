@@ -211,6 +211,24 @@ class MainController {
       query = await request.Knex('Opportunity')
         .where('SalesRep', params.salesRep)
     }
+    if (params.salesRep && params.searchStr) {
+      const str = `%${params.searchStr}%`;
+       query = await request.Knex('Opportunity').where(function() {
+        this.where('Type','like', str)
+          .orWhere('SalesRep', 'like', str)
+          .orWhere('OpportunityName','like', str)
+          .orWhere('CustomerName','like', str)
+          .orWhere('Country','like', str)
+          .orWhere('ChannelType','like', str)
+          .orWhere('IndustryType','like', str)
+          .orWhere('Origin','like', str)
+          .orWhere('SalesStage','like', str)
+          .orWhere('GrossValue','like', str)
+          .orWhere('BPID','like', str)
+          .orWhere('MemberOfConsortia','like', str)
+          .orWhere('Currency','like', str)
+      }).andWhere('SalesRep', params.salesRep)
+    }
     // console.log(query);
     // const sc = new SoapController();
     // await sc.createClient();

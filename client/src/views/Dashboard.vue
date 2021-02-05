@@ -12,21 +12,46 @@
     </v-card>
     <v-layout>
       <v-card
-        class="d-flex transparent mb-10 overflow-auto ml-auto mr-auto container"
+        class="d-flex transparent mb-10 ml-auto mr-auto"
         flat
         style="z-index: 2; margin-top: -160px;"
+        width="auto"
       >
         <v-row>
           <v-col>
-            <!--              <v-select-->
-            <!--                v-model="selectedStatus"-->
-            <!--                :items="statuses"-->
-            <!--                style="width: 300px"-->
-            <!--                dark-->
-            <!--                class="caption"-->
-            <!--                dense-->
-            <!--                multiple-->
-            <!--              ></v-select>-->
+            <v-toolbar class="transparent" flat dense>
+              <!--              <v-select-->
+              <!--                v-model="selectedStatus"-->
+              <!--                :items="statuses"-->
+              <!--                style="width: 300px"-->
+              <!--                dark-->
+              <!--                class="caption"-->
+              <!--                dense-->
+              <!--                multiple-->
+              <!--              ></v-select>-->
+              <v-spacer></v-spacer>
+              <v-card class="py-2 transparent" flat tile height="50" dark>
+                <v-btn
+                  x-small
+                  text
+                  @click="onAllFilterSelect"
+                  class="text--accent-2 font-weight-regular"
+                  v-bind:class="fontWeightAll"
+                >
+                  All
+                </v-btn>
+                <v-divider vertical inset class="white"></v-divider>
+                <v-btn
+                  x-small
+                  text
+                  @click="onSAPFilterSelect"
+                  class="text--accent-2 font-weight-regular"
+                  v-bind:class="fontWeightSapCreated"
+                >
+                  Accepted Leads
+                </v-btn>
+              </v-card>
+            </v-toolbar>
             <v-data-table
               :headers="showHeaders"
               :items="rows"
@@ -40,7 +65,6 @@
                 nextIcon: 'mdi-plus'
               }"
               @click:row="editOpportunity"
-              :search="searchStr"
               :loading="loading"
               :style="{ cursor: 'pointer' }"
               :sort-by="['ExpectedCloseDate']"
@@ -105,6 +129,7 @@
                                   color="primary"
                                   :ripple="false"
                                   dense
+                                  @change="toggle"
                                 ></v-checkbox>
                               </v-list-item-action>
                               <v-list-item-content>
@@ -154,6 +179,7 @@
                     class="mt-6"
                     light
                     @click:clear="clearSearch"
+                    @input="searchMyOpportunities"
                   ></v-text-field>
                   <v-spacer></v-spacer>
                 </v-toolbar>
@@ -185,6 +211,19 @@
                   </template>
                   <span>{{ item.SalesStage }}</span>
                 </v-tooltip>
+<!--                <v-tooltip bottom>-->
+<!--                  <template v-slot:activator="{ on, attrs }">-->
+<!--                    <v-list-item-subtitle v-bind="attrs" v-on="on">-->
+<!--                      <span-->
+<!--                        style="font-size: small; max-width: 200px"-->
+<!--                        class="text-truncate d-inline-block"-->
+<!--                      >-->
+<!--                        {{ item.CustomerName }}-{{ item.BPID }}-->
+<!--                      </span>-->
+<!--                    </v-list-item-subtitle>-->
+<!--                  </template>-->
+<!--                  <span>{{ item.CustomerName }}-{{ item.BPID }}</span>-->
+<!--                </v-tooltip>-->
               </template>
               <template v-slot:item.ExpectedCloseDate="{ item }">
                 <span class="caption">
@@ -327,7 +366,12 @@ export default {
       endSessionDialog: false,
       isOffline: false,
       isOnline: false,
-      noConnection: false
+      noConnection: false,
+      fontWeightAll: null,
+      fontWeightSapCreated: null,
+      sapFilter: false,
+      fontWeightNormal: 'fontWeightNormal',
+      fontWeightLight: 'fontWeightLight'
     };
   },
   filters: {
@@ -403,6 +447,11 @@ export default {
               : true;
           }
         },
+        // {
+        //   text: 'License ID',
+        //   align: 'left',
+        //   value: 'LicenseID'
+        // },
         {
           text: 'Expected Close Date',
           align: 'left',
@@ -441,6 +490,8 @@ export default {
       if (this.loading) this.setLoading(false);
       this.headersFilter = Object.values(this.headers);
       this.selectedHeaders = this.headersFilter;
+      this.fontWeightAll = this.fontWeightNormal;
+      this.fontWeightSapCreated = this.fontWeightLight;
     },
     getRecords: async function() {
       return await this.$store.dispatch(
@@ -469,10 +520,34 @@ export default {
     },
     clearSearch() {
       this.searchStr = '';
+      this.setSearchStr('');
+      this.init();
     },
     initFilters() {
-      for (let col in this.filters) {
-        this.filters[col] = this.rows
+      if (this.rows.length) {
+        for (let col in this.filters) {
+          this.filters[col] = this.rows
+            .map(d => {
+              return d[col];
+            })
+            .filter((value, index, self) => {
+              return self.indexOf(value) === index;
+            });
+        }
+        // TODO restore previous activeFilters before add/remove item
+        this.activeFilters = Object.assign({}, this.filters);
+        /*if (Object.keys(this.activeFilters).length === 0) this.activeFilters = Object.assign({}, this.filters)
+        else {
+          setTimeout(() => {
+            console.log(this.activeFilters)
+            //this.activeFilters = Object.assign({}, this.filters)
+          }, 1)
+        }*/
+      }
+    },
+    toggleAll(col) {
+      if (this.rows.length) {
+        this.activeFilters[col] = this.rows
           .map(d => {
             return d[col];
           })
@@ -480,35 +555,19 @@ export default {
             return self.indexOf(value) === index;
           });
       }
-      // TODO restore previous activeFilters before add/remove item
-      this.activeFilters = Object.assign({}, this.filters);
-      /*if (Object.keys(this.activeFilters).length === 0) this.activeFilters = Object.assign({}, this.filters)
-      else {
-        setTimeout(() => {
-          console.log(this.activeFilters)
-          //this.activeFilters = Object.assign({}, this.filters)
-        }, 1)
-      }*/
-    },
-    toggleAll(col) {
-      this.activeFilters[col] = this.rows
-        .map(d => {
-          return d[col];
-        })
-        .filter((value, index, self) => {
-          return self.indexOf(value) === index;
-        });
     },
     toggleWonInProcess(col) {
-      // console.log(col);
-      this.activeFilters[col] = this.rows
-        .map(d => {
-          return d[col];
-        })
-        .filter((value, index, self) => {
-          if (value === 'In Process' || value === 'Won')
-            return self.indexOf(value) === index;
-        });
+      if (this.rows.length) {
+        // console.log(col);
+        this.activeFilters[col] = this.rows
+          .map(d => {
+            return d[col];
+          })
+          .filter((value, index, self) => {
+            if (value === 'In Process' || value === 'Won')
+              return self.indexOf(value) === index;
+          });
+      }
     },
 
     clearAll(col) {
@@ -568,7 +627,50 @@ export default {
       this.endSessionDialog = false;
       this.setCurrentUser(null);
       this.$router.push('/login');
+    },
+    async searchMyOpportunities(searchString) {
+      this.setSearchStr(searchString);
+      await this.init();
+    },
+    onFilterChange(filter) {
+      const rows = [];
+      if (filter === 'sap') {
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightNormal;
+        this.sapFilter = true;
+        for (let i = 0; i < this.rows.length; i += 1) {
+          if (this.rows[i].source === 'SAP') {
+            rows.push(this.rows[i]);
+          }
+        }
+      } else if (filter === 'all') {
+        this.fontWeightAll = this.fontWeightNormal;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.sapFilter = false;
+        this.clearSearch();
+      }
+      return rows;
+    },
+    onAllFilterSelect() {
+      this.sapFilter = false;
+      this.onFilterChange('all');
+    },
+    onSAPFilterSelect() {
+      this.sapFilter = true;
+      this.rows = this.onFilterChange('sap');
     }
   }
 };
 </script>
+<style scoped>
+.fontWeightNormal {
+  font-weight: normal;
+  text-decoration-line: underline;
+}
+.fontWeightLight {
+  font-weight: lighter;
+}
+.fontWeight {
+  font-weight: lighter;
+}
+</style>

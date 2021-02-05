@@ -244,8 +244,9 @@ export default new Vuex.Store({
       return data;
     },
     async getCurrentSalesRepOpts(ctx, salesRep) {
+      if (this.state.searchStr === null) this.state.searchStr = '';
       const { data } = await axios
-        .get(`opts-by-sales-rep?salesRep=${salesRep}`)
+        .get(`opts-by-sales-rep?salesRep=${salesRep}&&searchStr=${this.state.searchStr}`)
         .catch(e => {
           if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
             localStorage.removeItem('token');
