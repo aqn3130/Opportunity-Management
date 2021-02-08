@@ -211,19 +211,19 @@
                   </template>
                   <span>{{ item.SalesStage }}</span>
                 </v-tooltip>
-<!--                <v-tooltip bottom>-->
-<!--                  <template v-slot:activator="{ on, attrs }">-->
-<!--                    <v-list-item-subtitle v-bind="attrs" v-on="on">-->
-<!--                      <span-->
-<!--                        style="font-size: small; max-width: 200px"-->
-<!--                        class="text-truncate d-inline-block"-->
-<!--                      >-->
-<!--                        {{ item.CustomerName }}-{{ item.BPID }}-->
-<!--                      </span>-->
-<!--                    </v-list-item-subtitle>-->
-<!--                  </template>-->
-<!--                  <span>{{ item.CustomerName }}-{{ item.BPID }}</span>-->
-<!--                </v-tooltip>-->
+                <!--                <v-tooltip bottom>-->
+                <!--                  <template v-slot:activator="{ on, attrs }">-->
+                <!--                    <v-list-item-subtitle v-bind="attrs" v-on="on">-->
+                <!--                      <span-->
+                <!--                        style="font-size: small; max-width: 200px"-->
+                <!--                        class="text-truncate d-inline-block"-->
+                <!--                      >-->
+                <!--                        {{ item.CustomerName }}-{{ item.BPID }}-->
+                <!--                      </span>-->
+                <!--                    </v-list-item-subtitle>-->
+                <!--                  </template>-->
+                <!--                  <span>{{ item.CustomerName }}-{{ item.BPID }}</span>-->
+                <!--                </v-tooltip>-->
               </template>
               <template v-slot:item.ExpectedCloseDate="{ item }">
                 <span class="caption">
@@ -479,9 +479,9 @@ export default {
     window.addEventListener('online', this.handleConnection);
     window.addEventListener('offline', this.handleConnection);
   },
-  updated() {
-    this.toggleWonInProcess('Status');
-  },
+  // updated() {
+  // this.toggleWonInProcess('Status');
+  // },
   methods: {
     async init() {
       if (!this.currentUser) await this.$router.push({ name: 'Login' });
