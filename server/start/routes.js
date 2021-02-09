@@ -67,5 +67,8 @@ Route.group(function () {
   // Route.get('/wscalc1', 'SoapController');
   Route.post('opportunity/create','SapController.store').middleware('auth');
   Route.get('sap-sourced','SapController.getSAPSourced').middleware('auth');
+  Route.get('opp-products','ProductController.getOppProducts').middleware('auth');
+  Route.get('products-list','ProductController.getProductsList').middleware('auth');
+  Route.get('states-list','StateController.getStatesList').middleware('auth');
 }).prefix('api');
 

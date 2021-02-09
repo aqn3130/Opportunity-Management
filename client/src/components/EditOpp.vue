@@ -837,8 +837,7 @@ export default {
       if (this.stateOptions.length) {
         this.states = this.stateOptions;
       } else {
-        await this.$store.dispatch('setCurrentTable', 'States');
-        const states = await this.$store.dispatch('getStates', '');
+        const states = await this.$store.dispatch('getStatesList', '');
         this.setStateOptions(states);
       }
     },
@@ -893,10 +892,8 @@ export default {
       }
     },
     getProducts: async function() {
-      // this.productItems = [];
       const prodItems = [];
-      await this.$store.dispatch('setCurrentTable', 'Opportunity');
-      const data = await this.$store.dispatch('getRecords', this.opportunityId);
+      const data = await this.$store.dispatch('getOppProducts', this.opportunityId);
       for (let i = 0; i < data.length; i += 1) {
         const product = {
           opportunity_fk: data[i].Opportunity_fk,
@@ -915,7 +912,6 @@ export default {
           agentDiscount: data[i].AgentDiscount,
           grossValue: this.formatCurrency(data[i].GrossValue)
         };
-        // this.productItems.push(product);
         prodItems.push(product);
       }
       return prodItems;
@@ -1012,11 +1008,7 @@ export default {
       if (this.productsOption.length) {
         this.products = this.productsOption;
       } else {
-        await this.$store.dispatch('setCurrentTable', 'Products');
-        const data = await this.$store.dispatch('getProducts', '');
-        // Object.keys(data).forEach(key => {
-        //   this.products.push(data[key].Category_Description);
-        // });
+        const data = await this.$store.dispatch('getProductsList');
         for (let i = 0; i < data.length; i += 1) {
           this.products.push(data[i].Category_Description);
         }
@@ -1027,10 +1019,6 @@ export default {
       if (this.countries.length) {
         this.countryItems = this.countries;
       } else {
-        await this.$store.dispatch(
-          'setCurrentTable',
-          'Country_Region_Territory'
-        );
         const countries = await this.$store.dispatch(
           'getCountryRegionTerritory',
           ''
@@ -1045,7 +1033,6 @@ export default {
       if (this.opportunityId) {
         this.setPage('');
         this.setTab('opp');
-        await this.$store.dispatch('setCurrentTable', 'Opportunity');
         await this.getProductOptions();
         this.productItems = [];
         this.productItems = await this.getProducts();

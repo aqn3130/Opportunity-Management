@@ -492,6 +492,7 @@ export default {
       this.selectedHeaders = this.headersFilter;
       this.fontWeightAll = this.fontWeightNormal;
       this.fontWeightSapCreated = this.fontWeightLight;
+      this.setSearchStr('');
     },
     getRecords: async function() {
       return await this.$store.dispatch(
@@ -515,6 +516,7 @@ export default {
     editOpportunity(item) {
       this.setOppId(item.Id);
       this.setOpp(item);
+      this.setSearchStr('');
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },

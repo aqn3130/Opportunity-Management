@@ -899,10 +899,10 @@ export default {
       if (this.countries.length) {
         this.countryOptions = this.countries;
       } else {
-        await this.$store.dispatch(
-          'setCurrentTable',
-          'Country_Region_Territory'
-        );
+        // await this.$store.dispatch(
+        //   'setCurrentTable',
+        //   'Country_Region_Territory'
+        // );
         const countries = await this.$store.dispatch(
           'getCountryRegionTerritory',
           ''

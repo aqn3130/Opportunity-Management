@@ -246,7 +246,9 @@ export default new Vuex.Store({
     async getCurrentSalesRepOpts(ctx, salesRep) {
       if (this.state.searchStr === null) this.state.searchStr = '';
       const { data } = await axios
-        .get(`opts-by-sales-rep?salesRep=${salesRep}&&searchStr=${this.state.searchStr}`)
+        .get(
+          `opts-by-sales-rep?salesRep=${salesRep}&&searchStr=${this.state.searchStr}`
+        )
         .catch(e => {
           if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
             localStorage.removeItem('token');
@@ -319,6 +321,37 @@ export default new Vuex.Store({
           }
         });
       commit('setLoading', false);
+      return data;
+    },
+    async getOppProducts({ commit }, id) {
+      commit('setLoading', true);
+      const { data } = await axios.get(`opp-products?id=${id}`).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
+      });
+      commit('setLoading', false);
+      return data;
+    },
+    async getProductsList({ commit }) {
+      commit('setLoading', true);
+      const { data } = await axios.get(`products-list`).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
+      });
+      commit('setLoading', false);
+      return data;
+    },
+    async getStatesList() {
+      const { data } = await axios.get(`states-list`).catch(e => {
+        if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
+          localStorage.removeItem('token');
+          window.USER = null;
+        }
+      });
       return data;
     }
   },

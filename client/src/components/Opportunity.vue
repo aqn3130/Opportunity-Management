@@ -524,8 +524,7 @@ export default {
       }
     },
     setCountryOptions: async function() {
-      await this.$store.dispatch('setCurrentTable', 'Country_Region_Territory');
-      const countries = await this.$store.dispatch('getRecords', '');
+      const countries = await this.$store.dispatch('getCountryRegionTerritory', '');
       this.countryItems = [];
       if (countries.length) {
         for (let i = 0; i < countries.length; i += 1) {
