@@ -11,150 +11,150 @@
       <v-card-text class="text-center overline"> </v-card-text>
     </v-card>
     <v-layout>
-      <v-container
-        class="mb-10 overflow-auto"
+      <v-card
+        class="d-flex transparent ml-auto mr-auto"
+        flat
         style="z-index: 2; margin-top: -180px;"
+        width="auto"
       >
-        <v-card class="d-flex transparent" flat>
-          <v-row>
-            <v-col>
-              <v-toolbar class="transparent" flat dense>
-                <v-select
-                  v-model="selectedStatus"
-                  :items="statuses"
-                  @change="onSelectChange"
-                  style="max-width: 110px"
-                  dark
-                  class="caption"
-                  dense
-                  multiple
-                >
-                  <template v-slot:selection="{ item, index }">
-                    <span v-if="index === 0">
-                      <span>{{ item }}</span>
-                    </span>
-                    <span v-if="index === 1" class="caption">
-                      <!--                    (+{{ selectedStatus.length - 1 }} )-->
-                      ...
-                    </span>
-                  </template>
-                </v-select>
-                <v-spacer></v-spacer>
-<!--                <v-card class="py-2 transparent" flat tile height="50" dark>-->
-<!--                  <v-btn-->
-<!--                    x-small-->
-<!--                    text-->
-<!--                    @click="onAllFilterSelect"-->
-<!--                    class="text&#45;&#45;accent-2 font-weight-regular"-->
-<!--                    v-bind:class="fontWeightAll"-->
-<!--                  >-->
-<!--                    SAP & PLM-->
-<!--                  </v-btn>-->
-<!--                  <v-divider vertical inset class="white"></v-divider>-->
-<!--                  <v-btn-->
-<!--                    x-small-->
-<!--                    text-->
-<!--                    @click="onSAPFilterSelect"-->
-<!--                    class="text&#45;&#45;accent-2 font-weight-regular"-->
-<!--                    v-bind:class="fontWeightSapCreated"-->
-<!--                  >-->
-<!--                    SAP-->
-<!--                  </v-btn>-->
-<!--                </v-card>-->
-              </v-toolbar>
-              <v-data-table
-                :headers="headers"
-                :items="rows"
-                :items-per-page="perPage"
-                class="elevation-1 text-no-wrap"
-                :footer-props="{
-                  showFirstLastPage: true,
-                  firstIcon: 'mdi-arrow-collapse-left',
-                  lastIcon: 'mdi-arrow-collapse-right',
-                  prevIcon: 'mdi-minus',
-                  nextIcon: 'mdi-plus'
-                }"
-                @click:row="editOpportunity"
-                :search="searchStr"
-                :loading="loading"
-                :style="{ cursor: 'pointer' }"
-                :server-items-length="totalLeads"
-                :options.sync="options"
+        <v-row>
+          <v-col>
+            <v-toolbar class="transparent" flat dense>
+              <v-select
+                v-model="selectedStatus"
+                :items="statuses"
+                @change="onSelectChange"
+                style="max-width: 110px"
+                dark
+                class="caption"
+                dense
+                multiple
               >
-                <template v-slot:top>
-                  <v-toolbar flat color="grey lighten-2">
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                      v-model="searchStr"
-                      clearable
-                      prepend-inner-icon="search"
-                      outlined
-                      flat
-                      dense
-                      class="mt-6"
-                      light
-                      @change="search"
-                      @click:clear="clearSearch"
-                    ></v-text-field>
-                    <v-spacer></v-spacer>
-                  </v-toolbar>
-                </template>
-                <template v-slot:item.OpportunityName="{ item }">
-                  <span style="font-size: small; font-weight: bold;">
-                    {{ item.OpportunityName }} </span
-                  ><br />
-                  <span style="font-size: small">
-                    {{ item.SalesStage }}<br />
+                <template v-slot:selection="{ item, index }">
+                  <span v-if="index === 0">
+                    <span>{{ item }}</span>
                   </span>
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-list-item-subtitle v-bind="attrs" v-on="on">
-                        <span
-                          style="font-size: small; max-width: 200px"
-                          class="text-truncate d-inline-block"
-                        >
-                          {{ item.CustomerName }}-{{ item.BPID }}
-                        </span>
-                      </v-list-item-subtitle>
-                    </template>
-                    <span>{{ item.CustomerName }}-{{ item.BPID }}</span>
-                  </v-tooltip>
-                </template>
-                <template v-slot:item.ExpectedCloseDate="{ item }">
-                  <span class="caption">
-                    {{ item.ExpectedCloseDate | convertDate }}
+                  <span v-if="index === 1" class="caption">
+                    <!--                    (+{{ selectedStatus.length - 1 }} )-->
+                    ...
                   </span>
                 </template>
-                <template v-slot:item.GrossValue="{ item }">
-                  <span class="caption">
-                    {{ item.GrossValue | formatCurrency }}
-                  </span>
-                </template>
-                <template v-slot:item.Currency="{ item }">
-                  <span class="caption">
-                    {{ item.Currency }}
-                  </span>
-                </template>
-                <template v-slot:item.Status="{ item }">
-                  <span class="caption">
-                    {{ item.Status }}
-                  </span>
-                </template>
-                <template v-slot:item.ChannelType="{ item }">
-                  <span class="caption">
-                    {{ item.ChannelType }}
-                  </span>
-                </template>
-                <template v-slot:item.Country="{ item }">
-                  <span class="caption">
-                    {{ item.Country }}
-                  </span>
-                </template>
-              </v-data-table>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-container>
+              </v-select>
+              <v-spacer></v-spacer>
+              <v-card class="py-2 transparent" flat tile height="50" dark>
+                <v-btn
+                  x-small
+                  text
+                  @click="onAllFilterSelect"
+                  class="text--accent-2 font-weight-regular"
+                  v-bind:class="fontWeightAll"
+                >
+                  All
+                </v-btn>
+                <v-divider vertical inset class="white"></v-divider>
+                <v-btn
+                  x-small
+                  text
+                  @click="onSAPFilterSelect"
+                  class="text--accent-2 font-weight-regular"
+                  v-bind:class="fontWeightSapCreated"
+                >
+                  Accepted Leads
+                </v-btn>
+              </v-card>
+            </v-toolbar>
+            <v-data-table
+              :headers="headers"
+              :items="rows"
+              :items-per-page="perPage"
+              class="elevation-1 text-no-wrap"
+              :footer-props="{
+                showFirstLastPage: true,
+                firstIcon: 'mdi-arrow-collapse-left',
+                lastIcon: 'mdi-arrow-collapse-right',
+                prevIcon: 'mdi-minus',
+                nextIcon: 'mdi-plus'
+              }"
+              @click:row="editOpportunity"
+              :search="searchStr"
+              :loading="loading"
+              :style="{ cursor: 'pointer' }"
+              :server-items-length="totalLeads"
+              :options.sync="options"
+            >
+              <template v-slot:top>
+                <v-toolbar flat color="grey lighten-2">
+                  <v-spacer></v-spacer>
+                  <v-text-field
+                    v-model="searchStr"
+                    clearable
+                    prepend-inner-icon="search"
+                    outlined
+                    flat
+                    dense
+                    class="mt-6"
+                    light
+                    @change="search"
+                    @click:clear="clearSearch"
+                  ></v-text-field>
+                  <v-spacer></v-spacer>
+                </v-toolbar>
+              </template>
+              <template v-slot:item.OpportunityName="{ item }">
+                <span style="font-size: small; font-weight: bold;">
+                  {{ item.OpportunityName }} </span
+                ><br />
+                <span style="font-size: small">
+                  {{ item.SalesStage }}<br />
+                </span>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-list-item-subtitle v-bind="attrs" v-on="on">
+                      <span
+                        style="font-size: small; max-width: 200px"
+                        class="text-truncate d-inline-block"
+                      >
+                        {{ item.CustomerName }}-{{ item.BPID }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </template>
+                  <span>{{ item.CustomerName }}-{{ item.BPID }}</span>
+                </v-tooltip>
+              </template>
+              <template v-slot:item.ExpectedCloseDate="{ item }">
+                <span class="caption">
+                  {{ item.ExpectedCloseDate | convertDate }}
+                </span>
+              </template>
+              <template v-slot:item.GrossValue="{ item }">
+                <span class="caption">
+                  {{ item.GrossValue | formatCurrency }}
+                </span>
+              </template>
+              <template v-slot:item.Currency="{ item }">
+                <span class="caption">
+                  {{ item.Currency }}
+                </span>
+              </template>
+              <template v-slot:item.Status="{ item }">
+                <span class="caption">
+                  {{ item.Status }}
+                </span>
+              </template>
+              <template v-slot:item.ChannelType="{ item }">
+                <span class="caption">
+                  {{ item.ChannelType }}
+                </span>
+              </template>
+              <template v-slot:item.Country="{ item }">
+                <span class="caption">
+                  {{ item.Country }}
+                </span>
+              </template>
+            </v-data-table>
+          </v-col>
+        </v-row>
+      </v-card>
     </v-layout>
     <!--    <v-btn-->
     <!--      absolute-->
