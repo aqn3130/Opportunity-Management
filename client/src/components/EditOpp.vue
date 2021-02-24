@@ -413,6 +413,7 @@
                       label="Agent"
                       dense
                       class="caption"
+                      @change="item.agentDiscount = 0"
                     ></v-checkbox>
                   </v-list-item-content>
                   <v-list-item-content class="mr-2">
@@ -422,13 +423,14 @@
                       label="Agent Discount"
                       class="caption"
                       dense
+                      :disabled="!item.agent"
                     ></v-select>
                   </v-list-item-content>
                   <v-list-item-content class="mr-4">
                     <v-text-field
                       v-model="item.grossValue"
                       label="Gross Value"
-                      :rules="nameRules"
+                      :rules="grossValueRule"
                       class="caption"
                       dense
                     ></v-text-field>
@@ -533,6 +535,9 @@ export default {
     productValid: true,
     name: '',
     nameRules: [v => !!v || 'This field is required'],
+    grossValueRule: [
+      v => /^[0-9]+$/.test(v) || 'Numeric values only'
+    ],
     email: '',
     emailRules: [
       v => !!v || 'E-mail is required',
@@ -1075,7 +1080,8 @@ export default {
     },
     formatCurrency(amount) {
       if (!amount) return '';
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      // return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return amount.toString();
     },
     getCurrentOpp() {
       const data = this.getFormData();
