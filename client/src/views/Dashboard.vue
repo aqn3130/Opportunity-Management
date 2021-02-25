@@ -465,7 +465,7 @@ export default {
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
     },
-    ...mapState(['loading']),
+    ...mapState(['loading', 'dashSearchStr']),
     ...mapState('auth', ['currentUser'])
   },
   watch: {
@@ -485,6 +485,9 @@ export default {
   methods: {
     async init() {
       if (!this.currentUser) await this.$router.push({ name: 'Login' });
+      if (this.dashSearchStr) {
+        this.searchStr = this.dashSearchStr;
+      }
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
       this.rows = await this.getRecords();
       if (this.loading) this.setLoading(false);
@@ -492,7 +495,6 @@ export default {
       this.selectedHeaders = this.headersFilter;
       this.fontWeightAll = this.fontWeightNormal;
       this.fontWeightSapCreated = this.fontWeightLight;
-      this.setSearchStr('');
     },
     getRecords: async function() {
       return await this.$store.dispatch(
@@ -505,7 +507,7 @@ export default {
       setOpp: 'setOpp',
       setPage: 'setPage',
       setPerPage: 'setPerPage',
-      setSearchStr: 'setSearchStr',
+      setDashSearchStr: 'setDashSearchStr',
       setFilter: 'setFilter',
       setLoading: 'setLoading'
     }),
@@ -516,13 +518,13 @@ export default {
     editOpportunity(item) {
       this.setOppId(item.Id);
       this.setOpp(item);
-      this.setSearchStr('');
+      // this.setSearchStr('');
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },
     clearSearch() {
-      this.searchStr = '';
-      this.setSearchStr('');
+      // this.dashSearchStr = '';
+      this.setDashSearchStr('');
       this.init();
     },
     initFilters() {
@@ -631,7 +633,7 @@ export default {
       this.$router.push('/login');
     },
     async searchMyOpportunities(searchString) {
-      this.setSearchStr(searchString);
+      this.setDashSearchStr(searchString);
       await this.init();
     },
     onFilterChange(filter) {
