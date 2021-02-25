@@ -649,6 +649,7 @@ export default {
       setCountries: 'setCountries'
     }),
     async onOpportunitySelect(item) {
+      const tempSearchStr = this.searchStr;
       this.searchStr = '';
       this.setSearchStr(this.searchStr);
       this.products = await this.getProducts(item.Id);
@@ -657,6 +658,8 @@ export default {
       await this.setIndustryType(item.ChannelType);
       await this.onStatusChange(item.Status);
       await this.getStatesForCurrentCountry(item.Country, this.states);
+      this.searchStr = tempSearchStr;
+      this.setSearchStr(this.searchStr);
       // console.log(item.Id, this.notes);
     },
     async onSelectChange(status) {
