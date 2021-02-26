@@ -44,6 +44,16 @@
                 <v-btn
                   x-small
                   text
+                  @click="onActiveFilterSelect"
+                  class="text--accent-2 font-weight-regular"
+                  v-bind:class="fontWeightActive"
+                >
+                  Active
+                </v-btn>
+                <v-divider vertical inset class="white"></v-divider>
+                <v-btn
+                  x-small
+                  text
                   @click="onSAPFilterSelect"
                   class="text--accent-2 font-weight-regular"
                   v-bind:class="fontWeightSapCreated"
@@ -343,6 +353,7 @@ export default {
   data() {
     return {
       rows: [],
+      rowsCopy: [],
       OppStatus: null,
       statuses: ['All', 'In Process', 'Won', 'Closed Won', 'Closed Lost'],
       searchStr: '',
@@ -369,6 +380,7 @@ export default {
       noConnection: false,
       fontWeightAll: null,
       fontWeightSapCreated: null,
+      fontWeightActive: null,
       sapFilter: false,
       fontWeightNormal: 'fontWeightNormal',
       fontWeightLight: 'fontWeightLight'
@@ -490,11 +502,13 @@ export default {
       }
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
       this.rows = await this.getRecords();
+      this.rowsCopy = this.rows.slice();
       if (this.loading) this.setLoading(false);
       this.headersFilter = Object.values(this.headers);
       this.selectedHeaders = this.headersFilter;
       this.fontWeightAll = this.fontWeightNormal;
       this.fontWeightSapCreated = this.fontWeightLight;
+      this.fontWeightActive = this.fontWeightLight;
     },
     getRecords: async function() {
       return await this.$store.dispatch(
@@ -637,31 +651,48 @@ export default {
       await this.init();
     },
     onFilterChange(filter) {
-      const rows = [];
+      let rows = [];
       if (filter === 'sap') {
         this.fontWeightAll = this.fontWeightLight;
         this.fontWeightSapCreated = this.fontWeightNormal;
+        this.fontWeightActive = this.fontWeightLight;
         this.sapFilter = true;
-        for (let i = 0; i < this.rows.length; i += 1) {
-          if (this.rows[i].source === 'SAP') {
-            rows.push(this.rows[i]);
+        for (let i = 0; i < this.rowsCopy.length; i += 1) {
+          if (this.rowsCopy[i].source === 'SAP') {
+            rows.push(this.rowsCopy[i]);
           }
         }
       } else if (filter === 'all') {
         this.fontWeightAll = this.fontWeightNormal;
         this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightLight;
         this.sapFilter = false;
-        this.clearSearch();
+        // this.clearSearch();
+        rows = this.rowsCopy;
+      } else if (filter === 'active') {
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightNormal;
+        this.sapFilter = false;
+        for (let i = 0; i < this.rowsCopy.length; i += 1) {
+          if (this.rowsCopy[i].Status === 'Won' || this.rowsCopy[i].Status === 'In Process') {
+            rows.push(this.rowsCopy[i]);
+          }
+        }
       }
       return rows;
     },
     onAllFilterSelect() {
       this.sapFilter = false;
-      this.onFilterChange('all');
+      this.rows = this.onFilterChange('all');
     },
     onSAPFilterSelect() {
       this.sapFilter = true;
       this.rows = this.onFilterChange('sap');
+    },
+    onActiveFilterSelect() {
+      this.sapFilter = false;
+      this.rows = this.onFilterChange('active');
     }
   }
 };
