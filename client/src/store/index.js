@@ -31,7 +31,10 @@ export default new Vuex.Store({
     productBasket: undefined,
     updatedProductBasket: undefined,
     dashSearchStr: '',
-    adminDashSearchStr: ''
+    adminDashSearchStr: '',
+    sapFilter: false,
+    activeFilter: false,
+    allFilter: false
   },
   mutations: {
     setTable(state, value) {
@@ -99,6 +102,21 @@ export default new Vuex.Store({
     },
     setUpdatedProductBasket(state, updatedProducts) {
       state.updatedProductBasket = updatedProducts;
+    },
+    setSAPFilter(state, sapFilter) {
+      state.sapFilter = sapFilter;
+      state.activeFilter = false;
+      state.allFilter = false;
+    },
+    setActiveFilter(state, activeFilter) {
+      state.activeFilter = activeFilter;
+      state.sapFilter = false;
+      state.allFilter = false;
+    },
+    setAllFilter(state, allFilter) {
+      state.allFilter = allFilter;
+      state.activeFilter = false;
+      state.sapFilter = false;
     }
   },
   actions: {

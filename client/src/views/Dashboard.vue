@@ -14,7 +14,7 @@
       <v-card
         class="d-flex transparent mb-10 ml-auto mr-auto"
         flat
-        style="z-index: 2; margin-top: -160px;"
+        style="z-index: 2; margin-top: -180px;"
         width="auto"
       >
         <v-row>
@@ -30,7 +30,7 @@
               <!--                multiple-->
               <!--              ></v-select>-->
               <v-spacer></v-spacer>
-              <v-card class="py-2 transparent" flat tile height="50" dark>
+              <v-card class="py-2 transparent mb-n2" flat tile height="50" dark>
                 <v-btn
                   x-small
                   text
@@ -40,7 +40,7 @@
                 >
                   All
                 </v-btn>
-                <v-divider vertical inset class="white"></v-divider>
+                <v-divider vertical inset class="grey lighten-1"></v-divider>
                 <v-btn
                   x-small
                   text
@@ -50,7 +50,7 @@
                 >
                   Active
                 </v-btn>
-                <v-divider vertical inset class="white"></v-divider>
+                <v-divider vertical inset class="grey lighten-1"></v-divider>
                 <v-btn
                   x-small
                   text
@@ -381,7 +381,6 @@ export default {
       fontWeightAll: null,
       fontWeightSapCreated: null,
       fontWeightActive: null,
-      sapFilter: false,
       fontWeightNormal: 'fontWeightNormal',
       fontWeightLight: 'fontWeightLight'
     };
@@ -503,12 +502,32 @@ export default {
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
       this.rows = await this.getRecords();
       this.rowsCopy = this.rows.slice();
+      if (this.$store.state.allFilter) {
+        this.rows = this.onFilterChange('all');
+        this.fontWeightAll = this.fontWeightNormal;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightLight;
+      }
+      if (this.$store.state.activeFilter) {
+        this.rows = this.onFilterChange('active');
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightNormal;
+      }
+      if (this.$store.state.sapFilter) {
+        this.rows = this.onFilterChange('sap');
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightNormal;
+        this.fontWeightActive = this.fontWeightLight;
+      }
+      if (!this.$store.state.sapFilter && !this.$store.state.activeFilter && !this.$store.state.allFilter) {
+        this.fontWeightAll = this.fontWeightNormal;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightLight;
+      }
       if (this.loading) this.setLoading(false);
       this.headersFilter = Object.values(this.headers);
       this.selectedHeaders = this.headersFilter;
-      this.fontWeightAll = this.fontWeightNormal;
-      this.fontWeightSapCreated = this.fontWeightLight;
-      this.fontWeightActive = this.fontWeightLight;
     },
     getRecords: async function() {
       return await this.$store.dispatch(
@@ -523,7 +542,10 @@ export default {
       setPerPage: 'setPerPage',
       setDashSearchStr: 'setDashSearchStr',
       setFilter: 'setFilter',
-      setLoading: 'setLoading'
+      setLoading: 'setLoading',
+      setActiveFilter: 'setActiveFilter',
+      setSAPFilter: 'setSAPFilter',
+      setAllFilter: 'setAllFilter'
     }),
     ...mapActions('auth', ['logout']),
     ...mapMutations('auth', {
@@ -537,7 +559,6 @@ export default {
       // console.log(item);
     },
     clearSearch() {
-      // this.dashSearchStr = '';
       this.setDashSearchStr('');
       this.init();
     },
@@ -656,7 +677,6 @@ export default {
         this.fontWeightAll = this.fontWeightLight;
         this.fontWeightSapCreated = this.fontWeightNormal;
         this.fontWeightActive = this.fontWeightLight;
-        this.sapFilter = true;
         for (let i = 0; i < this.rowsCopy.length; i += 1) {
           if (this.rowsCopy[i].source === 'SAP') {
             rows.push(this.rowsCopy[i]);
@@ -666,14 +686,11 @@ export default {
         this.fontWeightAll = this.fontWeightNormal;
         this.fontWeightSapCreated = this.fontWeightLight;
         this.fontWeightActive = this.fontWeightLight;
-        this.sapFilter = false;
-        // this.clearSearch();
         rows = this.rowsCopy;
       } else if (filter === 'active') {
         this.fontWeightAll = this.fontWeightLight;
         this.fontWeightSapCreated = this.fontWeightLight;
         this.fontWeightActive = this.fontWeightNormal;
-        this.sapFilter = false;
         for (let i = 0; i < this.rowsCopy.length; i += 1) {
           if (this.rowsCopy[i].Status === 'Won' || this.rowsCopy[i].Status === 'In Process') {
             rows.push(this.rowsCopy[i]);
@@ -684,14 +701,23 @@ export default {
     },
     onAllFilterSelect() {
       this.sapFilter = false;
+      this.activeFilter = false;
+      this.allFilter = true;
+      this.setAllFilter('all');
       this.rows = this.onFilterChange('all');
     },
     onSAPFilterSelect() {
       this.sapFilter = true;
+      this.activeFilter = false;
+      this.allFilter = false;
+      this.setSAPFilter('sap');
       this.rows = this.onFilterChange('sap');
     },
     onActiveFilterSelect() {
       this.sapFilter = false;
+      this.activeFilter = true;
+      this.allFilter = false;
+      this.setActiveFilter('active');
       this.rows = this.onFilterChange('active');
     }
   }
