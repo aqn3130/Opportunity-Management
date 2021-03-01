@@ -14,7 +14,7 @@
       <v-card
         class="d-flex transparent mb-10 ml-auto mr-auto"
         flat
-        style="z-index: 2; margin-top: -160px;"
+        style="z-index: 2; margin-top: -180px;"
         width="auto"
       >
         <v-row>
@@ -30,7 +30,7 @@
               <!--                multiple-->
               <!--              ></v-select>-->
               <v-spacer></v-spacer>
-              <v-card class="py-2 transparent" flat tile height="50" dark>
+              <v-card class="py-2 transparent mb-n2" flat tile height="50" dark>
                 <v-btn
                   x-small
                   text
@@ -40,7 +40,17 @@
                 >
                   All
                 </v-btn>
-                <v-divider vertical inset class="white"></v-divider>
+                <v-divider vertical inset class="grey lighten-1"></v-divider>
+                <v-btn
+                  x-small
+                  text
+                  @click="onActiveFilterSelect"
+                  class="text--accent-2 font-weight-regular"
+                  v-bind:class="fontWeightActive"
+                >
+                  Active
+                </v-btn>
+                <v-divider vertical inset class="grey lighten-1"></v-divider>
                 <v-btn
                   x-small
                   text
@@ -343,6 +353,7 @@ export default {
   data() {
     return {
       rows: [],
+      rowsCopy: [],
       OppStatus: null,
       statuses: ['All', 'In Process', 'Won', 'Closed Won', 'Closed Lost'],
       searchStr: '',
@@ -369,7 +380,7 @@ export default {
       noConnection: false,
       fontWeightAll: null,
       fontWeightSapCreated: null,
-      sapFilter: false,
+      fontWeightActive: null,
       fontWeightNormal: 'fontWeightNormal',
       fontWeightLight: 'fontWeightLight'
     };
@@ -465,7 +476,7 @@ export default {
         { text: 'Gross Value', align: 'left', value: 'GrossValue' }
       ];
     },
-    ...mapState(['loading']),
+    ...mapState(['loading', 'dashSearchStr']),
     ...mapState('auth', ['currentUser'])
   },
   watch: {
@@ -485,14 +496,38 @@ export default {
   methods: {
     async init() {
       if (!this.currentUser) await this.$router.push({ name: 'Login' });
+      if (this.dashSearchStr) {
+        this.searchStr = this.dashSearchStr;
+      }
       await this.$store.dispatch('setCurrentTable', 'Opportunity');
       this.rows = await this.getRecords();
+      this.rowsCopy = this.rows.slice();
+      if (this.$store.state.allFilter) {
+        this.rows = this.onFilterChange('all');
+        this.fontWeightAll = this.fontWeightNormal;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightLight;
+      }
+      if (this.$store.state.activeFilter) {
+        this.rows = this.onFilterChange('active');
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightNormal;
+      }
+      if (this.$store.state.sapFilter) {
+        this.rows = this.onFilterChange('sap');
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightNormal;
+        this.fontWeightActive = this.fontWeightLight;
+      }
+      if (!this.$store.state.sapFilter && !this.$store.state.activeFilter && !this.$store.state.allFilter) {
+        this.fontWeightAll = this.fontWeightNormal;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightLight;
+      }
       if (this.loading) this.setLoading(false);
       this.headersFilter = Object.values(this.headers);
       this.selectedHeaders = this.headersFilter;
-      this.fontWeightAll = this.fontWeightNormal;
-      this.fontWeightSapCreated = this.fontWeightLight;
-      this.setSearchStr('');
     },
     getRecords: async function() {
       return await this.$store.dispatch(
@@ -505,9 +540,12 @@ export default {
       setOpp: 'setOpp',
       setPage: 'setPage',
       setPerPage: 'setPerPage',
-      setSearchStr: 'setSearchStr',
+      setDashSearchStr: 'setDashSearchStr',
       setFilter: 'setFilter',
-      setLoading: 'setLoading'
+      setLoading: 'setLoading',
+      setActiveFilter: 'setActiveFilter',
+      setSAPFilter: 'setSAPFilter',
+      setAllFilter: 'setAllFilter'
     }),
     ...mapActions('auth', ['logout']),
     ...mapMutations('auth', {
@@ -516,13 +554,12 @@ export default {
     editOpportunity(item) {
       this.setOppId(item.Id);
       this.setOpp(item);
-      this.setSearchStr('');
+      // this.setSearchStr('');
       this.$router.push({ name: 'Edit Opportunity' });
       // console.log(item);
     },
     clearSearch() {
-      this.searchStr = '';
-      this.setSearchStr('');
+      this.setDashSearchStr('');
       this.init();
     },
     initFilters() {
@@ -631,35 +668,57 @@ export default {
       this.$router.push('/login');
     },
     async searchMyOpportunities(searchString) {
-      this.setSearchStr(searchString);
+      this.setDashSearchStr(searchString);
       await this.init();
     },
     onFilterChange(filter) {
-      const rows = [];
+      let rows = [];
       if (filter === 'sap') {
         this.fontWeightAll = this.fontWeightLight;
         this.fontWeightSapCreated = this.fontWeightNormal;
-        this.sapFilter = true;
-        for (let i = 0; i < this.rows.length; i += 1) {
-          if (this.rows[i].source === 'SAP') {
-            rows.push(this.rows[i]);
+        this.fontWeightActive = this.fontWeightLight;
+        for (let i = 0; i < this.rowsCopy.length; i += 1) {
+          if (this.rowsCopy[i].source === 'SAP') {
+            rows.push(this.rowsCopy[i]);
           }
         }
       } else if (filter === 'all') {
         this.fontWeightAll = this.fontWeightNormal;
         this.fontWeightSapCreated = this.fontWeightLight;
-        this.sapFilter = false;
-        this.clearSearch();
+        this.fontWeightActive = this.fontWeightLight;
+        rows = this.rowsCopy;
+      } else if (filter === 'active') {
+        this.fontWeightAll = this.fontWeightLight;
+        this.fontWeightSapCreated = this.fontWeightLight;
+        this.fontWeightActive = this.fontWeightNormal;
+        for (let i = 0; i < this.rowsCopy.length; i += 1) {
+          if (this.rowsCopy[i].Status === 'Won' || this.rowsCopy[i].Status === 'In Process') {
+            rows.push(this.rowsCopy[i]);
+          }
+        }
       }
       return rows;
     },
     onAllFilterSelect() {
       this.sapFilter = false;
-      this.onFilterChange('all');
+      this.activeFilter = false;
+      this.allFilter = true;
+      this.setAllFilter('all');
+      this.rows = this.onFilterChange('all');
     },
     onSAPFilterSelect() {
       this.sapFilter = true;
+      this.activeFilter = false;
+      this.allFilter = false;
+      this.setSAPFilter('sap');
       this.rows = this.onFilterChange('sap');
+    },
+    onActiveFilterSelect() {
+      this.sapFilter = false;
+      this.activeFilter = true;
+      this.allFilter = false;
+      this.setActiveFilter('active');
+      this.rows = this.onFilterChange('active');
     }
   }
 };

@@ -679,7 +679,8 @@ export default {
     isOffline: false,
     isOnline: false,
     noConnection: false,
-    toBeDeletedProduct: undefined
+    toBeDeletedProduct: undefined,
+    productsDetail: []
   }),
   filters: {
     formatDate(date) {
@@ -772,6 +773,13 @@ export default {
           currentOpp.grossValue +
           Number(this.formatGrossValue(this.productItems[key].grossValue));
         if (!this.productItems[key].id) {
+          let productCode = null;
+          for (let i = 0; i < this.productsDetail.length; i += 1) {
+            if (this.productItems[key].productName === this.productsDetail[i].Category_Description) {
+              productCode = this.productsDetail[i].Category_ID;
+            }
+          }
+          this.productItems[key].Product = productCode;
           if (this.productItems[key].typeOfBusiness === 'Renewal') {
             this.productItems[key].renewal = 1;
           }
@@ -785,6 +793,13 @@ export default {
           // delete this.productItems[key];
         }
         if (this.productItems[key].id) {
+          let productCode = null;
+          for (let i = 0; i < this.productsDetail.length; i += 1) {
+            if (this.productItems[key].productName === this.productsDetail[i].Category_Description) {
+              productCode = this.productsDetail[i].Category_ID;
+            }
+          }
+          this.productItems[key].Product = productCode;
           this.productItems[key].grossValue = this.formatGrossValue(
             this.productItems[key].grossValue
           );
@@ -940,8 +955,8 @@ export default {
         products: this.products,
         productName: null,
         productDescription: null,
-        licenseStartDate: null,
-        licenseEndDate: null,
+        licenseStartDate: new Date(new Date().getFullYear(), 0, 1).toISOString().substr(0, 10),
+        licenseEndDate: new Date(new Date().getFullYear(), 11, 31).toISOString().substr(0, 10),
         likelihood: null,
         agent: 0,
         agentDiscount: null,
@@ -1010,10 +1025,11 @@ export default {
       }
     },
     getProductOptions: async function() {
-      if (this.productsOption.length) {
+      if (this.productsOption.length && this.productsDetail.length) {
         this.products = this.productsOption;
       } else {
         const data = await this.$store.dispatch('getProductsList');
+        this.productsDetail = data;
         for (let i = 0; i < data.length; i += 1) {
           this.products.push(data[i].Category_Description);
         }

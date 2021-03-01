@@ -29,7 +29,12 @@ export default new Vuex.Store({
     currentActivity: {},
     customers: [],
     productBasket: undefined,
-    updatedProductBasket: undefined
+    updatedProductBasket: undefined,
+    dashSearchStr: '',
+    adminDashSearchStr: '',
+    sapFilter: false,
+    activeFilter: false,
+    allFilter: false
   },
   mutations: {
     setTable(state, value) {
@@ -62,6 +67,12 @@ export default new Vuex.Store({
     setSearchStr(state, searchStr) {
       state.searchStr = searchStr;
     },
+    setDashSearchStr(state, dashSearchStr) {
+      state.dashSearchStr = dashSearchStr;
+    },
+    setAdminDashSearchStr(state, adminDashSearchStr) {
+      state.adminDashSearchStr = adminDashSearchStr;
+    },
     setCurrentOpp(state, currentOpp) {
       state.currentOpp = currentOpp;
     },
@@ -91,6 +102,21 @@ export default new Vuex.Store({
     },
     setUpdatedProductBasket(state, updatedProducts) {
       state.updatedProductBasket = updatedProducts;
+    },
+    setSAPFilter(state, sapFilter) {
+      state.sapFilter = sapFilter;
+      state.activeFilter = false;
+      state.allFilter = false;
+    },
+    setActiveFilter(state, activeFilter) {
+      state.activeFilter = activeFilter;
+      state.sapFilter = false;
+      state.allFilter = false;
+    },
+    setAllFilter(state, allFilter) {
+      state.allFilter = allFilter;
+      state.activeFilter = false;
+      state.sapFilter = false;
     }
   },
   actions: {
@@ -244,10 +270,10 @@ export default new Vuex.Store({
       return data;
     },
     async getCurrentSalesRepOpts(ctx, salesRep) {
-      if (this.state.searchStr === null) this.state.searchStr = '';
+      if (this.state.dashSearchStr === null) this.state.dashSearchStr = '';
       const { data } = await axios
         .get(
-          `opts-by-sales-rep?salesRep=${salesRep}&&searchStr=${this.state.searchStr}`
+          `opts-by-sales-rep?salesRep=${salesRep}&&searchStr=${this.state.dashSearchStr}`
         )
         .catch(e => {
           if (e.message.indexOf('E_JWT_TOKEN_EXPIRED') > -1) {
