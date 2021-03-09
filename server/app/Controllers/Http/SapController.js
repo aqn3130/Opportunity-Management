@@ -10,7 +10,6 @@ const dateRule = {
 const rules = {
   SalesRep: 'required',
   Email: 'required|email',
-  Type: 'required|in:SPS,ISM',
   OpportunityName: 'required',
   CustomerName: 'required',
   ChannelType: 'required|in:Academic,Corporate,Government',
@@ -184,7 +183,8 @@ class SapController {
         data[i].SalesStage = '1 - Prospect / Lead';
         data[i].Status = 'In Process';
         data[i].source = 'SAP';
-        data[i].SalesRep = salesRep;
+        data[i].SalesRep = salesRep[0].Full_Name;
+        data[i].Type = salesRep[0].Type;
         data[i].Country = country;
         data[i].ForecastCategory = 'Pipeline';
         data[i].OpportunityName = `Lead Gen: ${data[i].OpportunityName}`;
@@ -215,12 +215,12 @@ class SapController {
     const user = await request.Knex('SalesRep').where('Email', email);
     let salesRep = undefined;
     if (user.length) {
-      const res = await request.Knex('SalesRep').where('Email', email).select('Full_Name');
-      if (res.length) salesRep = res[0].Full_Name;
+      const res = await request.Knex('SalesRep').where('Email', email).select('Full_Name', 'Type');
+      if (res.length) salesRep = res;
     } else {
       let fullName = email.substring(0, email.indexOf('@')).toLowerCase();
-      const res = await request.Knex('SalesRep').where('Full_Name', fullName).select('Full_Name');
-      if (res.length) salesRep = res[0].Full_Name;
+      const res = await request.Knex('SalesRep').where('Full_Name', fullName).select('Full_Name', 'Type');
+      if (res.length) salesRep = res;
     }
     return salesRep;
   }
