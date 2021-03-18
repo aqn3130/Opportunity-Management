@@ -116,8 +116,10 @@ export default {
         sortable: true,
         value: 'Country'
       },
+      { text: 'CRM Country Code', value: 'CRMCountryCode' },
       { text: 'Region', value: 'Region' },
       { text: 'Territory', value: 'Territory' },
+      { text: 'Currency', value: 'Currency' },
       { text: 'Actions', value: 'actions' }
     ],
     countryRegionTerritories: [],
