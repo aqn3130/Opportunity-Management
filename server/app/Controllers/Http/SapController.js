@@ -3,7 +3,6 @@
 const {rule} = require("@adonisjs/validator/src/Validator");
 const { validateAll } = use('Validator');
 const { validations } = require('indicative/validator');
-const currency = ['EUR', 'USD', 'GBP', 'JPY', 'AUD'];
 const dateRule = {
   validDate: [validations.dateFormat(['YYYY-MM-DD HH:mm:ss'])]
 }
@@ -12,8 +11,7 @@ const rules = {
   Email: 'required|email',
   OpportunityName: 'required',
   CustomerName: 'required',
-  ChannelType: 'required|in:Academic,Corporate,Government',
-  Currency: 'required'
+  ChannelType: 'required|in:Academic,Corporate,Government'
 }
 
 class SapController {
@@ -159,9 +157,13 @@ class SapController {
       for (let i = 0; i < data.length; i += 1) {
         const salesRep = await this.getSalesRep(data[i].Email, request);
         let country = null;
+        let currency = null;
         let countryRes = undefined;
         if (data[i].Country) countryRes = await this.getCountry(data[i].Country, request);
-        if (countryRes) country = countryRes;
+        if (countryRes) {
+          country = countryRes.Country;
+          currency = countryRes.Currency;
+        }
         if (!salesRep) {
           const validationError = {
             "Error": [
@@ -175,7 +177,6 @@ class SapController {
           response.status(400).send(validationError);
           return;
         }
-        if (!currency.includes(data[i].Currency)) delete data[i].Currency;
         data[i].CreationDate = new Date().toISOString().substr(0, 18);
         data[i].OpportunityStartDate = new Date().toISOString().substr(0, 10);
         data[i].ExpectedCloseDate = new Date(new Date().getFullYear(), 11, 31).toISOString().substr(0, 10);
@@ -186,6 +187,7 @@ class SapController {
         data[i].SalesRep = salesRep[0].Full_Name;
         data[i].Type = salesRep[0].Type;
         data[i].Country = country;
+        data[i].Currency = currency;
         data[i].ForecastCategory = 'Pipeline';
         data[i].OpportunityName = `Lead Gen: ${data[i].OpportunityName}`;
         delete data[i].Email;
@@ -272,9 +274,8 @@ class SapController {
     let country = undefined;
     const crt = await request.Knex('Country_Region_Territory').where('CRMCountryCode', countryCode);
     if (crt.length) {
-      country = crt[0].Country;
+      country = crt[0];
     }
-    // console.log(country);
     return country;
   }
 }
