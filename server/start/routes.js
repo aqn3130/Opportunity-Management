@@ -65,7 +65,7 @@ Route.group(function () {
   Route.post("create-role-permission", "RoleController.createRolePermission").middleware("auth");
   Route.post("role-permissions", "RoleController.getRolePermissions").middleware("auth");
   // Route.get('/wscalc1', 'SoapController');
-  // Route.post('opportunity/create','SapController.store').middleware('auth');
+  Route.post('opportunity/create','SapController.store').middleware('auth');
   Route.get('sap-sourced','SapController.getSAPSourced').middleware('auth');
   Route.get('opp-products','ProductController.getOppProducts').middleware('auth');
   Route.get('products-list','ProductController.getProductsList').middleware('auth');
