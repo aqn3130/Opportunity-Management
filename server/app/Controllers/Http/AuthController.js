@@ -6,13 +6,10 @@ const User = use('App/Models/User');
 
 class AuthController {
   constructor(){
-    // this.ude_url = `https://hub.springer-sbm.com/${Stage}/ude/api/v2.0/users/`;
-    this.ude_url = `https://legacysidm.springernature.com/api/v2.0/users/`;
-    // this.search_url = `https://hub.springer-sbm.com/${Stage}/ude/api/v2.0/users/names?q=`;
-    this.search_url = `https://legacysidm.springernature.com/api/v2.0/users/names?q=`;
-    // this.auth_url = `https://hub.springer-sbm.com/${Stage}/api/v2.0/internal/auth`;
-    // this.auth_url = `https://hub.springer-sbm.com/${Stage}/internal/auth`;
-    // this.auth_url = `https://muaddib.springernature.com/api/v2.1/sessions`;
+    // this.ude_url = `https://legacysidm.springernature.com/api/v2.0/users/`;
+    this.ude_url = `https://hub.springer-sbm.com/live/ude/users`;
+    // this.search_url = `https://legacysidm.springernature.com/api/v2.0/users/names?q=`;
+    this.search_url = `https://hub.springer-sbm.com/live/ude/users/names?q=`;
     this.auth_url = `https://hub.springer-sbm.com/live/internal/auth`;
   }
 
