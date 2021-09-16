@@ -12,7 +12,8 @@ class AuthController {
     this.search_url = `https://legacysidm.springernature.com/api/v2.0/users/names?q=`;
     // this.auth_url = `https://hub.springer-sbm.com/${Stage}/api/v2.0/internal/auth`;
     // this.auth_url = `https://hub.springer-sbm.com/${Stage}/internal/auth`;
-    this.auth_url = `https://muaddib.springernature.com/api/v2.1/sessions`;
+    // this.auth_url = `https://muaddib.springernature.com/api/v2.1/sessions`;
+    this.auth_url = `https://hub.springer-sbm.com/live/internal/auth`;
   }
 
   /*
