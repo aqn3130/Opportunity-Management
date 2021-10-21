@@ -1,14 +1,10 @@
 'use strict';
-const Env = use('Env');
-const Stage = Env.get('STAGE', 'dev');
 const axios = use('axios');
 const User = use('App/Models/User');
 
 class AuthController {
   constructor(){
-    // this.ude_url = `https://legacysidm.springernature.com/api/v2.0/users/`;
     this.ude_url = `https://hub.springer-sbm.com/live/ude/users`;
-    // this.search_url = `https://legacysidm.springernature.com/api/v2.0/users/names?q=`;
     this.search_url = `https://hub.springer-sbm.com/live/ude/users/names?q=`;
     this.auth_url = `https://hub.springer-sbm.com/live/internal/auth`;
   }
@@ -17,12 +13,14 @@ class AuthController {
   * login implementation
    */
   async login({ request, response, auth }) {
-    const credentials = request.only(['username','password']);
+    let credentials = request.only(['username','password']);
+    credentials['_system'] = 'plm'
     const salesReps = await request.Knex.table('SalesRep').select('Email', 'Full_Name');
 
     try {
       const { data } = await axios.post(this.auth_url, credentials);
       const currentUser = await User.findBy('email',data.email);
+      response.implicitEnd = false;
       if (currentUser) {
         return await this.authenticate(auth, currentUser, response);
       }
@@ -40,21 +38,31 @@ class AuthController {
           return await this.authenticate(auth, currentUser, response);
         } catch (e) {
           console.log(e);
-          return response.json({
+          return response.status(401).json({
             message: 'Can not register user, please contact your system admin'
           })
         }
       }
       else {
-        return response.json({
+        return response.status(401).json({
           message: 'User does not exist, please contact your system admin'
         })
       }
     } catch (e) {
-      console.log(e);
-      return response.json({
-        message: 'Incorrect username or password'
-      });
+      console.log(e.response);
+      if (e.response.status === 429) {
+        return response.status(401).json({
+          message: 'Too many failed attempts, please try later.'
+        });
+      } else if (e.response.status === 401) {
+        return response.status(401).json({
+          message: 'Incorrect username or password'
+        });
+      } else {
+        return response.status(401).json({
+          message: 'Login failed, please contact your system admin.'
+        });
+      }
     }
   }
 
@@ -70,7 +78,6 @@ class AuthController {
     let isUser = undefined;
     Object.keys(salesReps).forEach((key) => {
       if (salesReps[key].Email === currentUser) {
-        // console.log(salesReps[key].Email, currentUser);
         isUser = salesReps[key];
       }
     });
@@ -78,8 +85,6 @@ class AuthController {
   }
 
   async getCurrentUser({ request, response, auth }){
-    // const currentUser = await auth.getUser();
-    // return currentUser;
     try {
       const user = await auth.getUser();
       const userPermissions = await user.getPermissions();
@@ -99,7 +104,6 @@ class AuthController {
 
     try{
       const { data } = await axios.get(`${this.search_url}${name}`);
-      // console.log(data.names);
       return data.names;
     }catch (e) {
       console.log(e);

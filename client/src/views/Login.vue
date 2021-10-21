@@ -33,7 +33,7 @@
                 @input="setPassword"
                 prepend-icon="lock"
               ></v-text-field>
-              <v-alert type="error" v-if="loginError">
+              <v-alert type="error" v-if="loginError" dense>
                 <small>{{ loginError }}</small>
               </v-alert>
             </v-card-text>
@@ -91,7 +91,7 @@ export default {
           await this.$router.push({ name: 'Dashboard' });
         } catch (e) {
           this.loading = false;
-          this.setError(e);
+          this.setError(e.response.data.message);
         }
       }
     },
