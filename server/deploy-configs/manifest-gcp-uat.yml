@@ -10,5 +10,4 @@ applications:
       ENV_SILENT: true
       DB_CONNECTION: mysql
     routes:
-      - route: plm-uat.springernature.app
-      - route: plm-uat.public.springernature.app
+      - route: opportunity-managment-uat.example.com
